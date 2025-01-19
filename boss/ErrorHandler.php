@@ -3,6 +3,7 @@
 namespace boss;
 
 use Exception;
+use RuntimeException;
 
 class ErrorHandler extends Exception
 {
@@ -99,10 +100,22 @@ class ErrorHandler extends Exception
         return $sourceCode;
     }
 
-    public function debug()
+    /**
+     * 显示调试信息
+     *
+     * 如果启用了调试模式（DEBUG 常量为 true），则加载并显示调试模板。
+     *
+     * @return void
+     */
+    public function debug(): void
     {
-        if (DEBUG) {
-            include __DIR__ . '/templates/debug.php';
+        if (defined('DEBUG') && DEBUG) {
+            $debugTemplatePath = __DIR__ . '/templates/debug.php';
+            if (is_file($debugTemplatePath)) {
+                include $debugTemplatePath;
+            } else {
+                throw new RuntimeException('Debug template file not found.');
+            }
         }
     }
 }

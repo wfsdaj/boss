@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace boss;
 
 use Exception;
@@ -7,15 +9,19 @@ use Exception;
 class App
 {
     /**
-     * 启动应用程序
+     * 运行应用程序。
+     *
+     * 该方法负责初始化常量、配置错误报告、注册错误处理函数，并启动路由。
+     * 如果在路由过程中发生错误，将捕获并处理异常。
      *
      * @return void
      */
     public static function run(): void
     {
+        // 初始化常量
         self::initConstants();
 
-        // 错误报告设置
+        // 配置错误报告
         error_reporting(E_ALL);
         ini_set('display_errors', '0'); // 隐藏错误信息，防止泄漏给用户
 
@@ -25,6 +31,11 @@ class App
 
         try {
             self::router();
+
+            // 调试栏
+            if (DEBUG && TRACE) {
+                require CORE_PATH . 'templates/trace.php';
+            }
         } catch (ErrorHandler $e) {
             $e->debug();
         }
@@ -61,7 +72,7 @@ class App
         defined('CLOSE_CACHE')   || define('CLOSE_CACHE', false);    // 关闭全局缓存
         defined('SESSION_START') || define('SESSION_START', false);  // 是否启动 session
         defined('SESSION_TYPE')  || define('SESSION_TYPE', 'file');  // 会话存储类型 [file, memcache, redis]
-        defined('PAGE_SUFFIX')   || define('PAGE_SUFFIX', false);    // 页面后缀
+        defined('PAGE_SUFFIX')   || define('PAGE_SUFFIX', '');    // 页面后缀
     }
 
     /**
@@ -115,11 +126,6 @@ class App
 
         // 执行方法
         $controller_instance->$method();
-
-        // 调试模式
-        if (DEBUG && TRACE) {
-            require_once CORE_PATH . 'templates/trace.php';
-        }
     }
 
     /**
