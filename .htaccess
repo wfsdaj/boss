@@ -1,4 +1,11 @@
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
+<IfModule mod_headers.c>
+    Header set Content-Security-Policy "frame-ancestors 'none'"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  # 如果你无法指定网站根目录（虚拟主机往往没有该权限）
+  # 该文件会将所有请求重定向到 /public 目录
+  RewriteEngine on
+  RewriteRule ^$ public/ [L]
+  RewriteRule (.*) public/$1 [L]
+</IfModule>
