@@ -9,11 +9,11 @@ class User
         echo "User Index Page";
     }
 
-    public function a(int $id = null)
+    public function a(string $id = null)
     {
         echo "User A Method";
         echo '<hr>';
-        echo $id;
+        echo (int)$id;
         echo '<hr>';
     }
 }
