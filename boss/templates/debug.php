@@ -34,7 +34,7 @@
 <body>
     <div class="exception">
         <h1>Debug</h1>
-        <p class="text"><?= $message ?></p>
+        <p class="text"><?= $this->getMessage(); ?></p>
     </div>
 </body>
 

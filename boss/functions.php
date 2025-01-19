@@ -43,14 +43,23 @@ function view(string $view, array $data = []): void
     $template->render($view, $data);
 }
 
-
 /**
- * 获取当前请求的控制器、方法和参数
+ * 根据给定的键值从预定义的段数组中获取对应的段。
+ *
+ * @param int $key 要查找的段键值（从 1 开始）。
+ * @return mixed|null 返回与键值对应的段，如果键值不存在则返回 null。
  */
-// function segment(int $index = null)
-// {
+function segment(int $key): mixed
+{
+    // 假设 SEGMENTS 是一个预定义的数组常量
+    $segments = SEGMENTS;
 
-// }
+    // 将 $key 减 1，使其从 0 开始
+    $adjustedKey = $key - 1;
+
+    // 使用 null 合并运算符返回对应的段或 null
+    return $segments[$adjustedKey] ?? null;
+}
 
 /**
  * 获取请求数据，默认已过滤 html 标签等。

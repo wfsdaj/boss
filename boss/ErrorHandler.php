@@ -2,10 +2,10 @@
 
 namespace boss;
 
-class ErrorHandler
-{
-    private static array $errorInfo = [];
+use Exception;
 
+class ErrorHandler extends Exception
+{
     /**
      * 设置自定义错误处理函数
      *
@@ -36,7 +36,7 @@ class ErrorHandler
         ];
 
         // 包含错误模板，并传递错误信息
-        include CORE_PATH . 'templates/error.php';
+        include __DIR__ . '/templates/error.php';
         exit(1);
     }
 
@@ -61,7 +61,7 @@ class ErrorHandler
                 'source_code' => $sourceCode,
             ];
 
-            include CORE_PATH . 'templates/error.php';
+            include __DIR__ . '/templates/error.php';
             exit(1);
         }
     }
@@ -97,5 +97,12 @@ class ErrorHandler
         }
 
         return $sourceCode;
+    }
+
+    public function debug()
+    {
+        if (DEBUG) {
+            include __DIR__ . '/templates/debug.php';
+        }
     }
 }

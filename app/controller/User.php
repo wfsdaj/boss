@@ -11,7 +11,6 @@ class User
 
     public function a()
     {
-        echo "User A Method";
-        echo '<hr>';
+        echo segment(1);
     }
 }

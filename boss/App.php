@@ -23,7 +23,11 @@ class App
         set_error_handler([\boss\ErrorHandler::class, 'handleError']);
         register_shutdown_function([\boss\ErrorHandler::class, 'handleShutdown']);
 
-        self::router();
+        try {
+            self::router();
+        } catch (ErrorHandler $e) {
+            $e->debug();
+        }
     }
 
     /**
@@ -63,11 +67,8 @@ class App
     /**
      * 路由处理
      * 解析 URL，加载控制器并执行对应方法
-     *
-     * @throws \Exception 如果控制器或方法不存在，抛出异常
-     * @return void
      */
-    private static function router(): void
+    private static function router()
     {
         // 解析 URL 获取控制器和方法
         $url        = self::parseUrl();
@@ -75,51 +76,48 @@ class App
         $method     = $url[1] ?? DEFAULT_METHOD;
 
         // 验证控制器名称合法性
-        if (!preg_match('/^[a-zA-Z0-9]+$/', $controller)) {
-            die('404 - 1111');
+        if (!ctype_alnum($controller)) {
+            return abort(404);
         }
 
         // 加载控制器文件
         $controller_file = APP_PATH . 'controller/' . ucfirst($controller) . '.php';
         if (!is_file($controller_file)) {
-            die('404 - Controller not found');
+            return abort(404);
         }
 
         // 实例化控制器
         $controller_class = "\\app\\controller\\" . ucfirst($controller);
         if (!class_exists($controller_class)) {
-            throw new Exception("Controller class {$controller_class} does not exist.");
+            return abort(404);
         }
 
         $controller_instance = new $controller_class;
 
         // 解析方法名称
-
-        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9_]*$/', $method)) {
-            die('404 - 222 - Method not found');
+        if (!ctype_alnum($method)) {
+            return abort(404);
         }
 
         // 检查方法是否存在
         if (!method_exists($controller_instance, $method)) {
-            die('404 - 4444 - Method not found');
+            return abort(404);
         }
 
         // 定义全局常量
-        define('CONTROLLER_NAME', get_class($controller_instance));
+        define('CONTROLLER_NAME', $controller_instance);
         define('METHOD_NAME', $method);
-        define('SERVER_ROOT', str_replace('index.php', '', $_SERVER['PHP_SELF']));
+        define('SEGMENTS', $url);
 
-        // 设置请求参数
-        $segments = array_slice($url, 2);
-        define('SEGMENTS', implode('/', $segments));
+        // $segments = array_slice($url, 2);
 
         $GLOBALS['traceSql'] = [];
 
         // 执行方法
-        call_user_func([$controller_instance, $method]);
+        $controller_instance->$method();
 
         // 调试模式
-        if (DEBUG) {
+        if (DEBUG && TRACE) {
             require_once CORE_PATH . 'templates/trace.php';
         }
     }
@@ -135,7 +133,7 @@ class App
         // 获取路径信息
         if (isset($_GET['url'])) {
             $path = trim($_GET['url'], '/');
-            $path = filter_var($_GET['url'], FILTER_SANITIZE_URL);;
+            $path = filter_var($_GET['url'], FILTER_SANITIZE_URL);
             unset($_GET['url']);  // 移除 url，防止污染 $_GET
         } else {
             $path = DEFAULT_CONTROLLER . '/' . DEFAULT_METHOD;
