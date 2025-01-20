@@ -1,0 +1,58 @@
+<div class="dropdown">
+    <button class="btn btn-icon btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="表情">
+        <i class="iconfont icon-smile fs-5 text-primary"></i>
+    </button>
+    <button class="btn btn-icon btn-sm" type="button" aria-expanded="false" title="图片">
+        <label for="files" class="cursor-pointer">
+            <i class="iconfont icon-image fs-5 text-primary"></i>
+        </label>
+    </button>
+    <ul class="dropdown-menu shadow-sm emoji-list p-2" data-stoppropagation="true">
+        <li onclick="h_editor.insert('❤', -1, true);">❤</li>
+        <li onclick="h_editor.insert('❄', -1, true);">❄</li>
+        <li onclick="h_editor.insert('⛄', -1, true);">⛄</li>
+        <li onclick="h_editor.insert('🈚', -1, true);">🈚</li>
+        <li onclick="h_editor.insert('🈶', -1, true);">🈶</li>
+        <li onclick="h_editor.insert('😃', -1, true);">😃</li>
+        <li onclick="h_editor.insert('😅', -1, true);">😅</li>
+        <li onclick="h_editor.insert('😉', -1, true);">😉</li>
+        <li onclick="h_editor.insert('😍', -1, true);">😍</li>
+        <li onclick="h_editor.insert('😝', -1, true);">😝</li>
+        <li onclick="h_editor.insert('😏', -1, true);">😏</li>
+        <li onclick="h_editor.insert('😒', -1, true);">😒</li>
+        <li onclick="h_editor.insert('😞', -1, true);">😞</li>
+        <li onclick="h_editor.insert('😔', -1, true);">😔</li>
+        <li onclick="h_editor.insert('😓', -1, true);">😓</li>
+        <li onclick="h_editor.insert('💩', -1, true);">💩</li>
+        <li onclick="h_editor.insert('👐', -1, true);">👐</li>
+        <li onclick="h_editor.insert('👊', -1, true);">👊</li>
+        <li onclick="h_editor.insert('🙈', -1, true);">🙈</li>
+        <li onclick="h_editor.insert('⚽', -1, true);">⚽</li>
+    </ul>
+</div>
+
+<script>
+    let h_editor;
+    document.addEventListener('DOMContentLoaded', () => {
+        // 检查 TE 是否已经定义
+        if (typeof TextEditor === 'undefined') {
+            console.warn('TE 没有定义，无法初始化编辑器。');
+            return;
+        }
+
+        // 获取所有的 textarea 元素并选择第一个（如果存在）
+        const textareas = document.querySelectorAll('textarea');
+        if (!textareas) {
+            console.warn('没有找到任何 textarea 元素来初始化编辑器。');
+            return;
+        }
+
+        // 使用找到的 textarea 元素初始化编辑器
+        try {
+            h_editor = new TextEditor(textareas[0]);
+        } catch (error) {
+            console.error('初始化编辑器时发生错误：', error);
+            // 这里可以添加额外的错误处理逻辑，比如显示一个错误提示给用户
+        }
+    });
+</script>

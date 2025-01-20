@@ -167,11 +167,11 @@ class Database
     /**
      * 获取来自 query 查询的单条数据
      *
-     * @return object|null 返回查询到的数据对象，如果查询失败或没有数据则返回 null。
+     * @return array|null 返回查询到的数据对象，如果查询失败或没有数据则返回 null。
      */
-    public function queryFetch(): ?object
+    public function queryFetch(): ?array
     {
-        return $this->pretreatment ? $this->pretreatment->fetch(PDO::FETCH_OBJ) : null;
+        return $this->pretreatment ? $this->pretreatment->fetch(PDO::FETCH_ASSOC) : null;
     }
 
     /**
@@ -181,7 +181,7 @@ class Database
      */
     public function queryFetchAll(): array
     {
-        return $this->pretreatment ? $this->pretreatment->fetchAll(PDO::FETCH_OBJ) : [];
+        return $this->pretreatment ? $this->pretreatment->fetchAll(PDO::FETCH_ASSOC) : [];
     }
 
     /**
@@ -335,9 +335,9 @@ class Database
      * 获取查询结果的第一行
      *
      * @param string|null $fields 要选择的字段
-     * @return object|null 返回第一行作为对象，如果没有结果则返回null
+     * @return array|null 返回第一行作为数组，如果没有结果则返回null
      */
-    public function first(?string $fields = '*'): ?object
+    public function first(?string $fields = '*'): ?array
     {
         $preArray = $this->prepare($fields);
         $this->sql = $preArray[0];
@@ -345,9 +345,9 @@ class Database
         $startTime = microtime(true);
         $this->pretreatment = $this->pdo->prepare($this->sql);
         $this->pretreatment->execute($preArray[1]);
-        $res = $this->pretreatment->fetch(PDO::FETCH_OBJ);
+        $res = $this->pretreatment->fetch(PDO::FETCH_ASSOC);
         $this->trace($res, $startTime);
-        return $res;
+        return $res === false ? null : $res;
     }
 
     /**
@@ -379,7 +379,7 @@ class Database
         $startTime = microtime(true);
         $this->pretreatment = $this->pdo->prepare($this->sql);
         $this->pretreatment->execute($preArray[1]);
-        $res = $this->pretreatment->fetchAll(PDO::FETCH_OBJ);
+        $res = $this->pretreatment->fetchAll(PDO::FETCH_ASSOC);
         $this->trace($res, $startTime);
 
         return $res;

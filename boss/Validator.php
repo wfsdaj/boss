@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace core;
+namespace boss;
 
 /**
  * 数据验证类
@@ -125,7 +125,7 @@ class Validator
     // 字符串及长度检查
     public function checkString(string $value, $range): bool
     {
-        return preg_match('/^.{' . $range . '}$/Uis', trim($value));
+        return (bool) preg_match('/^.{' . $range . '}$/Uis', trim($value));
     }
 
     // 整数及长度检查
@@ -196,22 +196,27 @@ class Validator
     {
         return is_numeric($value) && $value > $limit;
     }
+
     public function checkGte($value, $limit): bool
     {
         return is_numeric($value) && $value >= $limit;
     }
+
     public function checkLt($value, $limit): bool
     {
         return is_numeric($value) && $value < $limit;
     }
+
     public function checkLte($value, $limit): bool
     {
         return is_numeric($value) && $value <= $limit;
     }
+
     public function checkSame($value, $expected): bool
     {
         return $value === $expected;
     }
+
     public function checkNotSame($value, $expected): bool
     {
         return $value !== $expected;

@@ -1,0 +1,152 @@
+@extends('layout.app')
+
+@section('main')
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <!-- 中间内容列 -->
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
+                    <i class="iconfont icon-left-arrow fs-5"></i>
+                </div>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
+                    <span class="text-truncate">{{ $pageTitle or '' }}</span>
+                </h2>
+            </div>
+
+            <!-- 帖子内容 -->
+            <div class="article">
+                <div class="d-flex align-items-center mt-2 px-3">
+                    <a href="/user/profile/{{ $post->user_id }}" data-letters="{{ mb_substr($post->username, 0, 1, 'UTF-8') }}"></a>
+                    <p>{{ $post->username }}</p>
+                    <div class="dropdown ms-auto">
+                        <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="iconfont icon-more fs-5"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end shadow-sm fs-15px">
+                        @if(is_admin())
+                        <a href="javascript:;" class="dropdown-item" id="js-pin" role="button" data-post-id="{$post->id}">
+                            <i class="iconfont icon-thumbtack me-2"></i>
+                            @if($post->is_sticky)
+                            <span class="fw-bold">取消置顶</span>
+                            @else
+                            <span class="fw-bold">置顶</span>
+                            @endif
+                        </a>
+                        @endif
+                        @isset($user)
+                            @if($post->user_id === $user->id)
+                            <a href="javascript:;" class="dropdown-item text-danger" id="js-del" data-post-id="{{ (int)segment(2) }}">
+                                <i class="iconfont icon-trash me-2"></i>
+                                <span>删除</span>
+                            </a>
+                            @endif
+                        @endisset
+                            <a class="dropdown-item" href="#">
+                                <i class="iconfont icon-shield me-2"></i>
+                                <span>屏蔽</span>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="iconfont icon-report me-2"></i>
+                                <span>举报 帖子</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3">
+                    <div class="typo-text fs-18" id="postContent">{{ $post->content }}</div>
+                    @if($post->images > 0)
+                    <?php $post->images = min(max(1, $post->images), 3); ?>
+                    <div class="gallery mt-2">
+                        <ul class="thumbnail-container list-unstyled mx-0">{{ getImagesList($post->images, $post->id, false) }}</ul>
+                    </div>
+                    @endif
+                </div>
+                <div class="d-flex align-items-center p-3 fs-15px text-muted border-bottom">
+                    <span class="d-inline-block me-3">
+                        <time datetime="{{ date("Y-m-d H:i:s", $post->created_at) }}">{{ nice_time($post->created_at) }}</time>
+                    </span>
+                    <span class="d-inline-block me-3">山东</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 边栏 -->
+        <div class="sidebar-col">
+            <div class="position-sticky sidebar-sticky">
+                <div class="position-relative mt-2 mb-3">
+                    <i class="iconfont icon-search search-iconfont"></i>
+                    <input class="form-control rounded-5 search-input" type="text" placeholder="搜索">
+                </div>
+                <div class="tile mb-3">
+                    <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">每日帖不过３😉</h2>
+                    <div class="px-3 pb-3">
+                        <p class="mt-1 mb-3 text-muted">友情提示，发帖和回帖都需要<i class="squiggle">扣除１枚金币</i>哦！</p>
+                        <a class="btn btn-dark rounded-pill" href="/reward/">
+                            <i class="iconfont icon-present me-2"></i>领取今日登录奖励
+                        </a>
+                        <?= session('user_id') ?>
+                    </div>
+                </div>
+                <div class="tile">
+                    <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">有什么新鲜事？</h2>
+                    <div href="###" class="tile-item d-flex">
+                        <img src="/img/avatar.jpg" width="79" height="79" alt="">
+                        <div class="d-flex flex-column">
+                            <div class="fs-15 fw-bold">摔跤大赛是真打吗？</div>
+                            <div class="fs-13 text-muted">摔角 . 昨天</div>
+                        </div>
+                    </div>
+                    <div class="tile-item d-flex flex-column">
+                        <div class="fs-13px text-muted">科幻</div>
+                        <div class="fs-15px fw-bold">测试标题，测试标题，test</div>
+                        <div class="fs-13px text-muted"><i class="iconfont icon-analytics"></i> 114</div>
+                    </div>
+                    <a class="d-flex p-3 tile-footer" href="###">更多</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+@endsection
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // mediumZoom('[data-zoomable]', {
+        //     margin: 30,
+        //     background: 'rgba(0,0,0,.7)',
+        // });
+
+        const jDel = document.getElementById('js-del');
+
+        if (jDel) {
+            jDel.addEventListener('click', function() {
+                let postId = this.getAttribute('data-post-id');
+                fetch(`/post/del/${postId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            'post_id': postId
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            toast(res.message, 'success');
+                            setTimeout(function() {
+                                window.location.href = "/";
+                            }, 2000);
+                        } else {
+                            toast(res.message, 'danger');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+    });
+</script>
+@endsection

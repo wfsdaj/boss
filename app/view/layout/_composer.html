@@ -1,0 +1,139 @@
+<div class="composer d-flex px-3 py-12px" id="homeEditor">
+    <img class="avatar" src="/img/avatar.jpg" alt="">
+    <div class="flex-fill">
+        <form id="post-form" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
+            <textarea class="form-control border-0 px-0 js-textarea" name="content" id="content" maxlength="200" spellcheck="false" placeholder="有什么新鲜事儿？" required autofocus></textarea>
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="file" class="d-none" name="files[]" id="files" accept="image/png,image/jpeg,image/gif">
+            <div class="composer-action d-flex justify-content-between align-items-center mb-2">
+                {include file="layout/_emoji" /}
+                <div>
+                    <span class="textarea-count" id="counter">200</span>
+                    <button type="button" id="submitButton" class="btn btn-dark px-3 fs-15px fw-bold rounded-pill" disabled>发帖</button>
+                </div>
+            </div>
+        </form>
+        <div id="previewContainer"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('content');
+        const counter = document.getElementById('counter');
+        const submitButton = document.getElementById('submitButton');
+        const MAX_LENGTH = 200;
+
+        // 更新剩余字数和按钮状态
+        function updateCounterAndButtonState() {
+            const remainingChars = Math.max(MAX_LENGTH - textarea.value.length, 0);
+            counter.textContent = remainingChars;
+            submitButton.disabled = !textarea.value.trim() || remainingChars === 0;
+        }
+
+        textarea.addEventListener('input', updateCounterAndButtonState);
+
+        // 初始化计数器和按钮状态
+        updateCounterAndButtonState();
+
+        // const MAX_FILES = 4; // 最多允许上传的文件数量
+        // const fileInput = document.getElementById('files');
+        // let files = fileInput.files;
+
+        // 验证发帖内容
+        function validateContent() {
+            const content = document.getElementById('content').value.trim();
+            return content.length > 0;
+        }
+
+        // 文件数量验证
+        // function validateFileCount() {
+        //     if (files.length > MAX_FILES) {
+        //         toast(`一次最多上传 ${MAX_FILES} 张图片！` );
+        //         return false;
+        //     }
+        //     return true;
+        // }
+
+        // 文件输入更改时更新文件列表并执行验证
+        // fileInput.addEventListener('change', function() {
+        //     files = fileInput.files;
+        //     validateFileCount();
+        // });
+
+        // 点击发帖按钮后验证
+
+        if (submitButton) {
+            submitButton.addEventListener('click', function() {
+                // if (!validateFileCount()) return;
+                if (!validateContent()) {
+                    return toast('请输入帖子内容');
+                }
+                let data = new FormData(document.getElementById('post-form'));
+                fetch('/post/submit', {
+                        method: 'POST',
+                        body: data
+                    })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            // 显示成功消息
+                            toast(res.message);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            // 显示错误消息
+                            toast(res.message);
+                        }
+                    })
+                    .catch(error => {
+                        toast('上传文件失败。');
+                    });
+            });
+        }
+
+        const previewContainer = document.getElementById('previewContainer');
+        let selectedFiles = [];
+
+        // 创建一个用于预览的图片元素
+        function createPreviewImage(file) {
+            const img = document.createElement('img');
+            img.classList.add('preview-image'); // 使用CSS类代替内联样式
+            img.src = URL.createObjectURL(file);
+            img.title = "点击删除图片";
+            img.addEventListener('click', function() {
+                removePreviewImage(this);
+            });
+            return img;
+        }
+
+        // 从预览容器中移除图片，并从文件列表中删除文件
+        function removePreviewImage(img) {
+            previewContainer.removeChild(img);
+            const file = selectedFiles.find(f => URL.createObjectURL(f) === img.src);
+            if (file) {
+                const index = selectedFiles.indexOf(file);
+                selectedFiles.splice(index, 1);
+                URL.revokeObjectURL(img.src);
+            }
+        }
+
+        // fileInput.addEventListener('change', function(e) {
+        //     previewContainer.innerHTML = '';
+        //     selectedFiles = [];
+        //     const files = e.target.files;
+        //     for (let i = 0; i < files.length; i++) {
+        //         const file = files[i];
+        //         // 添加一个简单的文件类型检查
+        //         if (!file.type.startsWith('image/')) {
+        //             toast.error('只支持上传图片 -_-"');
+        //             continue;
+        //         }
+        //         selectedFiles.push(file);
+        //         const img = createPreviewImage(file);
+        //         previewContainer.appendChild(img);
+        //     }
+        // });
+    });
+</script>

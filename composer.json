@@ -1,6 +1,7 @@
 {
     "require": {
-        "php": "^7.4"
+        "php": ">=7.4",
+        "topthink/think-template": "2.0.10"
     },
     "autoload": {
         "psr-4": {
@@ -8,7 +9,9 @@
             "boss\\": "boss/"
         },
         "files": [
-            "boss/functions.php"
+            "boss/functions.php",
+            "app/helpers.php",
+            "app/events.php"
         ]
     },
     "config": {

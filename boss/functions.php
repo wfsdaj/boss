@@ -19,7 +19,7 @@ function db(string $table, string $item = 'db'): object
  * 渲染视图并返回生成的内容
  *
  * 该函数用于加载并渲染视图模板。它会首先验证配置是否正确加载，
- * 然后通过 `\core\template\Template` 类进行渲染。若配置加载失败，
+ * 然后通过 `\boss\Template` 类进行渲染。若配置加载失败，
  * 则抛出异常。
  *
  * @param string $view 视图模板的名称或路径（相对路径）
@@ -37,27 +37,25 @@ function view(string $view, array $data = []): void
         throw new Exception('视图配置加载失败');
     }
 
-    // $template = new \core\view\Template($config);
-    $template = new \boss\View($config);
+    $template = new \think\Template($config);;
+    // $template = new \boss\View($config);
 
-    $template->render($view, $data);
+    $template->fetch($view, $data);
 }
 
 /**
  * 根据给定的键值从预定义的段数组中获取对应的段。
  *
  * @param int $key 要查找的段键值（从 1 开始）。
- * @return mixed|null 返回与键值对应的段，如果键值不存在则返回 null。
+ * @return string|null 返回与键值对应的段，如果键值不存在则返回 null。
  */
-function segment(int $key): mixed
+function segment(int $key)
 {
-    // 假设 SEGMENTS 是一个预定义的数组常量
     $segments = SEGMENTS;
 
     // 将 $key 减 1，使其从 0 开始
     $adjustedKey = $key - 1;
 
-    // 使用 null 合并运算符返回对应的段或 null
     return $segments[$adjustedKey] ?? null;
 }
 
@@ -150,7 +148,6 @@ function env(string $key): ?string
  * @param string $key   会话键
  * @param mixed  $value 会话值，如果为null则获取键的值
  */
-
 function session(string $key, $value = null)
 {
     if ($value !== null) {
@@ -442,7 +439,7 @@ function get_ip(): string
         // 解析多个 IP 并去除 'unknown'
         $ips = array_filter(
             explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']),
-            fn ($ip) => trim($ip) !== 'unknown'
+            fn($ip) => trim($ip) !== 'unknown'
         );
         $ip = trim(reset($ips)); // 获取第一个有效 IP
     }

@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$pageTitle | default="首页"}</title>
+    <link rel="stylesheet" href="/font/iconfont.css">
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/twitter.css">
+</head>
+
+<body class="d-flex w-100">
+    {include file="layout/header" /}
+
+    {block name="main"}{/block}
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/editor.js"></script>
+    <script src="/js/twitter.js"></script>
+    {block name="js"}{/block}
+</body>
+
+</html>

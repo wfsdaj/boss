@@ -1,0 +1,143 @@
+<ul class="feed-list list-unstyled">
+{if !$posts }
+    <div class="empty-text fs-3">有鄙夫问于我，空空如也，<br>我叩其两端而竭焉。</div>
+{else /}
+    {foreach $posts as $post}
+    <li class="feed-item d-flex js-tap" id="feed{$post.id}" data-href="/post/show/{$post.id}" data-pid="{$post.id}">
+        <a href="/user/profile/{$post.user_id}" data-letters="{$post.username | mb_substr=0, 1, 'UTF-8'}"></a>
+        <div class="d-flex flex-column w-100">
+            <div class="d-flex fs-15px position-relative">
+                <a class="link-dark fw-bold" href="/user/profile/{$post.user_id}">{$post.username}</a>
+                <a class="link-secondary ms-2" href="/post/show/{$post.id}">{$post.created_at | nice_time}</a>
+                <div class="ms-auto dropdown">
+                    <button class="btn btn-sm btn-icon feed-item-action" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="iconfont icon-more fs-18px"></i></button>
+                    <div class="dropdown-menu dropdown-menu-end fs-15px shadow-sm">
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-shield me-2"></i>
+                            <span class="fw-bold">屏蔽</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-report me-2"></i>
+                            <span class="fw-bold">举报 帖子</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <p class="typo-text">{$post.content}</p>
+            {if $post.images > 0}
+            {/if}
+            <div class="mt-1 d-flex justify-content-between post-actions">
+                <!-- 回复 -->
+                <a role="button" class="post-action-reply cursor-arrow" title="回复">
+                    <div class="btn btn-sm btn-icon post-action-icon">
+                        <i class="iconfont icon-comment fs-18px js-no-click"></i>
+                    </div>
+                    <span class="fs-13px">14</span>
+                </a>
+
+                <!-- 转帖 -->
+                <a href="javascript:;" class="post-action-retweet cursor-default" title="转帖">
+                    <div class="btn btn-sm btn-icon post-action-icon">
+                        <i class="iconfont icon-retweet fs-18px js-no-click"></i>
+                    </div>
+                </a>
+
+                <!-- 喜欢 -->
+                <button type="button" class="btn btn-link">
+                    <i class="iconfont icon-heart fs-18px js-no-click"></i>
+                     <span>4</span>
+                </button>
+
+                <!-- 收藏 -->
+
+            </div>
+        </div>
+    </li>
+    {/foreach}
+{/if}
+</ul>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function initGallery(galleryElement) {
+        const thumbnailContainer = galleryElement.querySelector('.thumbnail-container');
+        const fullscreenContainer = galleryElement.querySelector('.fullscreen-container');
+        const fullscreenImg = fullscreenContainer.querySelector('.fullscreen');
+        const prevBtn = fullscreenContainer.querySelector('.prev-btn');
+        const nextBtn = fullscreenContainer.querySelector('.next-btn');
+        const thumbnails = Array.from(thumbnailContainer.querySelectorAll('.feed-item-img'));
+
+        // 根据缩略图数量决定是否显示上一张和下一张按钮
+        if (thumbnails.length <= 1) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+        }
+
+        let currentIndex = 0;
+
+        function showFullscreenImage() {
+            const clickedThumbnail = thumbnails[currentIndex];
+            let fullImageUrl = clickedThumbnail.getAttribute('data-full');
+
+            // 添加加载状态
+            fullscreenContainer.style.display = 'flex';
+            fullscreenContainer.classList.add('loading');
+
+            // 使用 onload 事件来确保图片加载完成后再更新显示
+            const img = new Image();
+            img.onload = function() {
+                fullscreenImg.src = this.src; // 现在图片已经加载，可以安全地设置到全屏 img 元素
+
+                // 移除加载状态并显示图片
+                fullscreenContainer.classList.remove('loading');
+            };
+            img.onerror = function() {
+                // 处理图片加载错误的情况
+                // ...
+                // 移除加载状态，并可能显示一个错误消息
+                fullscreenContainer.classList.remove('loading');
+            };
+            img.src = fullImageUrl; // 设置图片的源以开始加载
+        }
+
+        // 为缩略图添加点击事件监听
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                thumbnailContainer.style.display = 'none';
+                // 移除其他缩略图的高亮
+                thumbnails.forEach(thumb => thumb.classList.remove('selected'));
+                // 为点击的缩略图添加高亮
+                thumbnail.classList.add('selected');
+
+                currentIndex = thumbnails.indexOf(thumbnail);
+                showFullscreenImage();
+            });
+        });
+
+        // 为大图添加点击事件监听
+        fullscreenImg.addEventListener('click', () => {
+            fullscreenContainer.style.display = 'none';
+            thumbnailContainer.style.display = 'flex';
+            // 可选：移除缩略图的高亮
+            thumbnails.forEach(thumb => thumb.classList.remove('selected'));
+        });
+
+        // 如果有多于一张的图片，才为按钮添加点击事件
+        if (thumbnails.length > 1) {
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
+                showFullscreenImage();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % thumbnails.length;
+                showFullscreenImage();
+            });
+        }
+    }
+
+    // 初始化所有的图片列表
+    const galleries = document.querySelectorAll('.gallery');
+    galleries.forEach(gallery => initGallery(gallery));
+});
+</script>

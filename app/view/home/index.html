@@ -1,0 +1,87 @@
+{extend name="layout/app" /}
+
+{block name="title"}{$title}{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">主页</h2>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="iconfont icon-magic"></i></button>
+                    <div class="dropdown-menu animated-dropdown dropdown-menu-end fs-15px">
+                        <div class="dropdown-item p-3 border-bottom text-center arrow bg-white">
+                            <img class="mb-2" src="/img/magic.svg" width="48" height="48" alt="">
+                            <p class="fs-6 fw-bold">主页优先显示热门帖子</p>
+                        </div>
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-exchange me-2"></i>
+                            <span>切换查看最新帖子</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-settings me-2"></i>
+                            <span>查看内容偏好设置</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {if session('user_id')}
+                {include file='layout/_composer' /}
+            {/if}
+
+            {include file='post/_list_twitter' /}
+
+        </div>
+        <div class="sidebar-col">
+            <div class="position-sticky sidebar-sticky">
+                <div class="position-relative mt-2 mb-3">
+                    <i class="iconfont icon-search search-iconfont"></i>
+                    <input class="form-control rounded-5 search-input" type="text" placeholder="搜索">
+                </div>
+                <div class="tile mb-3">
+                    <h2 class="mb-0 py-12px px-3 fs-6 fw-bold">每日帖不过３😉</h2>
+                    <div class="px-3 pb-3">
+                        <p class="mt-1 mb-3 fs-15px">友情提示，发帖和回帖都需要<i class="squiggle">扣除１枚金币</i>哦！</p>
+                        <a class="btn btn-primary rounded-pill" href="/reward/">
+                            <i class="iconfont icon-present me-2"></i>领取今日登录奖励
+                        </a>
+                    </div>
+                </div>
+                <div class="tile">
+                    <h2 class="mb-0 py-12px px-3 fs-6 fw-bold">有什么新鲜事？</h2>
+                    <div href="###" class="tile-item d-flex">
+                        <img src="/img/avatar.jpg" width="60" height="60" alt="">
+                        <div class="d-flex flex-column">
+                            <div class="fw-bold">摔跤大赛是真打吗？</div>
+                            <div class="fs-13px text-muted">摔角 . 昨天</div>
+                        </div>
+                    </div>
+                    <div class="tile-item d-flex flex-column">
+                        <div class="fs-13px text-muted">科幻</div>
+                        <div>测试标题，测试标题，test</div>
+                        <div class="fs-13px text-muted"><i class="iconfont icon-analytics"></i> 114</div>
+                    </div>
+                    <a class="d-flex p-3 tile-footer" href="###">更多</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 当前链接添加 active
+        highlightActiveLink("home");
+        // 切换当前链接的 iconfont
+        updateIconClassOnActive('.app-link', 'icon-home', 'icon-home-fill');
+    });
+</script>
+{/block}

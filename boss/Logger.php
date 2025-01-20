@@ -1,6 +1,11 @@
 <?php
 
-namespace core;
+declare(strict_types=1);
+
+namespace boss;
+
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * 日志类
@@ -28,6 +33,15 @@ class Logger
     // 默认日志文件夹路径
     private string $folder;
 
+    // 缓存当前日志文件名
+    private string $currentFilename;
+
+    // 日志缓存
+    private array $logBuffer = [];
+
+    // 日志缓存大小
+    private const BUFFER_SIZE = 100;
+
     /**
      * Logger constructor.
      * @param string $folder 日志文件夹路径
@@ -36,6 +50,7 @@ class Logger
     {
         $this->folder = rtrim($folder, '/');
         $this->mkdir();
+        $this->currentFilename = $this->getFilename();
     }
 
     /**
@@ -43,7 +58,9 @@ class Logger
      *
      * @param string $method 方法名
      * @param array $args 方法参数
-     * @throws \InvalidArgumentException 如果日志级别无效
+     * @throws InvalidArgumentException 如果日志级别无效
+     *
+     * @return void
      */
     public function __call(string $method, array $args): void
     {
@@ -52,7 +69,7 @@ class Logger
             $context = $args[1] ?? [];
             $this->record(ucfirst($method), $msg, $context);
         } else {
-            throw new \InvalidArgumentException('Invalid log level or missing message');
+            throw new InvalidArgumentException('Invalid log level or missing message');
         }
     }
 
@@ -62,6 +79,8 @@ class Logger
      * @param string $level 日志级别
      * @param string $msg 日志内容
      * @param array $context 上下文信息
+     *
+     * @return void
      */
     private function record(string $level, string $msg, array $context = []): void
     {
@@ -75,8 +94,36 @@ class Logger
             !empty($context) ? json_encode($context, JSON_UNESCAPED_UNICODE) : ''
         );
 
-        // 写入日志文件
-        $this->writeToFile($logMessage);
+        // 将日志消息添加到缓存
+        $this->logBuffer[] = $logMessage;
+
+        // 如果缓存达到一定大小，写入文件
+        if (count($this->logBuffer) >= self::BUFFER_SIZE) {
+            $this->flushLogBuffer();
+        }
+    }
+
+    /**
+     * 将缓存中的日志写入文件
+     *
+     * @return void
+     */
+    private function flushLogBuffer(): void
+    {
+        if (empty($this->logBuffer)) {
+            return;
+        }
+
+        $logContent = implode(PHP_EOL, $this->logBuffer) . PHP_EOL;
+        $this->logBuffer = [];
+
+        try {
+            if (file_put_contents($this->currentFilename, $logContent, FILE_APPEND) === false) {
+                throw new RuntimeException('Failed to write log to file: ' . $this->currentFilename);
+            }
+        } catch (RuntimeException $e) {
+            error_log($e->getMessage());
+        }
     }
 
     /**
@@ -85,21 +132,9 @@ class Logger
     private function mkdir(): void
     {
         if (!file_exists($this->folder)) {
-            mkdir($this->folder, 0755, true);
-        }
-    }
-
-    /**
-     * 将内容写入当前日志文件
-     *
-     * @param string $data 要附加的内容
-     */
-    private function writeToFile(string $data): void
-    {
-        $filename = $this->getFilename();
-        if (file_put_contents($filename, $data . PHP_EOL, FILE_APPEND) === false) {
-            // 如果文件写入失败，尝试记录到系统日志
-            error_log('Failed to write log to file: ' . $filename);
+            if (!mkdir($this->folder, 0755, true) && !is_dir($this->folder)) {
+                throw new RuntimeException('Failed to create log directory: ' . $this->folder);
+            }
         }
     }
 
@@ -152,5 +187,13 @@ class Logger
 
         // 验证 IP 是否有效，如果无效，返回默认 IP '0.0.0.0'
         return filter_var($ip, FILTER_VALIDATE_IP) ? $ip : '0.0.0.0';
+    }
+
+    /**
+     * 析构函数，确保缓存中的日志被写入文件
+     */
+    public function __destruct()
+    {
+        $this->flushLogBuffer();
     }
 }

@@ -1,0 +1,113 @@
+{extend name="user/layout" /}
+
+{block name="title"}登录{/block}
+
+{block name="main"}
+<div class="auth-box mx-auto text-center">
+    <a href="/">
+        <img class="auth-logo mb-4" src="/img/logo.png" alt="">
+    </a>
+    <h1 class="mb-4 h4 fw-bold text-center">欢迎回来</h1>
+    <form id="authForm" method="post">
+        <input type="hidden" name="csrf_token" value="{:csrf_token()}">
+        <div class="form-floating mb-4" hx-target="this">
+            <input type="text" class="form-control" id="username" name="username" placeholder="用户名" required autofocus>
+            <label for="username" class="error-message">用户名</label>
+        </div>
+        <div class="form-floating mb-4">
+            <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
+            <label for="password" class="error-message">密码</label>
+        </div>
+        <div class="form-floating mb-4 position-relative">
+            <input type="text" class="form-control" id="captcha" name="captcha" placeholder="验证码" required>
+            <label for="captcha" class="error-message">验证码</label>
+            <img id="resetCaptcha" class="position-absolute auth-captcha cursor-pointer" src="/auth/captcha" alt="" data-bs-toggle="tooltip" data-bs-title="点击刷新验证码">
+        </div>
+        <button type="submit" class="btn btn-dark py-3 mb-3 w-100 shadow" id="submit-btn">登录</button>
+        <div class="text-center">
+            <a href="/register" class="btn btn-link">忘记密码？</a>
+            <a href="/register" class="btn btn-link">注册</a>
+        </div>
+    </form>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    $(document).ready(function() {
+        const rules = {
+            username: {
+                regex: /^.{3,16}$/,
+                message: '用户名长度为3-16个字符'
+            },
+            password: {
+                regex: /^.{6,16}$/,
+                message: '密码长度为6-16个字符'
+            },
+            captcha: {
+                regex: /^.{4}$/,
+                message: '验证码为 4 个字符'
+            },
+        };
+
+        const captchaImg = document.getElementById("resetCaptcha");
+
+        function validate(field) {
+            const input = $('#' + field);
+            const value = input.val();
+            const rule = rules[field];
+            const errorDiv = input.next('.error-message');
+
+            if (!rule.regex.test(value)) {
+                errorDiv.text(rule.message);
+                input.addClass('is-invalid');
+            } else {
+                errorDiv.text(input.attr('placeholder'));
+                input.removeClass('is-invalid');
+            }
+        }
+
+        // 绑定输入事件，实时验证
+        $('.form-control').on('input', function() {
+            const fieldId = $(this).attr('id');
+            validate(fieldId);
+        });
+
+        $('#authForm').submit(function(event) {
+            event.preventDefault();
+            // 禁用提交按钮，防止重复点击
+            const submitButton = $('#submit-btn');
+            submitButton.prop('disabled', true);
+
+            // 获取表单数据
+            const formData = $(this).serialize();
+
+            // 发送 Ajax 请求
+            $.ajax({
+                url: '/login/submit',
+                type: 'POST',
+                data: formData,
+                dataType: 'json',
+                success: function(res) {
+                    if (res.status === 'success') {
+                        toast(res.message, 'success');
+                        setTimeout(() => {
+                            document.referrer === "" ? (window.location.href = "/") : window.history.back();
+                        }, 2000);
+                    } else {
+                        toast(res.message, 'danger');
+                        captchaImg.setAttribute("src", "/auth/captcha?" + Math.random());
+                    }
+                    // 提交完成后重新启用按钮
+                    submitButton.prop('disabled', false);
+                },
+                error: function(xhr, status, error) {
+                    // 提交失败后重新启用按钮
+                    submitButton.prop('disabled', false);
+                    toast('提交失败，请稍后再试', 'danger');
+                }
+            });
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,154 @@
+<header id="app-header" class="flex-column flex-grow-1 align-items-end" role="banner">
+    <div class="header-wrap d-flex align-items-end">
+        <div class="header-wrap d-flex flex-column px-2 position-fixed top-0 h-100 overflow-x-hidden overflow-y-auto">
+            <div class="d-flex flex-column">
+                <h1 class="app-logo p-3 mb-0" role="heading">
+                    <a href="/"><img src="/img/logo.png" alt=""></a>
+                </h1>
+                <nav class="app-nav d-flex flex-column" role="navigation">
+                    <a href="/" class="app-link" data-active="home" title="主页">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-home"></i>
+                            <div class="app-nav-text">主页</div>
+                            <div class="unread-dot"></div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/explore" data-active="explore" title="探索">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-search"></i>
+                            <div class="app-nav-text">探索</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/notification" data-active="notifications" title="通知">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-notifications"></i>
+                            <div class="app-nav-text">通知</div>
+                            <div class="d-flex align-items-center unread-message ">1</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/message" data-active="message" title="私信">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-messages"></i>
+                            <div class="app-nav-text">私信</div>
+                        </div>
+                    </a>
+                    <a href="/fav" class="app-link" data-active="fav" title="收藏夹">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-fav"></i>
+                            <div class="app-nav-text">收藏夹</div>
+                        </div>
+                    </a>
+                    <!-- <a href="/tag" class="app-link" data-active="tag" title="标签">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-explore"></i>
+                            <div class="app-nav-text">标签</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/reward" data-active="reward" title="奖励">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-present"></i>
+                            <div class="app-nav-text">领金币</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/medal" data-active="medal" title="勋章">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-medal"></i>
+                            <div class="app-nav-text">勋章</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/tool" data-active="tool" title="工具箱">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-work"></i>
+                            <div class="app-nav-text">工具箱</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/lists" data-active="lists" title="列表">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-lists"></i>
+                            <div class="app-nav-text">列表</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/message" data-active="message" title="消息">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-notifications"></i>
+                            <div class="app-nav-text">消息</div>
+                            <div class="unread-message">1</div>
+                        </div>
+                    </a>
+                    <a class="app-link" href="/bbs" data-active="bbs" title="动态">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-topics"></i>
+                            <div class="app-nav-text">动态</div>
+                        </div>
+                    </a> -->
+                    {if session('user_id')}
+                    <a class="app-link" href="/user/profile/{:session('user_id')}" data-active="user" title="个人资料">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-user"></i>
+                            <div class="app-nav-text">个人资料</div>
+                        </div>
+                    </a>
+                    <button type="button" id="createPost" class="btn btn-dark justify-content-center rounded-pill" data-bs-toggle="modal" data-bs-target="#js-createPostModal">发帖</button>
+                    <!-- 小屏显示的发帖按钮 -->
+                    <button type="button" class="btn btn-primary twteet-btn" data-bs-toggle="modal" data-bs-target="#js-createPostModal" title="发帖">
+                        <div class="nav-item d-inline-flex justify-content-center">
+                            <i class="iconfont icon-feather"></i>
+                        </div>
+                    </button>
+                    {else /}
+                    <a class="app-link" href="/login" data-active="user" title="登录">
+                        <div class="nav-item d-inline-flex">
+                            <i class="iconfont icon-user"></i>
+                            <div class="app-nav-text">登录</div>
+                        </div>
+                    </a>
+                    {/if}
+                </nav>
+            </div>
+            {if session('user_id')}
+            <div class="dropup mt-auto">
+                <div class="d-flex align-items-center fs-15px account-switcher-btn" id="account-switcher-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img class="avatar" src="/img/avatar.jpg" alt="">
+                    <div class="d-flex flex-column lh-1">
+                        <div>{$user.username}</div>
+                    </div>
+                    <div class="ms-auto">
+                        <i class="iconfont icon-more fs-5"></i>
+                    </div>
+                </div>
+                <div class="dropdown-menu">
+                    {if is_admin()}
+                    <a href="/admin" class="dropdown-item">
+                        <i class="iconfont icon-settings fs-5 me-2"></i>
+                        <span class="fw-bold">进入后台</span>
+                    </a>
+                    {/if}
+                    <a href="/auth/logout" class="dropdown-item">
+                        <i class="iconfont icon-logout fs-5 me-2"></i>
+                        <span>退出</span>
+                    </a>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+</header>
+
+{if session('user_id')}
+<div class="modal fade" id="js-createPostModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title">发新帖</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}

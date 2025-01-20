@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace boss;
 
-use Exception;
-
 class App
 {
     /**
@@ -18,18 +16,25 @@ class App
      */
     public static function run(): void
     {
-        // 初始化常量
-        self::initConstants();
-
-        // 配置错误报告
-        error_reporting(E_ALL);
-        ini_set('display_errors', '0'); // 隐藏错误信息，防止泄漏给用户
-
-        // 注册错误处理函数
-        set_error_handler([\boss\ErrorHandler::class, 'handleError']);
-        register_shutdown_function([\boss\ErrorHandler::class, 'handleShutdown']);
-
         try {
+            // 初始化常量
+            self::initConstants();
+
+            if (ENABLE_SESSION) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+            }
+
+            // 配置错误报告
+            error_reporting(E_ALL);
+            ini_set('display_errors', '0'); // 隐藏错误信息，防止泄漏给用户
+
+            // 注册错误处理函数
+            set_error_handler([\boss\ErrorHandler::class, 'handleError']);
+            register_shutdown_function([\boss\ErrorHandler::class, 'handleShutdown']);
+
+            // 路由
             self::router();
 
             // 调试栏
@@ -68,11 +73,11 @@ class App
         defined('DEFAULT_CONTROLLER') || define('DEFAULT_CONTROLLER', 'Home');  // 默认控制器
         defined('DEFAULT_METHOD')     || define('DEFAULT_METHOD', 'index');     // 默认方法
 
-        defined('CUSTOM_ROUTE')  || define('CUSTOM_ROUTE', false);   // 是否使用自定义路由
-        defined('CLOSE_CACHE')   || define('CLOSE_CACHE', false);    // 关闭全局缓存
-        defined('SESSION_START') || define('SESSION_START', false);  // 是否启动 session
-        defined('SESSION_TYPE')  || define('SESSION_TYPE', 'file');  // 会话存储类型 [file, memcache, redis]
-        defined('PAGE_SUFFIX')   || define('PAGE_SUFFIX', '');    // 页面后缀
+        defined('CUSTOM_ROUTE')   || define('CUSTOM_ROUTE', false);   // 是否使用自定义路由
+        defined('CLOSE_CACHE')    || define('CLOSE_CACHE', false);    // 关闭全局缓存
+        defined('ENABLE_SESSION') || define('ENABLE_SESSION', false);  // 是否启动 session
+        defined('SESSION_TYPE')   || define('SESSION_TYPE', 'file');  // 会话存储类型 [file, memcache, redis]
+        defined('PAGE_SUFFIX')    || define('PAGE_SUFFIX', '');    // 页面后缀
     }
 
     /**
@@ -91,36 +96,28 @@ class App
             return abort(404);
         }
 
-        // 加载控制器文件
+        // 检查控制器文件、控制器类是否存在
         $controller_file = APP_PATH . 'controller/' . ucfirst($controller) . '.php';
-        if (!is_file($controller_file)) {
+        $controller_class = "\\app\\controller\\" . ucfirst($controller);
+        if (!is_file($controller_file) || !class_exists($controller_class)) {
             return abort(404);
         }
 
         // 实例化控制器
-        $controller_class = "\\app\\controller\\" . ucfirst($controller);
-        if (!class_exists($controller_class)) {
-            return abort(404);
-        }
+        $controller_instance = new $controller_class();
 
-        $controller_instance = new $controller_class;
-
-        // 解析方法名称
-        if (!ctype_alnum($method)) {
-            return abort(404);
-        }
-
-        // 检查方法是否存在
-        if (!method_exists($controller_instance, $method)) {
+        // 检查方法名、检查方法是否存在
+        if (!ctype_alnum($method) || !method_exists($controller_instance, $method)) {
             return abort(404);
         }
 
         // 定义全局常量
-        define('CONTROLLER_NAME', $controller_instance);
+        define('CONTROLLER_NAME', $controller);
         define('METHOD_NAME', $method);
         define('SEGMENTS', $url);
 
-        // $segments = array_slice($url, 2);
+        $url = array_slice($url, 2);
+        define('PG_URL', implode('/', $url));
 
         $GLOBALS['traceSql'] = [];
 
@@ -138,8 +135,7 @@ class App
     {
         // 获取路径信息
         if (isset($_GET['url'])) {
-            $path = trim($_GET['url'], '/');
-            $path = filter_var($_GET['url'], FILTER_SANITIZE_URL);
+            $path = filter_var(trim($_GET['url'], '/'), FILTER_SANITIZE_URL);
             unset($_GET['url']);  // 移除 url，防止污染 $_GET
         } else {
             $path = DEFAULT_CONTROLLER . '/' . DEFAULT_METHOD;
@@ -157,6 +153,16 @@ class App
         $router[0] = $router[0] ?? DEFAULT_CONTROLLER;
         $router[1] = $router[1] ?? DEFAULT_METHOD;
 
-        return $router;
+        for ($i = 2; $i < count($router); $i++) {
+            if (preg_match('/^page_(.*)(' . PAGE_SUFFIX . ')*$/Ui', $router[$i], $matches)) {
+                define("PAGE_NUMBER",  intval($matches[1]));
+                array_splice($router, $i, 1);
+            }
+        }
+        if (!defined("PAGE_NUMBER")) {
+            define("PAGE_NUMBER",  1);
+        }
+
+        return array_values($router);  // 确保索引从0开始
     }
 }

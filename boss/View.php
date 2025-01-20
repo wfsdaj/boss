@@ -1,9 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace boss;
 
 use Exception;
 
+/**
+ * 视图渲染类
+ * 用于渲染模板，处理布局和缓存
+ */
 class View
 {
     private string $layout = '';           // 布局文件
@@ -11,8 +17,8 @@ class View
     private string $content = '';          // 内容
     private array  $blocks = [];           // 块内容
     private string $view_path = '';        // 模板目录
-    private string $cache_path;            // 缓存目录
-    private string $view_suffix = '.php';  // 模板文件默认后缀名
+    private string $cache_path = 'cache';  // 缓存目录
+    private string $view_suffix = '.html'; // 模板文件默认后缀名
 
     /**
      * 构造函数，初始化缓存目录和模板目录
@@ -25,53 +31,33 @@ class View
     public function __construct(array $config = [])
     {
         // 设置模板目录
-        $this->view_path = rtrim($config['view_path'] ?? '', '/');
+        $this->view_path = $config['view_path'] ?? '';
 
         // 设置缓存目录
-        $this->cache_path = rtrim($config['cache_path'] ?? 'cache', '/');
+        $this->cache_path = $config['cache_path'] ?? 'cache';
 
         // 设置模板文件后缀名
-        $this->view_suffix = $config['view_suffix'] ?? '.php';
+        $this->view_suffix = $config['view_suffix'] ?? '.html';
 
         // 创建缓存目录如果不存在
-        if (!is_dir($this->cache_path)) {
-            mkdir($this->cache_path, 0755, true);
+        if (!is_dir($this->cache_path) && !mkdir($this->cache_path, 0755, true)) {
+            throw new Exception('无法创建缓存目录: ' . htmlspecialchars($this->cache_path, ENT_QUOTES, 'UTF-8'));
         }
-    }
-
-    /**
-     * 设置模板目录
-     *
-     * @param string $view_path 模板目录
-     */
-    public function setViewPath(string $view_path): void
-    {
-        $this->view_path = rtrim($view_path, '/');
-    }
-
-    /**
-     * 设置模板文件后缀名
-     *
-     * @param string $view_suffix 模板文件后缀名
-     */
-    public function setViewSuffix(string $view_suffix): void
-    {
-        $this->view_suffix = $view_suffix;
     }
 
     /**
      * 渲染内容文件
      *
-     * @param string $contentFile 内容文件路径
+     * @param string $contentFile 内容文件路径（不带后缀）
      * @param array $data 页面数据数组
      * @throws Exception 如果内容文件不存在
+     *
+     * @return void
      */
     public function render(string $contentFile, array $data = []): void
     {
-        // 将输入数据安全转换为HTML
-        $this->data = array_map(function ($item) {
-            return htmlspecialchars($item, ENT_QUOTES, 'UTF-8');
-        }, $data);
+        // 将输入数据安全转换为HTML，防止XSS攻击
+        $this->data = array_map(fn($item) => is_string($item) ? htmlspecialchars($item, ENT_QUOTES, 'UTF-8') : $item, $data);
 
         $this->loadContent($contentFile);
 
@@ -89,6 +75,8 @@ class View
      *
      * @param string $contentFile 内容文件路径
      * @throws Exception 如果内容文件不存在
+     *
+     * @return void
      */
     private function loadContent(string $contentFile): void
     {
@@ -103,7 +91,7 @@ class View
 
         // 匹配并设置布局文件
         if (preg_match('/\{layout\s+name="([^"]+)"\s*\/?\}/', $content, $matches)) {
-            $this->layout = htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8') . $this->view_suffix;
+            $this->layout = $matches[1];
             // 移除布局声明
             $content = str_replace($matches[0], '', $content);
         }
@@ -122,6 +110,7 @@ class View
      * 提取块内容
      *
      * @param string $content 内容文件内容
+     * @return void
      */
     private function extractBlocks(string $content): void
     {
@@ -137,6 +126,7 @@ class View
      * 渲染布局文件
      *
      * @throws Exception 如果布局文件未设置或不存在
+     * @return void
      */
     private function renderLayout(): void
     {
@@ -147,34 +137,43 @@ class View
         $layoutFile = $this->resolvePath($this->layout);
 
         if (!file_exists($layoutFile)) {
-            throw new Exception('布局文件不存在', 500);
+            throw new Exception('布局文件不存在');
         }
-
-        // 提取数据供布局使用
-        extract($this->data, EXTR_OVERWRITE);
-        $content = $this->content;
 
         // 检查缓存文件是否存在且未过期
         $cacheFile = $this->cache_path . '/' . md5($layoutFile) . '.php';
         if (file_exists($cacheFile) && (filemtime($cacheFile) >= filemtime($layoutFile))) {
             include $cacheFile; // 直接包含缓存文件
         } else {
+            // 读取布局文件内容
+            $layoutContent = file_get_contents($layoutFile);
+
+            // 替换布局中的块内容
+            $layoutContent = $this->replaceBlocks($layoutContent);
+
+            // 将替换后的布局内容保存到临时文件中
+            $tempLayoutFile = $this->cache_path . '/temp_layout_' . md5($layoutFile) . '.php';
+            file_put_contents($tempLayoutFile, $layoutContent);
+
             // 生成缓存文件
             ob_start();
             extract($this->data, EXTR_OVERWRITE); // 提取数据到当前作用域
-            include $layoutFile; // 包含布局文件，布局中可以访问 $data 中的数据
+            include $tempLayoutFile; // 包含临时布局文件
             $output = ob_get_clean();
-
-            // 替换布局中的块内容
-            $output = $this->replaceBlocks($output);
 
             // 检查缓存目录是否可写
             if (!is_writable($this->cache_path)) {
-                throw new Exception('缓存目录不可写', 500);
+                throw new Exception('缓存目录不可写: ' . $this->cache_path);
             }
 
-            file_put_contents($cacheFile, $output); // 写入缓存文件
-            echo $output; // 输出内容
+            // 写入缓存文件
+            file_put_contents($cacheFile, $output);
+
+            // 删除临时布局文件
+            unlink($tempLayoutFile);
+
+            // 输出内容
+            echo $output;
         }
     }
 
@@ -189,10 +188,7 @@ class View
         // 替换布局中的块内容
         return preg_replace_callback(
             '/\{block\s+name="([^"]+)"\}\s*\{\/block\}/s',
-            function ($matches) {
-                $blockName = $matches[1];
-                return $this->blocks[$blockName] ?? ''; // 返回块内容，如果不存在则返回空字符串
-            },
+            fn($matches) => $this->blocks[$matches[1]] ?? '',
             $layoutContent
         );
     }
@@ -205,27 +201,32 @@ class View
      */
     private function resolvePath(string $path): string
     {
-        if (strpos($path, '/') === 0 || strpos($path, DIRECTORY_SEPARATOR) === 0 || strpos($path, ':') === 1) {
-            return $path;
-        }
-
-        $resolvedPath = $this->view_path . DIRECTORY_SEPARATOR . ltrim($path, '/');
+        $resolvedPath = $this->view_path . $path;
 
         if (!preg_match('/\.[a-zA-Z0-9]+$/', $resolvedPath)) {
             $resolvedPath .= $this->view_suffix;
         }
 
-        return realpath($resolvedPath) ?: $resolvedPath;
+        $resolvedPath = realpath($resolvedPath) ?: $resolvedPath;
+        if (!$resolvedPath) {
+            throw new Exception("无法解析路径: " . htmlspecialchars($path, ENT_QUOTES, 'UTF-8'));
+        }
+
+        return $resolvedPath;
     }
 
     /**
      * 清理过期的缓存文件
      *
      * @param int $maxLifetime 缓存文件的最大生命周期（秒）
+     * @return void
      */
     public function clearExpiredCache(int $maxLifetime = 86400): void
     {
         $files = glob($this->cache_path . '/*.php');
+        if ($files === false) {
+            throw new Exception('无法读取缓存目录: ' . $this->cache_path);
+        }
         foreach ($files as $file) {
             if (file_exists($file) && is_writable($file) && filemtime($file) < time() - $maxLifetime) {
                 unlink($file);
