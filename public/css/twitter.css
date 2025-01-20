@@ -6,12 +6,6 @@ body {
   height: 100%;
 }
 
-.btn-sm {
-  --bs-btn-padding-y: .375rem;
-  --bs-btn-padding-x: 1rem;
-  --bs-btn-font-size: 0.9375rem;
-}
-
 /******************************* btn icon */
 .btn-icon {
   --bs-btn-hover-bg: #E5F8F2;
@@ -147,18 +141,20 @@ body {
 .tile-footer {}
 
 /******************************* 自动隐藏 */
-.autohide{
+.autohide {
   position: sticky;
   top: 0;
   right: 0;
   left: 0;
   z-index: 4000;
 }
-.scrolled-down{
+
+.scrolled-down {
   transform: translateY(-100%);
   transition: all 0.3s ease-in-out;
 }
-.scrolled-up{
+
+.scrolled-up {
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
 }
@@ -173,8 +169,8 @@ body {
 
 @media (max-width: 767px) {
   .avatar {
-      width: 2rem;
-      height: 2rem;
+    width: 2rem;
+    height: 2rem;
   }
 }
 
@@ -585,6 +581,7 @@ body {
 .breadcrumb .iconfont {
   font-size: 20px;
 }
+
 .breadcrumb.scrolled {
   /* box-shadow: 0px 16px 32px rgb(0 0 0 / 4%); */
   box-shadow: 0 4px 8px rgb(0 0 0 / 4%);
@@ -645,6 +642,7 @@ body {
   transition: width .3s;
   overflow: hidden;
 }
+
 .search-input:focus {
   border-width: 2px;
 }
@@ -653,6 +651,7 @@ body {
 .composer {
   border-bottom: 1px solid #eff3f4;
 }
+
 .composer textarea {
   height: 3rem;
   max-height: 230px;
@@ -664,19 +663,24 @@ body {
   transition: height 0.3s;
   overflow-x: hidden;
 }
+
 .home-composer textarea {
   height: 10rem;
   min-height: 10rem;
 }
+
 .composer .avatar {
   margin-right: 12px;
 }
+
 .composer .form-control {
   outline: 0;
 }
+
 .composer-action {
   margin-left: -8px;
 }
+
 .textarea-count {
   margin-right: 12px;
   height: 18px;
@@ -685,27 +689,31 @@ body {
   color: var(--bs-gray);
   /* border-right: 1px solid #ddd; */
 }
+
 .previewImg {
   position: relative;
   max-height: 100px;
   overflow: hidden;
 }
+
 .img-del {
   position: absolute;
   top: 5px;
   right: 5px;
 }
+
 .progress-wrap {
   position: fixed;
   top: 20px;
   right: 0;
 }
+
 .progress-circle path {
   fill: none;
-	stroke: var(--bs-gray);
-	stroke-width: 4;
-	box-sizing:border-box;
-	-webkit-transition: all 200ms linear;
+  stroke: var(--bs-gray);
+  stroke-width: 4;
+  box-sizing: border-box;
+  -webkit-transition: all 200ms linear;
   transition: all 200ms linear;
 }
 
@@ -713,6 +721,7 @@ body {
 .emoji-list {
   min-width: 240px;
 }
+
 .emoji-list li {
   display: inline-flex;
   align-items: center;
@@ -723,6 +732,7 @@ body {
   color: var(--bs-body-color);
   transition: transform .3s;
 }
+
 .emoji-list li:hover {
   cursor: pointer;
   color: var(--bs-primary);
@@ -773,6 +783,7 @@ body {
   top: -6px;
   right: -8px;
 }
+
 .feed-item-img {
   max-width: 100%;
   max-height: 200px;
