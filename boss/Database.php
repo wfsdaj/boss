@@ -133,7 +133,7 @@ class Database
 
         // 初始化 SQL 记录数组
         $sqlRec = [
-            'status' => $res !== false ? 'success' : 'false',              // 执行状态
+            'status' => $res !== false ? '成功' : '失败',              // 执行状态
             'sql'    => $sql,                                              // SQL 语句
             'time'   => round((microtime(true) - $startTime) * 1000, 2),   // 执行时间（毫秒）
             'error'  => $res ? '' : $this->error(),                        // 错误信息（如果有）

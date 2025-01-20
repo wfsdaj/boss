@@ -22,7 +22,10 @@ class App
 
             if (ENABLE_SESSION) {
                 if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
+                    session_start([
+                        'cookie_httponly' => true,
+                        'cookie_samesite' => 'Strict',
+                    ]);
                 }
             }
 

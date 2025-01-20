@@ -1,6 +1,6 @@
 <?php
 
-
+declare(strict_types=1);
 
 /**
  * 获取一个数据表操作对象

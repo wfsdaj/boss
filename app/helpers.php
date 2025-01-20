@@ -48,26 +48,6 @@ function is_author(int $user_id, int $author_id): bool
 }
 
 /**
- * 检查是否为管理员
- *
- * 该函数检查当前用户是否为管理员（ID为1，且 group_id 为 1）。
- *
- * @return bool 如果当前用户是管理员返回 `true`，否则返回 `false`
- */
-function is_admin(): bool
-{
-    $userId = (int)session('user_id');
-
-    if ($userId !== 1) {
-        return false;
-    }
-
-    $user = (new User())->find($userId);
-
-    return $user->group_id === 1;
-}
-
-/**
  * 跳转到之前页面
  *
  * 该函数根据会话中的 `back_to_link` 变量决定跳转的目标页面。如果该变量不存在，

@@ -61,10 +61,9 @@ class User extends \boss\Model
     /**
      * 根据用户 id 查询用户数据
      */
-    public function find(int $user_id)
+    public function find(int $user_id, string $field = '*')
     {
         $this->model = db('user');
-
         $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
 
         return $this->model->where('id = ?', [$user_id])->first($field);
@@ -73,11 +72,13 @@ class User extends \boss\Model
     /**
      * 根据用户名查询用户数据
      */
-    public function findByName(string $username)
+    public function findByName(string $username, string $field = '*')
     {
         $this->model = db('user');
+        $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
+
         return $this->model->where('username = ?', [$username])
-                            ->first('id, username, password, created_at, golds');
+                            ->first($field);
         // $this->model->debugSql();
     }
 

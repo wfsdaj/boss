@@ -31,8 +31,19 @@ class Auth
         return;
     }
 
+    /**
+     * 退出登录
+     */
     public function logout()
     {
+        $user_id = (int)session('user_id');
+        $url_token = segment(3);
+        $session_token = session('csrf_token');
+
+        if (!$user_id || empty($url_token) || !hash_equals($url_token, $session_token)) {
+            abort('403');
+        }
+
         // 清空当前会话数据
         $_SESSION = [];
 
@@ -42,5 +53,6 @@ class Auth
 
         // 重定向到登录页面或其他安全页面
         return redirect(url('/'));
+
     }
 }

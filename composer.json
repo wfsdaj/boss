@@ -10,8 +10,7 @@
         },
         "files": [
             "boss/functions.php",
-            "app/helpers.php",
-            "app/events.php"
+            "app/helpers.php"
         ]
     },
     "config": {

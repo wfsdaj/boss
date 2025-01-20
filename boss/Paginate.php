@@ -60,7 +60,7 @@ class Paginate
 
         $this->totalRows = $totalRows;
         $this->eachPage = $eachPage;
-        $this->maxPage = max(1, ceil($totalRows / $eachPage)); // 确保最大页码至少为1
+        $this->maxPage = (int)max(1, ceil($totalRows / $eachPage)); // 确保最大页码至少为1
 
         // 修正当前页码
         $this->currentPage = $this->normalizeCurrentPage(PAGE_NUMBER);

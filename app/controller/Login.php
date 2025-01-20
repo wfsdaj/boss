@@ -56,6 +56,10 @@ class Login
 
         // 登录成功，设置 session
         session('user_id', $user['id']);
+        session('username', $user['username']);
+        if ($user['id'] === 1 && $user['group_id'] === 1) {
+            session('is_admin', true);
+        }
 
         return json('登录成功', 'success');
     }
