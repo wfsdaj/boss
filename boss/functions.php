@@ -37,7 +37,8 @@ function view(string $view, array $data = []): void
         throw new Exception('视图配置加载失败');
     }
 
-    $template = new \think\Template($config);;
+    $template = new \think\Template($config);
+    ;
     // $template = new \boss\View($config);
 
     $template->fetch($view, $data);
@@ -297,6 +298,32 @@ function url(string $path = ''): string
 }
 
 /**
+ * 从会话中获取并删除一个闪存数据（flash data）。
+ *
+ * 闪存数据是一种只会在下一次请求时有效的数据，通常用于在重定向后显示一次性消息。
+ *
+ * @param string $key 闪存数据的键名。
+ * @param mixed $default 如果闪存数据不存在时返回的默认值。
+ * @return mixed 返回与键名关联的闪存数据，如果不存在则返回默认值。
+ */
+function flash(string $key, $default = null)
+{
+    // 确保会话已启动
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // 构造完整的会话键名
+    $sessionKey = 'flash__' . $key;
+
+    $flash = $_SESSION[$sessionKey] ?? $default;
+
+    unset($_SESSION[$sessionKey]);
+
+    return $flash;
+}
+
+/**
  * 消毒数据
  *
  * @param  string $value
@@ -439,7 +466,7 @@ function get_ip(): string
         // 解析多个 IP 并去除 'unknown'
         $ips = array_filter(
             explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']),
-            fn($ip) => trim($ip) !== 'unknown'
+            fn ($ip) => trim($ip) !== 'unknown'
         );
         $ip = trim(reset($ips)); // 获取第一个有效 IP
     }

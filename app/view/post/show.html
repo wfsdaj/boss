@@ -1,6 +1,8 @@
-@extends('layout.app')
+{extend name="layout/app" /}
 
-@section('main')
+{block name="title"}{$title}{/block}
+
+{block name="main"}
 <main role="main" class="d-flex flex-grow-1">
     <div class="d-flex main-wrap justify-content-between min-vh-100">
         <!-- 中间内容列 -->
@@ -11,38 +13,38 @@
                     <i class="iconfont icon-left-arrow fs-5"></i>
                 </div>
                 <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
-                    <span class="text-truncate">{{ $pageTitle or '' }}</span>
+                    <span class="text-truncate">{$pageTitle}</span>
                 </h2>
             </div>
 
             <!-- 帖子内容 -->
             <div class="article">
                 <div class="d-flex align-items-center mt-2 px-3">
-                    <a href="/user/profile/{{ $post->user_id }}" data-letters="{{ mb_substr($post->username, 0, 1, 'UTF-8') }}"></a>
-                    <p>{{ $post->username }}</p>
+                    <a href="/user/profile/{$post.user_id}" data-letters="{:mb_substr($post.username, 0, 1, 'UTF-8')}"></a>
+                    <p>{$post.username}</p>
                     <div class="dropdown ms-auto">
                         <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="iconfont icon-more fs-5"></i>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end shadow-sm fs-15px">
-                        @if(is_admin())
-                        <a href="javascript:;" class="dropdown-item" id="js-pin" role="button" data-post-id="{$post->id}">
+                        {if is_author($post.user_id)}
+                        <a href="javascript:;" class="dropdown-item" id="js-pin" role="button" data-post-id="{$post.id}">
                             <i class="iconfont icon-thumbtack me-2"></i>
-                            @if($post->is_sticky)
+                            {if $post.is_sticky}
                             <span class="fw-bold">取消置顶</span>
-                            @else
+                            {else}
                             <span class="fw-bold">置顶</span>
-                            @endif
+                            {/if}
                         </a>
-                        @endif
-                        @isset($user)
-                            @if($post->user_id === $user->id)
-                            <a href="javascript:;" class="dropdown-item text-danger" id="js-del" data-post-id="{{ (int)segment(2) }}">
+                        {/if}
+                        {if $user}
+                            {if $post.user_id === $user.id}
+                            <a href="javascript:;" class="dropdown-item text-danger" id="js-del" data-post-id="{:segment(3)}">
                                 <i class="iconfont icon-trash me-2"></i>
                                 <span>删除</span>
                             </a>
-                            @endif
-                        @endisset
+                            {/if}
+                        {/if}
                             <a class="dropdown-item" href="#">
                                 <i class="iconfont icon-shield me-2"></i>
                                 <span>屏蔽</span>
@@ -55,17 +57,13 @@
                     </div>
                 </div>
                 <div class="p-3">
-                    <div class="typo-text fs-18" id="postContent">{{ $post->content }}</div>
-                    @if($post->images > 0)
-                    <?php $post->images = min(max(1, $post->images), 3); ?>
-                    <div class="gallery mt-2">
-                        <ul class="thumbnail-container list-unstyled mx-0">{{ getImagesList($post->images, $post->id, false) }}</ul>
-                    </div>
-                    @endif
+                    <div class="typo-text fs-18px" id="postContent">{$post.content}</div>
+                    {if $post.images > 0}
+                    {/if}
                 </div>
-                <div class="d-flex align-items-center p-3 fs-15px text-muted border-bottom">
+                <div class="d-flex align-items-center px-3 pb-3 fs-14px text-muted border-bottom">
                     <span class="d-inline-block me-3">
-                        <time datetime="{{ date("Y-m-d H:i:s", $post->created_at) }}">{{ nice_time($post->created_at) }}</time>
+                        <time datetime="{$post.created_at | date='Y-m-d H:i'}">{:nice_time($post.created_at)}</time>
                     </span>
                     <span class="d-inline-block me-3">山东</span>
                 </div>
@@ -86,7 +84,6 @@
                         <a class="btn btn-dark rounded-pill" href="/reward/">
                             <i class="iconfont icon-present me-2"></i>领取今日登录奖励
                         </a>
-                        <?= session('user_id') ?>
                     </div>
                 </div>
                 <div class="tile">
@@ -109,9 +106,9 @@
         </div>
     </div>
 </main>
-@endsection
+{/block}
 
-@section('js')
+{block name="js"}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // mediumZoom('[data-zoomable]', {
@@ -149,4 +146,4 @@
         }
     });
 </script>
-@endsection
+{/block}

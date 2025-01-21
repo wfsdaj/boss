@@ -49,7 +49,7 @@ class Post extends Model
                                         attach AS a
                                     ON
                                         a.post_id = p.id')
-            ->where('p.id = ?', $post_id)
+            ->where('p.id = ?', [$post_id])
             ->first($fields);
         return $data;
     }

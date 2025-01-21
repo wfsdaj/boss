@@ -37,14 +37,13 @@ function is_logined(): bool
  * 该函数检查当前用户ID是否与资源的作者ID相同。
  * 如果用户是作者，返回 `true`，否则返回 `false`。
  *
- * @param int $user_id 当前用户的ID
  * @param int $author_id 资源（例如文章、帖子等）的作者ID
  * @return bool 如果用户是作者返回 `true`，否则返回 `false`
  */
-function is_author(int $user_id, int $author_id): bool
+function is_author(int $author_id): bool
 {
     // 比较用户ID和资源作者ID是否相同
-    return $user_id === $author_id;
+    return session('user_id') === $author_id;
 }
 
 /**
