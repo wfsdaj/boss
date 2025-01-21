@@ -25,6 +25,7 @@ class Register
      */
     public function submit()
     {
+        // 检查请求方法
         if (!is_post()) {
             return json('请求方法不正确');
         }
@@ -55,7 +56,10 @@ class Register
         $user_id = $userModel->create($data);
 
         if ($user_id) {
-            session('user_id', $user_id);
+            session_set([
+                'user_id' => $user_id,
+                'username' => $data['username'],
+            ]);
             return json('注册成功', 'success');
         }
 

@@ -25,8 +25,9 @@ class Login
      */
     public function submit()
     {
+        // 检查请求方法
         if (!is_post()) {
-            return json('请求方法不正确');
+            return json('请求方法不正确', 'error', 405);
         }
 
         // 比对验证码
@@ -34,20 +35,25 @@ class Login
         if (!$captcha || $captcha !== session('captcha')) {
             return json('验证码错误');
         }
+        // 清除验证码，防止重放攻击
+        session('captcha', null);
 
-        // 表单数据
+        // 获取表单数据
         $data = [
             'username' => post('username'),
             'password' => post('password'),
         ];
-        $errors = $this->validateFormData($data);
+        storeOldInput($data);
+
+        // 验证表单数据
+        $errors = self::validateFormData($data);
         if ($errors) {
             return json($errors);
         }
 
         $userModel = new User();
 
-        // 用户名存在，比对密码
+        // 尝试登录用户
         $user = $userModel->login($data['username'], $data['password']);
 
         if (!$user) {
@@ -55,10 +61,14 @@ class Login
         }
 
         // 登录成功，设置 session
-        session('user_id', $user['id']);
-        session('username', $user['username']);
+        session_regenerate_id(true);
+        session_set([
+            'user_id' => $user['id'],
+            'username' => $user['username'],
+        ]);
+
         if ($user['id'] === 1 && $user['group_id'] === 1) {
-            session('is_admin', true);
+            session_set('is_admin', true);
         }
 
         return json('登录成功', 'success');
@@ -70,7 +80,7 @@ class Login
      * @param array $data
      * @return string|null 错误消息或 null
      */
-    private function validateFormData(array $data): ?string
+    private static function validateFormData(array $data): ?string
     {
         $rules  = [
             'username' => ['string', '3,32', '姓名应为 3-32 个字符'],

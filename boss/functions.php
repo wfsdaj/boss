@@ -37,8 +37,7 @@ function view(string $view, array $data = []): void
         throw new Exception('视图配置加载失败');
     }
 
-    $template = new \think\Template($config);
-    ;
+    $template = new \think\Template($config);;
     // $template = new \boss\View($config);
 
     $template->fetch($view, $data);
@@ -144,21 +143,77 @@ function env(string $key): ?string
 }
 
 /**
- * 获取或者设置会话
- *
- * @param string $key   会话键
- * @param mixed  $value 会话值，如果为null则获取键的值
+ * 获取会话值
+ * @param string $key 会话键名
+ * @param mixed $default 默认值（可选）
+ * @return mixed 返回会话值或默认值
  */
-function session(string $key, $value = null)
+function session($key, $default = null)
 {
-    if ($value !== null) {
-        // 设置会话值并返回
-        $_SESSION[$key] = $value;
-        return true; // 设置成功返回true
+    return $_SESSION[$key] ?? $default;
+}
+
+/**
+ * 设置会话值
+ * @param string|array $key 如果是字符串，则表示键名；如果是数组，则表示批量设置
+ * @param mixed $value 如果是字符串键名，则为对应的值
+ * @return bool 是否设置成功
+ */
+function session_set($key, $value = null)
+{
+    // 批量设置
+    if (is_array($key)) {
+        foreach ($key as $k => $v) {
+            $_SESSION[$k] = $v;
+        }
+        return true;
     }
 
-    // 获取会话值，如果不存在则返回null
-    return $_SESSION[$key] ?? null;
+    // 单个设置
+    $_SESSION[$key] = $value;
+    return true;
+}
+
+/**
+ * 删除会话值
+ * @param string $key 要删除的会话键名
+ * @return bool 是否成功删除
+ */
+function session_forget(string $keys)
+{
+    if (is_string($keys) && isset($_SESSION[$keys])) {
+        unset($_SESSION[$keys]);
+        return true;
+    }
+
+    return false;
+}
+
+/**
+ * 模拟 Laravel 的 old() 函数
+ * @param string $key 表单字段的名称
+ * @param mixed $default 默认值（可选）
+ * @return mixed 返回之前存储的值或默认值
+ */
+function old($key, $default = '')
+{
+    // 检查会话中是否存在旧值
+    if (isset($_SESSION['old_input'][$key])) {
+        $value = $_SESSION['old_input'][$key];
+        // 清除已使用的旧值，避免重复填充
+        unset($_SESSION['old_input'][$key]);
+        return $value;
+    }
+    return $default;
+}
+
+/**
+ * 存储表单数据到会话中
+ * @param array $data 表单数据
+ */
+function storeOldInput($data)
+{
+    $_SESSION['old_input'] = $data;
 }
 
 /**

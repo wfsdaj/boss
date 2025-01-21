@@ -23,8 +23,9 @@ class App
             if (ENABLE_SESSION) {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start([
-                        'cookie_httponly' => true,
-                        'cookie_samesite' => 'Strict',
+                        'use_strict_mode' => 1,        // 启用严格 session id 模式
+                        'cookie_httponly' => true,     // 防止 JavaScript 访问 Cookie
+                        'cookie_samesite' => 'Strict', // 防止跨站请求伪造（CSRF）攻击
                     ]);
                 }
             }

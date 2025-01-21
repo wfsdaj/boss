@@ -26,9 +26,7 @@ function is_guest(): bool
  */
 function is_logined(): bool
 {
-    $userId = session('user_id');
-
-    return $userId !== null;
+    return session('user_id') !== null;
 }
 
 /**
