@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <p class="typo-text fs-6">{$post.content}</p>
+            <p class="typo-text fs-6">{$post.content | raw}</p>
             {if $post.images > 0}
             {/if}
             <div class="mt-1 d-flex justify-content-between post-actions">

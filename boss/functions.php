@@ -37,8 +37,7 @@ function view(string $view, array $data = []): void
         throw new Exception('视图配置加载失败');
     }
 
-    $template = new \think\Template($config);
-    ;
+    $template = new \think\Template($config);;
     // $template = new \boss\View($config);
 
     $template->fetch($view, $data);
@@ -393,7 +392,7 @@ function flash(string $key, $default = null)
  */
 function escape(string $value): string
 {
-    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 }
 
 /**
@@ -408,6 +407,76 @@ function remove_all_whitespace(string $str): string
     return preg_replace('/\s/', '', $str);
 }
 
+/**
+ * 过滤并清理 HTML 文本，移除所有 HTML 标签、多余的空格、换行符等。
+ *
+ * @param string $text 输入的 HTML 文本。
+ * @return string 清理后的纯文本。
+ */
+function filter_all_html(string $text): string
+{
+    // 去除首尾空白字符
+    $text = trim($text);
+
+    // 去除反斜杠（用于处理转义字符）
+    $text = stripslashes($text);
+
+    // 移除所有 HTML 和 PHP 标签
+    $text = strip_tags($text);
+
+    // 定义需要替换的字符数组
+    $replacements = [
+        '&nbsp;', // HTML 空格
+        '/',      // 斜杠
+        "\t",     // 制表符
+        '  ',     // 双空格
+        '   ',    // 三空格
+        '    ',   // 四空格
+        '	'     // 制表符（再次确保）
+    ];
+
+    // 替换所有不需要的字符为空字符串
+    $text = str_replace($replacements, '', $text);
+
+    // 将换行符替换为 <br> 标签
+    $text = preg_replace("/\r\n|\n|\r/", "<br>", $text);
+
+    return $text;
+}
+
+/**
+ * 解析内容中的网址，并将匹配的 URL 替换为带有 <a> 标签的链接。
+ * 排除已经被 <a> 标签包裹的 URL。
+ *
+ * @param string $content 要解析的内容。
+ * @return string 替换后的内容。
+ */
+function replace_urls_with_links(string $content): string
+{
+    // 定义匹配 URL 的正则表达式（排除已被 <a> 标签包裹的 URL）
+    static $pattern = null;
+    if ($pattern === null) {
+        $pattern = '/(?<!href=")https?:\/\/[^\s"\']+|(?:www\.)?[a-z0-9-]+(?:\.[a-z]{2,}){1,2}[^\s"\']*/i';
+    }
+
+    // 使用 preg_replace_callback 替换匹配的 URL
+    $content = preg_replace_callback($pattern, function ($matches) {
+        $url = $matches[0];
+
+        // 如果 URL 没有协议，添加默认的 http://
+        if (!preg_match('/^https?:\/\//i', $url)) {
+            $url = 'http://' . $url;
+        }
+
+        // 生成链接文本（去掉协议部分）
+        $link_text = preg_replace('/^https?:\/\//i', '', $url);
+
+        // 返回带有 <a> 标签的链接
+        return '<a href="/jump?' . escape($url) . '">' . escape($link_text) . '</a>';
+    }, $content);
+
+    return $content;
+}
 
 /**
  * 生成 CSRF token

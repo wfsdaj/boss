@@ -62,6 +62,7 @@ class Post extends Model
 
         $data['user_id']    = session('user_id');
         $data['created_at'] = time();
+        $data['content'] = replace_urls_with_links($data['content']);
         // 使用正则表达式匹配#标签#
         // preg_match_all('/#([^#]+)#/u', $data['content'], $matches);
         // $matches[1]现在包含了所有的标签
@@ -90,7 +91,7 @@ class Post extends Model
             $this->uploadFile($post_id);
 
             // 更新帖子字段文件数
-            $this->model->where('id = ?', [$post_id])->increment('images', 1);
+            // $this->model->where('id = ?', [$post_id])->increment('images', 1);
 
             // 提交事务
             $this->model->commit();

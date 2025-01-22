@@ -49,7 +49,7 @@ class Post
      */
     public function submit()
     {
-        if(!is_logined() ){
+        if (!is_logined()) {
             return json('用户未登录');
         }
 
@@ -58,9 +58,7 @@ class Post
         }
 
         // 获取表单数据
-        $formData['content'] = post('content');
-        // 保存提交的数据，防止表单刷新时重新输入
-        storeOldInput($formData);
+        $formData['content'] = post(filter_all_html('content'));
 
         // 验证规则
         $validationRules  = [
@@ -75,10 +73,12 @@ class Post
         }
 
         try {
-            $save = (new PostModel())->store($formData);
+            (new PostModel())->store($formData);
             return json('发帖成功', 'success');
         } catch (\Throwable $th) {
-            return json($th->getMessage());
+            throw new \Exception($th, 1);
+
+            // return json($th->getMessage());
         }
 
     }

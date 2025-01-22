@@ -311,7 +311,6 @@ class Database
      * @param string $key 字段名称
      * @param int $value 增量值（正数表示增加，负数表示减少）
      * @return bool 更新结果
-     * @throws Exception 如果没有设置WHERE条件
      */
     public function increment(string $key, int $value = 1): bool
     {
@@ -319,11 +318,11 @@ class Database
             throw new InvalidArgumentException('字段名包含非法字符');
         }
 
-        $this->sql = "UPDATE `{$this->table}` SET `{$key}` = `{$key}` + {$value}";
+        $this->sql = "UPDATE `{$this->table}` SET `{$key}` = `{$key}` + ?";
         $where = $this->getWhere();
         $this->sql .= $where[0] . ';';
 
-        return $this->query($this->sql, $where[1]);
+        return $this->query($this->sql, array_merge([$value], $where[1]));
     }
 
     /**
