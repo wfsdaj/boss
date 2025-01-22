@@ -2,8 +2,7 @@
 
 namespace app\model;
 
-use boss\{Model, Image};
-use boss\upload\Upload;
+use boss\{Model, Image, File};
 use Exception;
 
 class Post extends Model
@@ -59,61 +58,48 @@ class Post extends Model
      */
     public function store($data)
     {
-        $post = db('post');
+        $this->model = db('post');
 
         $data['user_id']    = session('user_id');
         $data['created_at'] = time();
         // 使用正则表达式匹配#标签#
-        preg_match_all('/#([^#]+)#/u', $data['content'], $matches);
+        // preg_match_all('/#([^#]+)#/u', $data['content'], $matches);
         // $matches[1]现在包含了所有的标签
-        $tags = $matches[1];
+        // $tags = $matches[1];
         // 去除内容中的标签
-        $data['content'] = trim(preg_replace('/#([^#]+)#/u', '', $data['content']));
+        // $data['content'] = trim(preg_replace('/#([^#]+)#/u', '', $data['content']));
         // 转换内容中的链接
-        $data['content'] = url2Link($data['content']);
+        // $data['content'] = url2Link($data['content']);
 
         try {
             // 开启事务
-            $post->beginTransaction();
+            $this->model->beginTransaction();
 
             // 插入帖子数据，返回帖子 id
-            $post_id = $post->insert($data);
+            $post_id = $this->model->insert($data);
 
-             // 插入标签
-             if ($tags) {
-                Tag::store($tags, $post_id);
-            }
+            // 插入标签
+            // if ($tags) {
+            //     Tag::store($tags, $post_id);
+            // }
 
-            // 处理用户积分，发一帖扣除用户一金币
-            self::handleUserPoints(-1);
-
+            // 处理用户积分，这里发一帖扣除用户一金币
+            $this->handleUserPoints(-1);
 
             // 有附件则上传
-            if (isset($_FILES['files']) && $_FILES['files']['error'][0] !== UPLOAD_ERR_NO_FILE) {
-                // 验证上传的文件类型
-                $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
-                $file_ext = pathinfo($_FILES['files']['name'][0], PATHINFO_EXTENSION);
-                if (!in_array($file_ext, $allowed_ext)) {
-                    throw new Exception("只允许上传 JPG, JPEG, PNG, GIF 格式的文件", 1);
-                }
+            $this->uploadFile($post_id);
 
-                $store_file = $this->storeFile($post_id);
-
-                if (empty($store_file)) {
-                    throw new Exception("保存附件失败", 1);
-                }
-
-                // 更新帖子字段文件数
-                db('post')->where('id = ?', $post_id)->increment('images', count($store_file));
-            }
+            // 更新帖子字段文件数
+            $this->model->where('id = ?', [$post_id])->increment('images', 1);
 
             // 提交事务
-            $post->commit();
+            $this->model->commit();
+
             return $post_id;
         } catch (\Throwable $th) {
             // 回滚事务
-            $post->rollback();
-            throw new Exception("发帖失败。", 1);
+            $this->model->rollback();
+            throw new Exception($th, 1);
         }
     }
 
@@ -233,56 +219,39 @@ class Post extends Model
     }
 
     /**
-     * 存储文件
+     * 将上传的文件信息存储到附件表
      *
      * @param int $postId 与文件相关联的帖子 ID
-     * @return array 存储后的文件数据
+     * @return bool
      * @throws Exception 保存附件失败时抛出异常
      */
-    private function storeFile(int $postId): array
+    private function uploadFile(int $post_id): bool
     {
-        // 上传文件并获取结果
-        $uploadedFileData = $this->uploadFile();
+        // 检查是否有文件上传
+        if (!isset($_FILES['files']) || $_FILES['files']['error'] === UPLOAD_ERR_NO_FILE) {
+            return false;
+        }
 
-        // 准备附件数据，包括文件名、类型和关联信息
-        $attachmentsData = array_map(function ($fileData) use ($postId) {
-            return [
-                'filename'   => $fileData['path'],
-                'type'       => $fileData['ext'],
-                'post_id'    => $postId,            // 直接在映射时添加 post_id
+        try {
+            // 上传文件并获取上传后的文件数据
+            $uploadedFileData = (new File())->upload()[0];
+
+            // 构建附件数据
+            $attachmentsData = [
+                'filename'   => $uploadedFileData['file_name'],
+                'type'       => $uploadedFileData['file_ext'],
+                'post_id'    => $post_id,
                 'user_id'    => session('user_id'),
                 'created_at' => time(),
             ];
-        }, $uploadedFileData);
 
-        // 批量写入附件表
-        $isSaved = db('attach')->batchInsert($attachmentsData);
+            // 写入附件表
+            db('attach')->insert($attachmentsData);
 
-        if (!$isSaved) {
-            // 如果保存失败，抛出异常
-            throw new Exception('保存附件失败', 1);
+            return true;
+        } catch (\Throwable $th) {
+            throw new Exception('文件存储过程中发生错误: ' . $th->getMessage(), $th->getCode(), $th);
         }
-
-        $this->handleImagesWidth($attachmentsData);
-
-        return $attachmentsData; // 返回存储后的附件数据
-    }
-
-    /**
-     * 上传文件
-     *
-     */
-    private function uploadFile()
-    {
-        $formField = post('files');
-        $upload = new Upload(config('upload'));
-        $uploadedFiles = $upload->upload($formField);
-
-        if (!$uploadedFiles) {
-            throw new Exception($upload->getError() ?? '未知上传错误。');
-        }
-
-        return $uploadedFiles;
     }
 
     /**
@@ -336,11 +305,12 @@ class Post extends Model
      * @return bool 操作是否成功
      * @throws Exception 如果数据库操作失败，则抛出异常
      */
-    private static function handleUserPoints(int $increment): bool
+    private function handleUserPoints(int $increment): bool
     {
         // 执行数据库操作
         try {
-            db('user')->where('id = ?', session('user_id'))->increment('golds', $increment);
+            $user_id = (int)session('user_id');
+            db('user')->where('id = ?', [$user_id])->increment('golds', $increment);
             return true;
         } catch (\Throwable $e) {
             // 这里可以根据需要进一步处理或记录异常

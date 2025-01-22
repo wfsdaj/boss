@@ -315,20 +315,15 @@ class Database
      */
     public function increment(string $key, int $value = 1): bool
     {
-        if (empty($this->where)) {
-            throw new Exception('请使用where()方法设置条件');
-        }
-
         if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
             throw new InvalidArgumentException('字段名包含非法字符');
         }
 
-        $this->sql = "UPDATE `{$this->table}` SET `{$key}` = `{$key}` + ?";
+        $this->sql = "UPDATE `{$this->table}` SET `{$key}` = `{$key}` + {$value}";
         $where = $this->getWhere();
-        $this->sql .= $where[0];
+        $this->sql .= $where[0] . ';';
 
-        $startTime = microtime(true);
-        return $this->query($this->sql, array_merge([$value], $where[1]));
+        return $this->query($this->sql, $where[1]);
     }
 
     /**
@@ -446,7 +441,7 @@ class Database
             return null;
         }
 
-        $whereClause = ' WHERE ' . $this->where[0];
+        $whereClause = ' WHERE ' . $this->where[0] . ' ';
         $bindParams = $this->where[1];
         $this->where = null;
         return [$whereClause, $bindParams];
@@ -475,7 +470,7 @@ class Database
             return null;
         }
 
-        $group = ' GROUP BY ' . $this->groupBy;
+        $group = ' GROUP BY ' . $this->groupBy . ' ';
         $this->groupBy = null;
         return $group;
     }

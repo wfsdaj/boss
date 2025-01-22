@@ -105,8 +105,9 @@ class Validator
      */
     private function validateCsrfToken(): bool
     {
-        $token = $_POST['csrf_token'] ?? '';
-        if (empty($token) || !hash_equals($token, $_SESSION['csrf_token'])) {
+        $token = $_POST['csrf_token'];
+        $session_token = $_SESSION['csrf_token'] ?? '';;
+        if (empty($token) || !hash_equals($token, $session_token)) {
             return false;
         }
 

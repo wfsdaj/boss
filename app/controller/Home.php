@@ -17,4 +17,17 @@ class Home
 
         return view('home/index', $data);
     }
+
+    public function a()
+    {
+        dd($_FILES);
+        return view('home/a');
+    }
+
+    public function b()
+    {
+        dd($_FILES['files']);
+        $file = new \boss\File();
+        dd($file->upload());
+    }
 }

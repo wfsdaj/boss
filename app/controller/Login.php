@@ -35,6 +35,7 @@ class Login
         if (!$captcha || $captcha !== session('captcha')) {
             return json('验证码错误');
         }
+
         // 清除验证码，防止重放攻击
         session('captcha', null);
 
@@ -43,6 +44,8 @@ class Login
             'username' => post('username'),
             'password' => post('password'),
         ];
+
+        // 保存提交的数据，防止表单刷新时重新输入
         storeOldInput($data);
 
         // 验证表单数据
@@ -57,7 +60,7 @@ class Login
         $user = $userModel->login($data['username'], $data['password']);
 
         if (!$user) {
-            return json('用户名或密码错误', 'error');
+            return json('用户名或密码错误');
         }
 
         // 登录成功，设置 session
@@ -66,12 +69,11 @@ class Login
             'user_id' => $user['id'],
             'username' => $user['username'],
         ]);
-
         if ($user['id'] === 1 && $user['group_id'] === 1) {
             session_set('is_admin', true);
         }
 
-        return json('登录成功', 'success');
+        return json('登录成功', 'success', 200);
     }
 
     /**

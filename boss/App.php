@@ -69,6 +69,7 @@ class App
         defined('VIEW_PATH')      || define('VIEW_PATH', APP_PATH .        'view/');     // 模板目录
         defined('CORE_PATH')      || define('CORE_PATH', ROOT_PATH .       'boss/');     // 框架目录
         defined('CONFIG_PATH')    || define('CONFIG_PATH', ROOT_PATH .     'config/');   // 配置文件目录
+        defined('PUBLIC_PATH')    || define('PUBLIC_PATH', ROOT_PATH .     'public/');   // 公共文件目录
         defined('RUNTIME_PATH')   || define('RUNTIME_PATH', ROOT_PATH .    'runtime/');  // 临时文件目录
         defined('LOG_PATH')       || define('LOG_PATH', RUNTIME_PATH .     'log/');      // 日志目录
         defined('CACHE_PATH')     || define('CACHE_PATH', RUNTIME_PATH .   'cache/');    // 缓存目录

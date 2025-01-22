@@ -5,21 +5,6 @@ declare(strict_types=1);
 use app\model\User;
 
 /**
- * 检查当前用户是否为游客
- *
- * 该函数通过检查会话中是否存在用户ID来判断当前用户是否为游客。
- * 如果用户ID存在，则返回 `false`（表示不是游客），如果不存在，则返回 `true`（表示是游客）。
- *
- * @return bool 如果是游客返回 `true`，否则返回 `false`
- */
-function is_guest(): bool
-{
-    $userId = session('user_id');
-
-    return empty($userId);
-}
-
-/**
 
  * 检查用户是否已登录。
  * @return bool 如果用户已登录，则返回 true；否则返回 false。

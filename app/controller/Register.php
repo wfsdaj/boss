@@ -27,7 +27,7 @@ class Register
     {
         // 检查请求方法
         if (!is_post()) {
-            return json('请求方法不正确');
+            return json('请求方法不正确', 'error', 405);
         }
 
         // 比对验证码
@@ -36,11 +36,19 @@ class Register
             return json('验证码错误');
         }
 
+        // 清除验证码，防止重放攻击
+        session('captcha', null);
+
         // 验证表单数据
         $data = [
             'username' => remove_all_whitespace(post('username')),
             'password' => post('password'),
         ];
+
+        // 保存提交的数据，防止表单刷新时重新输入
+        storeOldInput($data);
+
+        // 验证表单数据
         $errors = $this->validateFormData($data);
         if ($errors) {
             return json($errors);
@@ -53,17 +61,18 @@ class Register
             return json('用户名已被占用');
         }
 
+        // 注册用户，返回成功后的用户 ID
         $user_id = $userModel->create($data);
 
-        if ($user_id) {
-            session_set([
-                'user_id' => $user_id,
-                'username' => $data['username'],
-            ]);
-            return json('注册成功', 'success');
+        if (!$user_id) {
+            return json('注册失败');
         }
 
-        return json('注册失败');
+        session_set([
+            'user_id'  => $user_id,
+            'username' => $data['username'],
+        ]);
+        return json('注册成功', 'success', 200);
     }
 
     /**

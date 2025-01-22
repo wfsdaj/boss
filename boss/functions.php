@@ -37,7 +37,8 @@ function view(string $view, array $data = []): void
         throw new Exception('视图配置加载失败');
     }
 
-    $template = new \think\Template($config);;
+    $template = new \think\Template($config);
+    ;
     // $template = new \boss\View($config);
 
     $template->fetch($view, $data);
@@ -221,9 +222,15 @@ function storeOldInput($data)
  *
  * @param string $msg      要返回的消息内容
  * @param string $status   状态信息，例如 'success' 或 'error'，默认值为 'error'
- * @param int    $httpCode HTTP 状态码，例如 200, 400, 500，默认值为 200
+ * @param int    $httpCode HTTP 状态码，默认值为 400
+ *
+ * 200：成功
+ * 400：请求无效或格式错误，服务器无法理解。
+ * 404：请求的资源未找到。
+ * 405：请求方法不被允许（例如，GET 方法被用于需要 POST 请求的接口）。
+ * 500：服务器遇到错误，无法完成请求。通常是服务器端的异常。
  */
-function json(string $msg, string $status = 'error', int $httpCode = 200)
+function json(string $msg, string $status = 'error', int $httpCode = 400)
 {
     // 设置响应头，确保返回的是 JSON 格式数据
     header('Content-Type: application/json; charset=utf-8');
@@ -460,7 +467,7 @@ function abort(int $code, string $message = ''): void
         echo "<h1>错误 {$code}</h1><p>{$message}</p>";
     }
 
-    exit(1); // 终止脚本执行
+    exit(1);
 }
 
 /**
@@ -494,6 +501,18 @@ function nice_time(int $time): string
 
     // 如果时间差为 0 或负数，返回默认值
     return '刚刚';
+}
+
+/**
+ * 生成一个指定长度的唯一ID（类似于UUID）
+ *
+ * @param int $length 生成ID的长度，默认为32
+ * @return string 返回生成的唯一ID字符串
+ */
+function uuid(int $length = 32): string
+{
+    $bytes = random_bytes((int)ceil($length / 2));
+    return substr(bin2hex($bytes), 0, $length);
 }
 
 /**

@@ -36,19 +36,18 @@ class Auth
      */
     public function logout()
     {
-        $user_id = (int)session('user_id');
-        $url_token = segment(3);
+        $user_id       = (int)session('user_id');
+        $url_token     = segment(3);
         $session_token = session('csrf_token');
 
         if (!$user_id || empty($url_token) || !hash_equals($url_token, $session_token)) {
             abort('403');
         }
 
-        // 清空当前会话数据
+        // 清空 $_SESSION 数组
         $_SESSION = [];
 
-        // 重新生成会话 ID 并销毁旧会话
-        session_regenerate_id(true);
+        // 销毁 session 数据
         session_destroy();
 
         // 重定向到登录页面或其他安全页面

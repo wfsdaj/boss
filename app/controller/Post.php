@@ -49,35 +49,38 @@ class Post
      */
     public function submit()
     {
-        if(is_guest() && !segment(2)){
-            return json('用户未登录，或者帖子 ID 无效。');
+        if(!is_logined() ){
+            return json('用户未登录');
         }
 
-        if (is_post()) {
-
-            // 获取表单数据
-            $data['content'] = post('content');
-            // 验证规则
-            $rules  = [
-                'content' => ['string', '1,400', '内容应为 1-200 个字符'],
-            ];
-            // 验证
-            $validate = new Validator($data, $rules, true);
-            $verify = $validate->check();
-
-            if (!$verify) {
-                return json($validate->error);
-            }
-
-            try {
-
-                $save = (new PostModel())->store($data);
-
-                return json('发帖成功', 'success');
-            } catch (\Throwable $th) {
-                return json($th->getMessage());
-            }
+        if (!is_post()) {
+            return json('请求方法不正确', 'error', 405);
         }
+
+        // 获取表单数据
+        $formData['content'] = post('content');
+        // 保存提交的数据，防止表单刷新时重新输入
+        storeOldInput($formData);
+
+        // 验证规则
+        $validationRules  = [
+            'content' => ['string', '1,400', '内容应为 1-400 个字符'],
+        ];
+        // 验证
+        $validator = new Validator($formData, $validationRules, true);
+        $isValid = $validator->check();
+
+        if (!$isValid) {
+            return json($validator->error);
+        }
+
+        try {
+            $save = (new PostModel())->store($formData);
+            return json('发帖成功', 'success');
+        } catch (\Throwable $th) {
+            return json($th->getMessage());
+        }
+
     }
 
     /**
