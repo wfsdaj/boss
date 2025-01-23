@@ -17,34 +17,54 @@
                 </h2>
             </div>
 
-            <!-- 帖子内容 -->
+            <!-- 帖子 -->
             <div class="article">
+                <!-- 头像 -->
                 <div class="d-flex align-items-center mt-2 px-3">
-                    <a href="/user/profile/{$post.user_id}" data-letters="{:mb_substr($post.username, 0, 1, 'UTF-8')}"></a>
-                    <p>{$post.username}</p>
+                    <a href="/user/profile/{$post.user_id}">
+                        <img class="avatar" src="{:get_avatar($post.user_id)}" alt="">
+                    </a>
+                    <p class="ps-12px fw-bold">{$post.username}</p>
+                    <div class="ms-auto">
+                        <button class="btn btn-sm btn-danger rounded-pill">关注</button>
+                    </div>
+                </div>
+                <!-- 帖子内容 -->
+                <div class="p-3">
+                    <div class="typo-text fs-18px" id="postContent">{$post.content | raw}</div>
+                    {if $post.images > 0}
+                    {/if}
+                </div>
+                <div class="d-flex align-items-center px-3 pb-2 fs-14px text-muted border-bottom">
+                    <span class="d-inline-block me-3">
+                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)}</time>
+                    </span>
+                    <!-- <span class="d-inline-block me-3">山东</span> -->
+                    <!-- 帖子工具栏 -->
                     <div class="dropdown ms-auto">
-                        <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             <i class="iconfont icon-more fs-5"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-sm fs-15px">
-                        {if is_author($post.user_id)}
-                        <a href="javascript:;" class="dropdown-item" id="js-pin" role="button" data-post-id="{$post.id}">
-                            <i class="iconfont icon-thumbtack me-2"></i>
-                            {if $post.is_sticky}
-                            <span class="fw-bold">取消置顶</span>
-                            {else}
-                            <span class="fw-bold">置顶</span>
+                        <div class="dropdown-menu dropdown-menu-end shadow-sm">
+                            {if is_admin()}
+                            <a href="javascript:;" class="dropdown-item" id="js-pin" role="button"
+                                data-post-id="{$post.id}">
+                                <i class="iconfont icon-thumbtack me-2"></i>
+                                {if $post.is_sticky}
+                                <span class="fw-bold">取消置顶</span>
+                                {else}
+                                <span class="fw-bold">置顶</span>
+                                {/if}
+                            </a>
                             {/if}
-                        </a>
-                        {/if}
-                        {if $user}
-                            {if $post.user_id === $user.id}
-                            <a href="javascript:;" class="dropdown-item text-danger" id="js-del" data-post-id="{:segment(3)}">
+                            {if is_admin() || is_author($post.user_id)}
+                            <a href="javascript:;" class="dropdown-item text-danger" id="js-del"
+                                data-post-id="{:segment(3)}">
                                 <i class="iconfont icon-trash me-2"></i>
                                 <span>删除</span>
                             </a>
                             {/if}
-                        {/if}
                             <a class="dropdown-item" href="#">
                                 <i class="iconfont icon-shield me-2"></i>
                                 <span>屏蔽</span>
@@ -56,17 +76,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-3">
-                    <div class="typo-text fs-18px" id="postContent">{$post.content | raw}</div>
-                    {if $post.images > 0}
-                    {/if}
-                </div>
-                <div class="d-flex align-items-center px-3 pb-3 fs-14px text-muted border-bottom">
-                    <span class="d-inline-block me-3">
-                        <time datetime="{$post.created_at | date='Y-m-d H:i'}">{:nice_time($post.created_at)}</time>
-                    </span>
-                    <span class="d-inline-block me-3">山东</span>
-                </div>
+                <!-- 评论列表 -->
+                 <div class="p-3">
+                    <div class="text-muted">共 2123 条评论</div>
+                 </div>
             </div>
         </div>
 
@@ -110,7 +123,7 @@
 
 {block name="js"}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // mediumZoom('[data-zoomable]', {
         //     margin: 30,
         //     background: 'rgba(0,0,0,.7)',
@@ -119,22 +132,22 @@
         const jDel = document.getElementById('js-del');
 
         if (jDel) {
-            jDel.addEventListener('click', function() {
+            jDel.addEventListener('click', function () {
                 let postId = this.getAttribute('data-post-id');
                 fetch(`/post/del/${postId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            'post_id': postId
-                        })
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        'post_id': postId
                     })
+                })
                     .then(response => response.json())
                     .then(res => {
                         if (res.status === 'success') {
                             toast(res.message, 'success');
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 window.location.href = "/";
                             }, 2000);
                         } else {

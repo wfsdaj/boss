@@ -448,8 +448,8 @@
     },
     {
       "icon_id": "33437944",
-      "name": "magic3",
-      "font_class": "magic2",
+      "name": "magic-color",
+      "font_class": "magic-color",
       "unicode": "e62e",
       "unicode_decimal": 58926
     },

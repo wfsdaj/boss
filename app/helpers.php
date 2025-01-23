@@ -25,8 +25,51 @@ function is_logined(): bool
  */
 function is_author(int $author_id): bool
 {
-    // 比较用户ID和资源作者ID是否相同
     return session('user_id') === $author_id;
+}
+
+/**
+ * 检查当前用户是否为管理员
+ *
+ * @return bool 当前用户是否为管理员
+ */
+function is_admin(): bool
+{
+    return session('user_id') && session('is_admin') === true;
+}
+
+/**
+ * 根据用户ID生成头像路径
+ *
+ * @param int|null $user_id 用户ID，可以为null
+ * @return string 返回头像的路径
+ */
+function get_avatar(?int $user_id): string
+{
+    // 使用静态变量缓存结果
+    static $avatarCache = [];
+
+    // 检查$user_id是否为null或小于等于0，如果是则直接返回默认头像
+    if (is_null($user_id) || $user_id === '' || $user_id <= 0) {
+        return '/img/avatar/default.jpg';
+    }
+
+    // 如果结果已经缓存，直接返回缓存结果
+    if (isset($avatarCache[$user_id])) {
+        return $avatarCache[$user_id];
+    }
+
+    // 使用crc32哈希函数并取绝对值，然后取模得到头像索引
+    $avatarIndex = abs(crc32((string)$user_id)) % 20;
+
+    // 拼接头像路径
+    $avatarPath = '/img/avatar/' . $avatarIndex . '.png';
+
+    // 缓存结果
+    $avatarCache[$user_id] = $avatarPath;
+
+    // 返回头像路径
+    return $avatarPath;
 }
 
 /**
@@ -70,23 +113,6 @@ function check_login(): void
         redirect(url('/login'));
     }
 }
-
-
-
-/**
- * 获取用户头像
- */
-function get_avatar(string $user_id)
-{
-    $avatars = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    $hash        = abs(crc32($user_id));     // crc32是一个常见的哈希函数，这里取其绝对值以防得到负数
-    $avatarIndex = $hash % 12;  // 取模确保索引在数组范围内
-    $userAvatar  = $avatars[$avatarIndex] . '.png';
-
-    return '/img/avatar/' . $userAvatar;
-}
-
-
 
 /**
  * 返回缩略图路径，若无缩略图则返回原图路径

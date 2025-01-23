@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2791172 */
-  src: url('iconfont.woff2?t=1736212813705') format('woff2'),
-       url('iconfont.woff?t=1736212813705') format('woff'),
-       url('iconfont.ttf?t=1736212813705') format('truetype');
+  src: url('iconfont.woff2?t=1737613514861') format('woff2'),
+       url('iconfont.woff?t=1737613514861') format('woff'),
+       url('iconfont.ttf?t=1737613514861') format('truetype');
 }
 
 .iconfont {
@@ -265,7 +265,7 @@
   content: "\e630";
 }
 
-.icon-magic2:before {
+.icon-magic-color:before {
   content: "\e62e";
 }
 
