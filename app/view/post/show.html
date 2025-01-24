@@ -33,11 +33,14 @@
                 <div class="p-3">
                     <div class="typo-text fs-18px" id="postContent">{$post.content | raw}</div>
                     {if $post.images > 0}
+                    <div class="gallery mt-2">
+                        <img src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
+                    </div>
                     {/if}
                 </div>
                 <div class="d-flex align-items-center px-3 pb-2 fs-14px text-muted border-bottom">
                     <span class="d-inline-block me-3">
-                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)}</time>
+                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)} · {$post.created_at | date='Y-m-d'}</time>
                     </span>
                     <!-- <span class="d-inline-block me-3">山东</span> -->
                     <!-- 帖子工具栏 -->
@@ -79,6 +82,9 @@
                 <!-- 评论列表 -->
                  <div class="p-3">
                     <div class="text-muted">共 2123 条评论</div>
+                    <!-- <div>
+                        㒭㒹㕛㚉㚐㚙㝍㠪㠭㤫㪳㫈㵘㶣㶪㸞㹜㽓㽒㿢丄丅冇卍叒叕囧壵夯夵嫑孒孧孨孬尕尛屮巭恏惢憇朤歪汖灮舙
+                    </div> -->
                  </div>
             </div>
         </div>
@@ -94,7 +100,7 @@
                     <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">每日帖不过３😉</h2>
                     <div class="px-3 pb-3">
                         <p class="mt-1 mb-3 text-muted">友情提示，发帖和回帖都需要<i class="squiggle">扣除１枚金币</i>哦！</p>
-                        <a class="btn btn-dark rounded-pill" href="/reward/">
+                        <a class="btn btn-primary rounded-pill" href="/reward/">
                             <i class="iconfont icon-present me-2"></i>领取今日登录奖励
                         </a>
                     </div>

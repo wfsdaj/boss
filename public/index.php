@@ -15,7 +15,7 @@ header('X-Frame-Options: SAMEORIGIN');
 header('X-Powered-By:');
 
 define('TRACE', true);  // 追踪模式
-// define('DEBUG', true);  // 调试模式
+define('DEBUG', true);  // 调试模式
 define('SHOW_ERROR', true); // 是否展示错误信息
 define('ENABLE_SESSION', true); // 启用 session
 

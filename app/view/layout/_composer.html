@@ -1,44 +1,93 @@
 <div class="composer d-flex px-3 py-12px" id="homeEditor">
-    <img class="avatar" src="/img/avatar.jpg" alt="">
+    <a href="/user/profile/{:session('user_id')}" class="position-relative">
+        <img class="avatar" src="{:get_avatar(session('user_id'))}" alt="">
+    </a>
     <div class="flex-fill">
-        <form id="post-form" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate action="/post/submit">
-            <textarea class="form-control border-0 px-0 js-textarea" name="content" id="content" maxlength="200" spellcheck="false" placeholder="有什么新鲜事儿？" required autofocus></textarea>
+        <form id="post-form" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
+            <textarea class="form-control border-0 px-0 js-textarea" name="content" id="content" maxlength="200"
+                spellcheck="false" placeholder="有什么新鲜事儿？" required autofocus></textarea>
             <input type="hidden" name="csrf_token" value="{:csrf_token()}">
-            <input type="file" class="d-none" name="files" id="files" accept=".jpeg, .jpg, .png, .gif, .wbep">
+            <input type="file" class="d-none" name="imageUpload" id="imageUpload"
+                accept=".jpeg, .jpg, .png, .gif, .wbep">
             <div class="composer-action d-flex justify-content-between align-items-center mb-2">
                 {include file="layout/_emoji" /}
                 <div>
                     <span class="textarea-count" id="counter">200</span>
-                    <button type="button" id="submitButton" class="btn btn-dark px-3 fw-bold rounded-pill" disabled>发布</button>
+                    <button type="button" id="submitButton" class="btn btn-primary px-3 fw-bold rounded-pill" disabled>发布</button>
                 </div>
             </div>
         </form>
-        <div id="previewContainer"></div>
+        <div id="imageContainer"></div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const textarea = document.getElementById('content');
-        const counter = document.getElementById('counter');
         const submitButton = document.getElementById('submitButton');
-        const MAX_LENGTH = 200;
 
-        // 更新剩余字数和按钮状态
-        function updateCounterAndButtonState() {
-            const remainingChars = Math.max(MAX_LENGTH - textarea.value.length, 0);
-            counter.textContent = remainingChars;
-            submitButton.disabled = !textarea.value.trim() || remainingChars === 0;
-        }
+        document.getElementById('imageUpload').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const base64Image = e.target.result;
 
-        textarea.addEventListener('input', updateCounterAndButtonState);
+                    // 创建图片容器
+                    const previewContainer = document.createElement('div');
+                    previewContainer.classList.add('preview-container');
 
-        // 初始化计数器和按钮状态
-        updateCounterAndButtonState();
+                    // 动态创建 <img> 元素
+                    const img = document.createElement('img');
+                    img.src = base64Image;
+                    img.alt = "Image Preview";
+                    img.classList.add('preview-image');
 
-        // const MAX_FILES = 4; // 最多允许上传的文件数量
-        // const fileInput = document.getElementById('files');
-        // let files = fileInput.files;
+                    // 动态创建删除图标
+                    const deleteIcon = document.createElement('i');
+                    deleteIcon.classList.add('iconfont', 'icon-close', 'delete-icon');
+
+                    // 为删除图标添加点击事件
+                    deleteIcon.addEventListener('click', function () {
+                        // 移除图片容器
+                        const imageContainer = document.getElementById('imageContainer');
+                        imageContainer.removeChild(previewContainer);
+
+                        // 清空 textarea
+                        const textArea = document.getElementById('textArea');
+                        textArea.value = '';
+
+                        // 清空文件输入框
+                        const fileInput = document.getElementById('imageUpload');
+                        fileInput.value = '';
+                    });
+
+                    // 将图片和删除图标添加到容器中
+                    previewContainer.appendChild(img);
+                    previewContainer.appendChild(deleteIcon);
+
+                    // 插入到页面中
+                    const imageContainer = document.getElementById('imageContainer');
+                    imageContainer.innerHTML = ''; // 清空之前的图片
+                    imageContainer.appendChild(previewContainer);
+
+                    // 将 Base64 数据插入到 textarea 中
+                    const textArea = document.getElementById('textArea');
+                    textArea.value = base64Image;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 监听textarea的输入事件
+        textarea.addEventListener('input', function () {
+            // 如果textarea中有内容，启用按钮；否则禁用按钮
+            if (textarea.value.trim() !== '') {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        });
 
         // 验证发帖内容
         function validateContent() {
@@ -46,34 +95,17 @@
             return content.length > 0;
         }
 
-        // 文件数量验证
-        // function validateFileCount() {
-        //     if (files.length > MAX_FILES) {
-        //         toast(`一次最多上传 ${MAX_FILES} 张图片！` );
-        //         return false;
-        //     }
-        //     return true;
-        // }
-
-        // 文件输入更改时更新文件列表并执行验证
-        // fileInput.addEventListener('change', function() {
-        //     files = fileInput.files;
-        //     validateFileCount();
-        // });
-
         // 点击发帖按钮后验证
-
         if (submitButton) {
-            submitButton.addEventListener('click', function() {
-                // if (!validateFileCount()) return;
+            submitButton.addEventListener('click', function () {
                 if (!validateContent()) {
                     return toast('请输入帖子内容');
                 }
                 let data = new FormData(document.getElementById('post-form'));
                 fetch('/post/submit', {
-                        method: 'POST',
-                        body: data
-                    })
+                    method: 'POST',
+                    body: data
+                })
                     .then(response => response.json())
                     .then(res => {
                         if (res.status === 'success') {
@@ -92,48 +124,5 @@
                     });
             });
         }
-
-        const previewContainer = document.getElementById('previewContainer');
-        let selectedFiles = [];
-
-        // 创建一个用于预览的图片元素
-        function createPreviewImage(file) {
-            const img = document.createElement('img');
-            img.classList.add('preview-image'); // 使用CSS类代替内联样式
-            img.src = URL.createObjectURL(file);
-            img.title = "点击删除图片";
-            img.addEventListener('click', function() {
-                removePreviewImage(this);
-            });
-            return img;
-        }
-
-        // 从预览容器中移除图片，并从文件列表中删除文件
-        function removePreviewImage(img) {
-            previewContainer.removeChild(img);
-            const file = selectedFiles.find(f => URL.createObjectURL(f) === img.src);
-            if (file) {
-                const index = selectedFiles.indexOf(file);
-                selectedFiles.splice(index, 1);
-                URL.revokeObjectURL(img.src);
-            }
-        }
-
-        // fileInput.addEventListener('change', function(e) {
-        //     previewContainer.innerHTML = '';
-        //     selectedFiles = [];
-        //     const files = e.target.files;
-        //     for (let i = 0; i < files.length; i++) {
-        //         const file = files[i];
-        //         // 添加一个简单的文件类型检查
-        //         if (!file.type.startsWith('image/')) {
-        //             toast.error('只支持上传图片 -_-"');
-        //             continue;
-        //         }
-        //         selectedFiles.push(file);
-        //         const img = createPreviewImage(file);
-        //         previewContainer.appendChild(img);
-        //     }
-        // });
     });
 </script>

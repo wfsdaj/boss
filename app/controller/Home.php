@@ -3,6 +3,7 @@
 namespace app\controller;
 
 use app\model\Post;
+use think\facade\Db;
 
 class Home
 {

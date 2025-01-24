@@ -38,6 +38,9 @@ class App
             set_error_handler([\boss\ErrorHandler::class, 'handleError']);
             register_shutdown_function([\boss\ErrorHandler::class, 'handleShutdown']);
 
+            // 连接数据库
+            self::connectDatabase();
+
             // 路由
             self::router();
 
@@ -83,6 +86,34 @@ class App
         defined('ENABLE_SESSION') || define('ENABLE_SESSION', false);  // 是否启动 session
         defined('SESSION_TYPE')   || define('SESSION_TYPE', 'file');  // 会话存储类型 [file, memcache, redis]
         defined('PAGE_SUFFIX')    || define('PAGE_SUFFIX', '');    // 页面后缀
+    }
+
+    private static function connectDatabase()
+    {
+        \think\facade\Db::setConfig([
+            // 默认数据连接标识
+            'default' => 'mysql',
+            // 数据库连接信息
+            'connections' => [
+                'mysql' => [
+                    // 数据库类型
+                    'type'     => config('db.driver'),
+                    // 主机地址
+                    'hostname' => config('db.host'),
+                    // 用户名
+                    'username' => config('db.username'),
+                    'password' => config('db.password'),
+                    // 数据库名
+                    'database' => config('db.database'),
+                    // 数据库编码默认采用utf8
+                    'charset'  => config('db.charset'),
+                    // 数据库表前缀
+                    'prefix'   => config('db.prefix'),
+                    // 数据库调试模式
+                    'debug'    => true,
+                ],
+            ],
+        ]);
     }
 
     /**

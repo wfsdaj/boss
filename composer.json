@@ -1,6 +1,7 @@
 {
     "require": {
         "php": ">=7.4",
+        "topthink/think-orm": "^2.0",
         "topthink/think-template": "2.0.10"
     },
     "autoload": {

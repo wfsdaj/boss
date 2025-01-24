@@ -2,7 +2,7 @@
 {if !$posts }
     <div class="empty-text fs-3">有鄙夫问于我，空空如也，<br>我叩其两端而竭焉。</div>
 {else /}
-    {foreach $posts as $post}
+    {foreach $posts[0] as $post}
     <li class="feed-item d-flex js-tap" id="feed{$post.id}" data-href="/post/show/{$post.id}" data-pid="{$post.id}">
         <a href="/user/profile/{$post.user_id}" class="position-relative">
             <img class="avatar" src="{:get_avatar($post.user_id)}" alt="">
@@ -32,6 +32,9 @@
             </div>
             <p class="typo-text fs-6">{$post.content | raw}</p>
             {if $post.images > 0}
+            <div class="gallery mt-2">
+                <img src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
+            </div>
             {/if}
             <div class="mt-1 d-flex justify-content-between post-actions">
                 <!-- 回复 -->

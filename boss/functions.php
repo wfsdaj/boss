@@ -12,7 +12,7 @@ declare(strict_types=1);
 function db(string $table, string $item = 'db'): object
 {
     $conf = config($item);
-    return \boss\Database::getInstance($conf, $table, $item);
+    return \boss\Db::getInstance($conf, $table, $item);
 }
 
 /**

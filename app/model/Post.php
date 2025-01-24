@@ -91,7 +91,7 @@ class Post extends Model
             $this->uploadFile($post_id);
 
             // 更新帖子字段文件数
-            // $this->model->where('id = ?', [$post_id])->increment('images', 1);
+            $this->model->where('id = ?', [$post_id])->increment('images', 1);
 
             // 提交事务
             $this->model->commit();
@@ -120,15 +120,30 @@ class Post extends Model
      */
     protected function getList()
     {
-        $fields = 'p.*, u.username, u.avatar';
+        $fields =  'p.id,
+                    p.user_id,
+                    p.created_at,
+                    p.images,
+                    p.files,
+                    p.content,
+                    p.comments,
+                    p.likes,
+                    p.favorites,
+                    p.is_sticky,
+                    u.username,
+                    a.post_id,
+                    a.filename,
+                    a.type';
 
         $data = db('post')->join('AS p
                             LEFT JOIN user AS u
-                                   ON p.user_id = u.id
+                                    ON p.user_id = u.id
+                            LEFT JOIN attach AS a
+                                    ON a.post_id = p.id
                             LEFT JOIN favorite AS f
-                                   ON f.post_id = p.id
+                                    ON f.post_id = p.id
                             LEFT JOIN likes AS l
-                                   ON l.post_id = p.id')
+                                    ON l.post_id = p.id')
             ->paginate($this->parameter)
             ->orderBy('p.is_sticky DESC, p.id DESC')
             ->get($fields);
@@ -155,21 +170,21 @@ class Post extends Model
     /**
      * 根据用户 id 获取用户所有帖子列表
      */
-    public function getListByUserId($user_id, int $pages = 10)
+    public function findByUserId($user_id, int $pages = 10)
     {
         $this->model = db('post');
 
         $fields = 'p.*, u.username, a.post_id, a.filename, a.type';
         return $this->model->join('AS p
-                                    LEFT JOIN
-                                        user AS u
-                                    ON
-                                        p.user_id = u.id
-                                    LEFT JOIN
-                                        attach AS a
-                                    ON
-                                        a.post_id = p.id')
-            ->where('u.id = ?', $user_id)
+                                LEFT JOIN
+                                    user AS u
+                                ON
+                                    p.user_id = u.id
+                                LEFT JOIN
+                                    attach AS a
+                                ON
+                                    a.post_id = p.id')
+            ->where('u.id = ?', [$user_id])
             ->orderBy('p.id DESC')
             ->paginate($pages)
             ->get($fields);
@@ -229,7 +244,7 @@ class Post extends Model
     private function uploadFile(int $post_id): bool
     {
         // 检查是否有文件上传
-        if (!isset($_FILES['files']) || $_FILES['files']['error'] === UPLOAD_ERR_NO_FILE) {
+        if (!isset($_FILES['imageUpload']) || $_FILES['imageUpload']['error'] === UPLOAD_ERR_NO_FILE) {
             return false;
         }
 
@@ -251,7 +266,7 @@ class Post extends Model
 
             return true;
         } catch (\Throwable $th) {
-            throw new Exception('文件存储过程中发生错误: ' . $th->getMessage(), $th->getCode(), $th);
+            throw new Exception($th);
         }
     }
 

@@ -352,11 +352,13 @@ class Database
      */
     public function get(?string $fields = '*'): array
     {
+        $startTime = microtime(true);
+
         $preArray = $this->prepare($fields, false);
         $this->sql = $preArray[0];
 
         if (is_null($this->eachPage)) {
-            $this->sql .= $this->getLimit();
+            $this->sql .= $this->getLimit() . ';';
         } else {
             if (empty($this->totalRows)) {
                 $countSql = preg_replace('/SELECT .* FROM/', 'SELECT COUNT(*) AS total FROM', $this->sql);
@@ -370,7 +372,6 @@ class Database
             $this->sql .= (new Paginate($this->totalRows, $this->eachPage))->limit;
         }
 
-        $startTime = microtime(true);
         $this->pretreatment = $this->pdo->prepare($this->sql);
         $this->pretreatment->execute($preArray[1]);
         $res = $this->pretreatment->fetchAll(PDO::FETCH_ASSOC);
@@ -556,7 +557,7 @@ class Database
         }
 
         // 校验 $this->limit 中的值是否为非负整数
-        $start = (int)$this->limit[0];
+        $start  = (int)$this->limit[0];
         $length = (int)$this->limit[1];
         if ($start < 0 || $length < 0) {
             throw new InvalidArgumentException('LIMIT 参数必须为非负整数');

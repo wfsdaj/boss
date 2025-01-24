@@ -691,16 +691,38 @@
   /* border-right: 1px solid #ddd; */
 }
 
-.previewImg {
+.preview-image {
   position: relative;
   max-height: 100px;
   overflow: hidden;
 }
 
-.img-del {
+.preview-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+.preview-image {
+  max-width: 100px;
+  display: block;
+}
+.delete-icon {
   position: absolute;
   top: 5px;
   right: 5px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.875rem;
+  text-align: center;
+}
+.delete-icon:hover {
+  background-color: #fef1e3;
+  color: var(--bs-danger);
 }
 
 .progress-wrap {

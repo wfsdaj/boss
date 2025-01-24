@@ -13,20 +13,27 @@ class User
      * 获取指定用户的信息以及该用户的帖子列表，若用户不存在则返回 404 错误。
      * 数据通过视图渲染并展示给用户。
      */
-    public function profile(int $user_id)
+    public function profile()
     {
-        $userModel = new UserModel();
+        $user_id = (int)segment(3);
 
-        dd($userModel);
+        if (!$user_id) {
+            return abort(404);
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->find($user_id);
 
         if (!$user) {
             return abort(404);
         }
 
-        $postModel = new Post();
+        $post = new Post();
 
         // 查询用户帖子列表
-        $posts = $postModel->getListByUserId($user_id);
+        $posts = $post->findByUserId($user_id);
+
+        dd($user);
 
         $data = [
             'user'  => $user,

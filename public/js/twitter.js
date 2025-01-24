@@ -229,9 +229,11 @@ function updateIconClassOnActive(selector, fromClass, toClass) {
 // 计算字符长度（中文算2个字节）
 const getStringLength = (str) => {
     let realLength = 0;
-    for (let i = 0; i < str.length; i++) {
+    const len = str.length; // 缓存字符串长度，避免重复计算
+    for (let i = 0; i < len; i++) {
         const charCode = str.charCodeAt(i);
-        realLength += (charCode >= 0x4E00 && charCode <= 0x9FFF) ? 2 : 1;
+        // 使用位运算优化条件判断
+        realLength += (charCode - 0x4E00) >>> 0 <= 0x9FFF - 0x4E00 ? 2 : 1;
     }
     return realLength;
 };
