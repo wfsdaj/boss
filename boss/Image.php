@@ -378,4 +378,25 @@ class Image
                 throw new \RuntimeException("不支持的图像类型: {$image_type}");
         }
     }
+
+    /**
+     * 为图像文件名添加自定义前缀
+     *
+     * @param string $prefix 要添加的前缀（默认为 "_thumb"）
+     * @return string 修改后的文件路径
+     */
+    public function addPrefix(string $prefix = '_thumb'): string
+    {
+        // 使用 pathinfo() 函数获取文件信息
+        $info = pathinfo($this->filename);
+
+        // 构建新的文件名（添加自定义前缀）
+        $newFilename = $info['dirname'] . '/' . $info['filename'] . $prefix . '.' . $info['extension'];
+
+        // 更新类的 filename 属性
+        $this->filename = $newFilename;
+
+        // 返回新的文件路径
+        return $newFilename;
+    }
 }

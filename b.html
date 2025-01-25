@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>点击小图显示大图</title>
+    <link href="http://b.test/css/bootstrap.css" rel="stylesheet">
+    <style>
+        .img-list {
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .img-list:hover {
+            opacity: 0.8;
+        }
+
+        .img-small {
+            width: 120px;
+        }
+
+        .img-large {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+        }
+
+        .loading-overlay.visible {
+            visibility: visible;
+        }
+
+        .img-container {
+            position: relative;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="img-container">
+            <img src="http://b.test/upload/2025/01/25/07ca1b3c32b0f81ddf086c1e13752640.png" class="img-list img-small"
+                data-large="https://pics7.baidu.com/feed/622762d0f703918f3d89806b9a0a189858eec4fa.jpeg@f_auto?token=48313edf689512a13cb05c2402952e7b">
+        </div>
+        <div class="img-container">
+            <img src="http://b.test/upload/2025/01/25/55fe4bd46da9614eb0fccf7610d649d0.png" class="img-list img-small"
+                data-large="https://pics6.baidu.com/feed/810a19d8bc3eb1357cdbd4c16d2996dcfd1f4476.jpeg@f_auto?token=a991931ce87d717ee968ba4bbfed973d">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.img-container').forEach(container => {
+                const thumbnail = container.querySelector('.img-list');
+
+                thumbnail.addEventListener('click', () => {
+                    const overlay = document.createElement('div');
+                    overlay.className = 'loading-overlay';
+                    overlay.innerHTML = `
+                        <div class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>`;
+                    container.appendChild(overlay);
+                    overlay.classList.add('visible');
+
+                    const tempImg = new Image();
+                    tempImg.src = thumbnail.dataset.large;
+
+                    tempImg.onload = () => {
+                        [thumbnail.src, thumbnail.dataset.large] = [thumbnail.dataset.large, thumbnail.src];
+                        thumbnail.classList.toggle('img-small');
+                        thumbnail.classList.toggle('img-large');
+                        overlay.remove();
+                    };
+
+                    tempImg.onerror = () => {
+                        overlay.textContent = '加载失败';
+                        setTimeout(() => overlay.remove(), 2000);
+                    };
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

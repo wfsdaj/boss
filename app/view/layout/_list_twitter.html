@@ -33,7 +33,7 @@
             <p class="typo-text fs-6">{$post.content | raw}</p>
             {if $post.images > 0}
             <div class="gallery mt-2">
-                <img src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
+                <img class="img-fluid" src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
             </div>
             {/if}
             <div class="mt-1 d-flex justify-content-between post-actions">

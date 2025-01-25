@@ -3,7 +3,6 @@
 namespace app\controller;
 
 use app\model\Post;
-use think\facade\Db;
 
 class Home
 {
@@ -17,5 +16,29 @@ class Home
         $data = ['posts' => $posts];
 
         return view('home/index', $data);
+    }
+
+    public function a()
+    {
+        view('home/a');
+    }
+
+    public function b()
+    {
+        $file = new \boss\File();
+        $a = $file->upload();
+
+        dd($a);
+    }
+
+    public function c()
+    {
+        $file = PUBLIC_PATH . 'img/logo.png';
+        $img = new \boss\Image();
+        $img->load($file);
+
+        echo $file;
+
+        dd($img->getWidth());
     }
 }

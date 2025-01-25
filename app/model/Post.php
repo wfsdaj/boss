@@ -87,8 +87,8 @@ class Post extends Model
             // 处理用户积分，这里发一帖扣除用户一金币
             $this->handleUserPoints(-1);
 
-            // 有附件则上传
-            $this->uploadFile($post_id);
+            // 有图片则上传
+            $this->uploadImage($post_id);
 
             // 更新帖子字段文件数
             $this->model->where('id = ?', [$post_id])->increment('images', 1);
@@ -195,7 +195,7 @@ class Post extends Model
     /**
      * 根据标签id查询内容列表
      */
-    public static function getListByTagId(int $tag_id, int $pages = 10)
+    public static function findListByTagId(int $tag_id, int $pages = 10)
     {
         $post = db('post');
 
@@ -241,7 +241,7 @@ class Post extends Model
      * @return bool
      * @throws Exception 保存附件失败时抛出异常
      */
-    private function uploadFile(int $post_id): bool
+    private function uploadImage(int $post_id): bool
     {
         // 检查是否有文件上传
         if (!isset($_FILES['imageUpload']) || $_FILES['imageUpload']['error'] === UPLOAD_ERR_NO_FILE) {
@@ -261,6 +261,9 @@ class Post extends Model
                 'created_at' => time(),
             ];
 
+            $img_path = PUBLIC_PATH . substr($uploadedFileData['file_path'], 2);
+            $this->resizeImages($img_path);
+
             // 写入附件表
             db('attach')->insert($attachmentsData);
 
@@ -279,20 +282,20 @@ class Post extends Model
      *
      * @return array
      */
-    public function handleImagesWidth(array $imagesData, int $targetWidth = 500)
-    {
-        if (!is_array($imagesData)) {
-            $imagesData = [$imagesData];
-        }
+    // public function handleImagesWidth(array $imagesData, int $targetWidth = 500)
+    // {
+    //     if (!is_array($imagesData)) {
+    //         $imagesData = [$imagesData];
+    //     }
 
-        foreach ($imagesData as $image) {
-            list($width, $height, $type, $attr) = getimagesize($image['filename']);
+    //     foreach ($imagesData as $image) {
+    //         list($width, $height, $type, $attr) = getimagesize($image['filename']);
 
-            if ($width > $targetWidth) {
-                $this->resizeImages($imagesData);
-            }
-        }
-    }
+    //         if ($width > $targetWidth) {
+    //             $this->resizeImages($imagesData);
+    //         }
+    //     }
+    // }
 
     /**
      * 生成缩略图
@@ -300,19 +303,30 @@ class Post extends Model
      * @param array|string $uploaded_file_paths 文件路径或包含文件路径的数组
      * @param int $width 缩略图的宽度
      */
-    private static function resizeImages(array $imagesData, int $targetWidth = 300)
+    private function resizeImages(string $image_path, int $targetWidth = 300)
     {
-        foreach ($imagesData as $img) {
-            $image = new Image();
-            if ($image->load($img['filename'])) {
-                $path_parts = pathinfo($img['filename']);
-                $thumbnailPath = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumb.' . $path_parts['extension'];
-                // 调整图像大小
-                $image->resizeToWidth($targetWidth);
-                $image->save($thumbnailPath, $path_parts['extension']);
-            }
+        $image = new Image();
+        $image->load($image_path);
+
+        if ($image->getWidth() >= 500) {
+            $image->resizeToWidth($targetWidth);
+            $image->addPrefix('_thumb');
+            $image->save($image->getFilePath(), $image->getImageFormat());
         }
     }
+    // private static function resizeImages(array $imagesData, int $targetWidth = 300)
+    // {
+    //     foreach ($imagesData as $img) {
+    //         $image = new Image();
+    //         if ($image->load($img['filename'])) {
+    //             $path_parts = pathinfo($img['filename']);
+    //             $thumbnailPath = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumb.' . $path_parts['extension'];
+    //             // 调整图像大小
+    //             $image->resizeToWidth($targetWidth);
+    //             $image->save($thumbnailPath, $path_parts['extension']);
+    //         }
+    //     }
+    // }
 
     /**
      * 处理用户积分
@@ -328,9 +342,9 @@ class Post extends Model
             $user_id = (int)session('user_id');
             db('user')->where('id = ?', [$user_id])->increment('golds', $increment);
             return true;
-        } catch (\Throwable $e) {
+        } catch (\Throwable $th) {
             // 这里可以根据需要进一步处理或记录异常
-            throw new Exception('更新用户积分失败。');
+            throw new Exception($th);
         }
     }
 

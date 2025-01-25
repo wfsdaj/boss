@@ -5,6 +5,7 @@ namespace boss;
 use PDO;
 use Exception;
 use PDOStatement;
+use InvalidArgumentException;
 
 class Db
 {
@@ -20,29 +21,29 @@ class Db
     /** @var string SQL 语句 */
     public string $sql;
 
-    /** @var PDOStatement|null 预处理语句 */
-    public ?PDOStatement $pretreatment = null;
+    /** @var PDOStatement 预处理语句 */
+    public PDOStatement $pretreatment;
 
     /** @var array WHERE 条件 */
     public array $where = [];
 
     /** @var string GROUP BY 条件 */
-    public string $groupBy = '';
+    public string $groupBy;
 
     /** @var string JOIN 条件 */
-    public string $join = '';
+    public string $join;
 
     /** @var string ORDER BY 条件 */
-    public string $orderBy = '';
+    public string $orderBy;
 
     /** @var array LIMIT 条件 */
-    public array $limit = [];
+    public array $limit;
 
     /** @var int 每页记录数 */
-    public int $eachPage = 0;
+    public int $eachPage;
 
     /** @var int 总记录数 */
-    public int $totalRows = 0;
+    public int $totalRows;
 
     /** @var array 数据库配置 */
     public array $conf;
@@ -72,7 +73,6 @@ class Db
                         $conf['password']
                     );
                     $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                    $this->pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
                     break;
                 default:
                     throw new Exception('不支持的数据库驱动');
@@ -95,7 +95,6 @@ class Db
         $this->orderBy = '';
         $this->limit = [];
         $this->eachPage = 0;
-        $this->totalRows = 0;
     }
 
     /**
@@ -103,8 +102,9 @@ class Db
      * @param array $conf 数据库配置
      * @param string $tableName 表名
      * @param string $configName 配置名称
+     * @return Db
      */
-    public static function getInstance(array $conf, string $tableName, string $configName)
+    public static function getInstance(array $conf, string $tableName, string $configName): Db
     {
         $tableName = $conf['prefix'] . $tableName;
         if (empty(self::$operater[$configName])) {
@@ -148,9 +148,6 @@ class Db
     {
         $startTime = microtime(true);
         $this->pretreatment = $this->pdo->prepare($sql);
-        if ($this->pretreatment === false) {
-            throw new Exception('SQL 预处理失败: ' . implode(' ', $this->pdo->errorInfo()));
-        }
         $res = $this->pretreatment->execute($execute);
         $this->trace($res, $startTime, $sql);
         return $res;
@@ -183,6 +180,9 @@ class Db
     public function insert(?array $data = null): string
     {
         $startTime = microtime(true);
+        if (empty($data)) {
+            $data = $_POST;
+        }
         if (!is_array($data)) {
             throw new Exception('插入数据错误', '插入数据应为一个一维数组');
         }
@@ -310,9 +310,9 @@ class Db
                 $pretreatment = $this->pdo->prepare($sql);
                 $pretreatment->execute($preArray[1]);
                 $arrTotal = $pretreatment->fetch(PDO::FETCH_ASSOC);
-                $pager = new \boss\Paginate($arrTotal['total'], $this->eachPage);
+                $pager = new Paginate($arrTotal['total'], $this->eachPage);
             } else {
-                $pager = new \boss\Paginate($this->totalRows, $this->eachPage);
+                $pager = new Paginate($this->totalRows, $this->eachPage);
             }
             $this->sql .= $pager->limit . ';';
         }
@@ -323,7 +323,7 @@ class Db
         if (is_null($this->eachPage)) {
             return $res;
         } else {
-            $this->eachPage = 0;
+            $this->eachPage = null;
             return [$res, $pager];
         }
     }
@@ -371,7 +371,7 @@ class Db
      */
     public function getWhere(): ?array
     {
-        if (empty($this->where) || !isset($this->where[0])) {
+        if (empty($this->where)) {
             return null;
         }
         $return = [' WHERE ' . $this->where[0] . ' ', $this->where[1]];
@@ -665,7 +665,6 @@ class Db
      */
     public function debugSql(): void
     {
-        $sql = addslashes($this->sql);
-        echo '<script>console.log("phpGrace log : sql 命令 : ' . $sql . '");</script>';
+        echo '<script>console.log("phpGrace log : sql 命令 : ' . $this->sql . '");</script>';
     }
 }

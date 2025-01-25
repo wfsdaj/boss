@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件监听器实现点击图片弹出大图</title>
+    <!-- Bootstrap CSS -->
+    <link href="http://b.test/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <!-- 图片 -->
+        <img src="http://b.test/upload/2025/01/25/07ca1b3c32b0f81ddf086c1e13752640.png" alt="Small Image"
+            class="img-thumbnail popup-image" data-large-src="https://pics7.baidu.com/feed/622762d0f703918f3d89806b9a0a189858eec4fa.jpeg@f_auto?token=48313edf689512a13cb05c2402952e7b">
+        <!-- 更多图片 -->
+        <img src="http://b.test/upload/2025/01/25/55fe4bd46da9614eb0fccf7610d649d0.png" alt="Another Small Image"
+            class="img-thumbnail popup-image" data-large-src="https://pics6.baidu.com/feed/810a19d8bc3eb1357cdbd4c16d2996dcfd1f4476.jpeg@f_auto?token=a991931ce87d717ee968ba4bbfed973d">
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <img id="modalImage" src="" alt="Large Image" class="img-fluid">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="http://b.test/js/jquery.min.js"></script>
+    <script src="http://b.test/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 初始化 Modal 实例
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+
+        // 事件委托：绑定点击事件到 body
+        document.body.addEventListener('click', function (event) {
+            if (event.target.classList.contains('popup-image')) {
+                const largeSrc = event.target.getAttribute('data-large-src');
+                showModal(largeSrc);
+            }
+        });
+
+        // 显示 Modal 并更新图片
+        function showModal(imageSrc) {
+            // 更新 Modal 中的图片
+            document.getElementById('modalImage').src = imageSrc;
+            // 显示 Modal
+            modal.show();
+        }
+    </script>
+</body>
+
+</html>
