@@ -1,0 +1,40 @@
+{php}
+    use \app\controller\Comment;
+    $postId = (int)segment(3);
+    $comments = Comment::list($postId);
+    $floors = $comments[1]->totalRows;
+{/php}
+
+{if $comments[1]->totalRows > 0}
+    <ul class="list-unstyled chat p-3 border-bottom">
+    {foreach $comments[0] as $comment}
+        {if !is_author($comment.user_id)}
+        <li class="others">
+            <div class="chat-item">
+                <a href="/user/profile/{$comment.user_id}">
+                    <img class="avatar me-2" src="{:get_avatar($comment.user_id)}" alt="">
+                </a>
+                <div>
+                    <div class="chat-content">{$comment.content}</div>
+                    <span class="fs-13px text-muted">{$comment.username} · {:nice_time($comment.created_at)}</span>
+                </div>
+            </div>
+        </li>
+        {else /}
+        <li class="self">
+            <div class="chat-item">
+                <a href="/user/profile/{$comment.user_id}">
+                    <img class="avatar ms-2" src="{:get_avatar($comment.user_id)}" alt="">
+                </a>
+                <div>
+                    <div class="chat-content">{$comment.content}</div>
+                    <span class="fs-13px text-muted">{:nice_time($comment.created_at)} · {$comment.username}</span>
+                </div>
+            </div>
+        </li>
+        {/if}
+    {/foreach}
+    </ul>
+{else /}
+    <div class="empty-text fs-5">暂无评论</div>
+{/if}

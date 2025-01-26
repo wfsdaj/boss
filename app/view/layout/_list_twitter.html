@@ -1,7 +1,7 @@
 <ul class="feed-list list-unstyled">
-{if !$posts }
+    {if !$posts }
     <div class="empty-text fs-3">有鄙夫问于我，空空如也，<br>我叩其两端而竭焉。</div>
-{else /}
+    {else /}
     {foreach $posts[0] as $post}
     <li class="feed-item d-flex js-tap" id="feed{$post.id}" data-href="/post/show/{$post.id}" data-pid="{$post.id}">
         <a href="/user/profile/{$post.user_id}" class="position-relative">
@@ -13,11 +13,12 @@
             {/if}
         </a>
         <div class="d-flex flex-column w-100">
-            <div class="d-flex fs-15px position-relative">
+            <div class="d-flex position-relative">
                 <a class="link-dark fw-bold" href="/user/profile/{$post.user_id}">{$post.username}</a>
                 <a class="link-secondary ms-2" href="/post/show/{$post.id}">{$post.created_at | nice_time}</a>
                 <div class="ms-auto dropdown">
-                    <button class="btn btn-sm btn-icon feed-item-action" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="iconfont icon-more fs-18px"></i></button>
+                    <button class="btn btn-sm btn-icon feed-item-action" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false"><i class="iconfont icon-more fs-18px"></i></button>
                     <div class="dropdown-menu dropdown-menu-end fs-15px shadow-sm">
                         <a class="dropdown-item" href="#">
                             <i class="iconfont icon-shield me-2"></i>
@@ -30,124 +31,88 @@
                     </div>
                 </div>
             </div>
-            <p class="typo-text fs-6">{$post.content | raw}</p>
-            {if $post.images > 0}
-            <div class="gallery mt-2">
-                <img class="img-fluid" src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
-            </div>
-            {/if}
+            <p class="typo-text mt-1 fs-6">{$post.content | raw}</p>
+            {:generateImageHtml($post)}
             <div class="mt-1 d-flex justify-content-between post-actions">
                 <!-- 回复 -->
                 <a role="button" class="post-action-reply cursor-arrow" title="回复">
                     <div class="btn btn-sm btn-icon post-action-icon">
                         <i class="iconfont icon-comment fs-18px js-no-click"></i>
+                        <span class="badge fs-13px">{$post.comments ?: ''}</span>
                     </div>
-                    <span class="fs-13px">14</span>
                 </a>
 
                 <!-- 转帖 -->
                 <a href="javascript:;" class="post-action-retweet cursor-default" title="转帖">
                     <div class="btn btn-sm btn-icon post-action-icon">
                         <i class="iconfont icon-retweet fs-18px js-no-click"></i>
+                        <span class="badge fs-13px">{$post.comments ?: ''}</span>
                     </div>
                 </a>
 
                 <!-- 喜欢 -->
-                <button type="button" class="btn btn-link">
-                    <i class="iconfont icon-heart fs-18px js-no-click"></i>
-                     <span>4</span>
-                </button>
+                <a href="javascript:;" class="post-action-like cursor-default" title="赞">
+                    <div class="btn btn-sm btn-icon post-action-icon">
+                        <i class="iconfont icon-thumbs-up fs-18px js-no-click"></i>
+                        <span class="badge fs-13px">{$post.likes ?: ''}</span>
+                    </div>
+                </a>
 
                 <!-- 收藏 -->
-
+                <a href="javascript:;" class="post-action-fav cursor-default" title="收藏">
+                    <div class="btn btn-sm btn-icon post-action-icon">
+                        <i class="iconfont icon-fav fs-18px js-no-click"></i>
+                        <span class="badge fs-13px">{$post.favorites ?: ''}</span>
+                    </div>
+                </a>
             </div>
         </div>
     </li>
     {/foreach}
-{/if}
+    {/if}
 </ul>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    function initGallery(galleryElement) {
-        const thumbnailContainer = galleryElement.querySelector('.thumbnail-container');
-        const fullscreenContainer = galleryElement.querySelector('.fullscreen-container');
-        const fullscreenImg = fullscreenContainer.querySelector('.fullscreen');
-        const prevBtn = fullscreenContainer.querySelector('.prev-btn');
-        const nextBtn = fullscreenContainer.querySelector('.next-btn');
-        const thumbnails = Array.from(thumbnailContainer.querySelectorAll('.feed-item-img'));
+    document.addEventListener('DOMContentLoaded', () => {
+        // 点击小图显示大图
+        document.querySelectorAll('.feed-gallery').forEach(container => {
+            const thumbnail = container.querySelector('.feed-item-img');
 
-        // 根据缩略图数量决定是否显示上一张和下一张按钮
-        if (thumbnails.length <= 1) {
-            prevBtn.style.display = 'none';
-            nextBtn.style.display = 'none';
-        }
-
-        let currentIndex = 0;
-
-        function showFullscreenImage() {
-            const clickedThumbnail = thumbnails[currentIndex];
-            let fullImageUrl = clickedThumbnail.getAttribute('data-full');
-
-            // 添加加载状态
-            fullscreenContainer.style.display = 'flex';
-            fullscreenContainer.classList.add('loading');
-
-            // 使用 onload 事件来确保图片加载完成后再更新显示
-            const img = new Image();
-            img.onload = function() {
-                fullscreenImg.src = this.src; // 现在图片已经加载，可以安全地设置到全屏 img 元素
-
-                // 移除加载状态并显示图片
-                fullscreenContainer.classList.remove('loading');
-            };
-            img.onerror = function() {
-                // 处理图片加载错误的情况
-                // ...
-                // 移除加载状态，并可能显示一个错误消息
-                fullscreenContainer.classList.remove('loading');
-            };
-            img.src = fullImageUrl; // 设置图片的源以开始加载
-        }
-
-        // 为缩略图添加点击事件监听
-        thumbnails.forEach(thumbnail => {
             thumbnail.addEventListener('click', () => {
-                thumbnailContainer.style.display = 'none';
-                // 移除其他缩略图的高亮
-                thumbnails.forEach(thumb => thumb.classList.remove('selected'));
-                // 为点击的缩略图添加高亮
-                thumbnail.classList.add('selected');
+                const overlay = document.createElement('div');
+                overlay.className = 'loading-overlay';
+                overlay.innerHTML = `
+                        <div class="spinner-border text-light" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>`;
+                container.appendChild(overlay);
+                overlay.classList.add('visible');
 
-                currentIndex = thumbnails.indexOf(thumbnail);
-                showFullscreenImage();
+                const tempImg = new Image();
+                tempImg.src = thumbnail.dataset.large;
+
+                tempImg.onload = () => {
+                    [thumbnail.src, thumbnail.dataset.large] = [thumbnail.dataset.large, thumbnail.src];
+                    thumbnail.classList.toggle('img-small');
+                    thumbnail.classList.toggle('img-large');
+                    overlay.remove();
+                };
+
+                tempImg.onerror = () => {
+                    overlay.textContent = '加载失败';
+                    setTimeout(() => overlay.remove(), 2000);
+                };
+
+                // 计算图片距离页面顶部的距离
+                const imageTop = thumbnail.getBoundingClientRect().top + window.pageYOffset;
+                // 计算目标滚动位置（图片顶部 - 120px）
+                const targetPosition = imageTop - 120;
+                // 滚动到目标位置
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth' // 平滑滚动
+                });
             });
         });
-
-        // 为大图添加点击事件监听
-        fullscreenImg.addEventListener('click', () => {
-            fullscreenContainer.style.display = 'none';
-            thumbnailContainer.style.display = 'flex';
-            // 可选：移除缩略图的高亮
-            thumbnails.forEach(thumb => thumb.classList.remove('selected'));
-        });
-
-        // 如果有多于一张的图片，才为按钮添加点击事件
-        if (thumbnails.length > 1) {
-            prevBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex - 1 + thumbnails.length) % thumbnails.length;
-                showFullscreenImage();
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentIndex = (currentIndex + 1) % thumbnails.length;
-                showFullscreenImage();
-            });
-        }
-    }
-
-    // 初始化所有的图片列表
-    const galleries = document.querySelectorAll('.gallery');
-    galleries.forEach(gallery => initGallery(gallery));
-});
+    });
 </script>

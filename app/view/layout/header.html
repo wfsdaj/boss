@@ -119,9 +119,10 @@
                 <div class="dropdown-menu">
                     {if session('is_admin')}
                     <a href="/admin" class="dropdown-item">
-                        <i class="iconfont icon-settings fs-5 me-2"></i>
-                        <span class="fw-bold">进入后台</span>
+                        <i class="iconfont icon-set fs-5 me-2"></i>
+                        <span>进入后台</span>
                     </a>
+                    <hr class="dropdown-divider">
                     {/if}
                     <a href="/auth/logout/{:csrf_token()}" class="dropdown-item">
                         <i class="iconfont icon-logout fs-5 me-2"></i>

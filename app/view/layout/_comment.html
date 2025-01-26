@@ -1,0 +1,97 @@
+{if is_logined()}
+<div class="composer d-flex p-3 border-bottom js-elastic" id="jsCommentTextarea">
+    <img class="avatar" src="{:get_avatar(session('user_id'))}" alt="">
+    <div class="flex-fill">
+        <form id="commentForm" method="POST" action="/comment/submit">
+            <input type="hidden" name="csrf_token" value="{:csrf_token()}">
+            <input type="hidden" name="post_id" id="post_id" value="{$post.id}">
+            <textarea class="form-control p-3 mb-2 bg-light fs-6 lh-1 js-textarea" name="commentTextarea"
+                id="commentTextarea" maxlength="200" spellcheck="false" placeholder="说说您的想法" required></textarea>
+            <div class="composer-action d-flex align-items-center mb-2">
+                <div class="dropdown">
+                    <button class="btn btn-icon btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                        data-bs-toggle="tooltip" data-bs-title="表情">
+                        <i class="iconfont icon-smile fs-5 text-primary"></i>
+                    </button>
+                    <!-- 表情 -->
+                    <ul id="emojiList" class="dropdown-menu dropdown-menu-star shadow-sm emoji-list p-2" data-stoppropagation="true">
+                        <li>❤</li><li>❄</li><li>⛄</li><li>🈚</li><li>🈶</li><li>😃</li><li>😅</li>
+                        <li>😉</li><li>😍</li><li>😝</li><li>😏</li><li>😒</li><li>😞</li><li>😔</li>
+                        <li>😓</li><li>💩</li><li>👐</li><li>👊</li><li>🙈</li><li>⚽</li>
+                    </ul>
+                </div>
+                {if isset($user) && $user !== null}
+                    {if isset($user.golds) && $user.golds <= 0}
+                        <button type="button" class="btn btn-primary rounded-pill ms-auto fw-bold" disabled>金币不足</button>
+                    {else /}
+                    <button type="button" id="submitComments" class="btn btn-primary rounded-pill ms-auto fw-bold submitButton"
+                        disabled>评论</button>
+                    <!-- <button type="submit" class="btn btn-primary rounded-pill fw-bold submitButton" disabled>回帖</button> -->
+                    {/if}
+                {/if}
+            </div>
+        </form>
+    </div>
+</div>
+{else /}
+<div class="p-4 text-center bg-light border-bottom">
+    <h3 class="fs-18px fw-bold mb-2">您好！喜欢交流可以注册账号。</h3>
+    <p class="mb-3 text-muted">拥有账号，您才可以回复用户的帖子。<br>您还可以收到新回复通知、收藏帖子，以及使用“赞”来感谢他人。</p>
+    <a href="/login" class="btn btn-primary rounded-pill">登录</a>
+    <a href="/register" class="btn btn-light rounded-pill ms-1">注册</a>
+</div>
+{/if}
+
+<script>
+    // 回帖编辑器
+    let comment_editor;
+
+    window.addEventListener('load', function () {
+        // 初始化回帖编辑器
+        const commentTextarea = document.getElementById('commentTextarea');
+        if (commentTextarea && typeof TextEditor === 'function') {
+            comment_editor = new TextEditor(commentTextarea);
+            // 表情列表
+            const emojiList = document.getElementById('emojiList');
+            if (emojiList) {
+                emojiList.addEventListener('click', function (event) {
+                    if (event.target.tagName === 'LI') {
+                        const emoji = event.target.textContent;
+                        comment_editor.insert(emoji, -1, true);
+                    }
+                });
+            }
+        }
+
+        // 点击提交按钮后验证
+        const submitCommentsElement = document.getElementById('submitComments');
+        if (submitCommentsElement) {
+            submitCommentsElement.addEventListener('click', function () {
+                let form = document.getElementById('commentForm');
+                let data = new FormData(form);
+
+                // 发送 AJAX 请求
+                fetch('/comment/submit', {
+                    method: 'POST',
+                    body: data,
+                })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            // 显示成功消息
+                            toast(res.message);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            // 显示错误消息
+                            toast(res.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:');
+                    });
+            });
+        }
+    });
+</script>

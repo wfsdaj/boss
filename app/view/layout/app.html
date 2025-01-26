@@ -17,9 +17,16 @@
 
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/editor.js"></script>
+    <script src="/js/editor429.js"></script>
     <script src="/js/twitter.js"></script>
+    <script src="/js/gifffer.min.js"></script>
     {block name="js"}{/block}
+    <script>
+        window.addEventListener('load', function () {
+            // GIF动画播放
+            Gifffer();
+        });
+    </script>
 </body>
 
 </html>

@@ -33,14 +33,15 @@
                 <div class="p-3">
                     <div class="typo-text fs-18px" id="postContent">{$post.content | raw}</div>
                     {if $post.images > 0}
-                    <div class="gallery mt-2">
-                        <img src="/upload/{$post.created_at | date='Y/m/d/'}{$post.filename}" alt="">
+                    <div class="feed-gallery mt-2">
+                        <img class="img-fluid" src="/upload/{$post.filename}" alt="">
                     </div>
                     {/if}
                 </div>
                 <div class="d-flex align-items-center px-3 pb-2 fs-14px text-muted border-bottom">
                     <span class="d-inline-block me-3">
-                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)} · {$post.created_at | date='Y-m-d'}</time>
+                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)} ·
+                            {$post.created_at | date='Y-m-d'}</time>
                     </span>
                     <!-- <span class="d-inline-block me-3">山东</span> -->
                     <!-- 帖子工具栏 -->
@@ -79,14 +80,56 @@
                         </div>
                     </div>
                 </div>
-                <!-- 评论列表 -->
-                 <div class="p-3">
-                    <div class="text-muted">共 2123 条评论</div>
-                    <!-- <div>
-                        㒭㒹㕛㚉㚐㚙㝍㠪㠭㤫㪳㫈㵘㶣㶪㸞㹜㽓㽒㿢丄丅冇卍叒叕囧壵夯夵嫑孒孧孨孬尕尛屮巭恏惢憇朤歪汖灮舙
-                    </div> -->
-                 </div>
+                <div class="d-flex justify-content-between py-2 px-3 ms-0 post-actions border-bottom">
+                    <!-- 评论数 -->
+                    <a role="button" class="post-action-reply cursor-arrow" data-bs-toggle="tooltip"
+                        data-bs-trigger="hover" title="评论">
+                        <div class="btn btn-sm btn-icon post-action-icon">
+                            <i class="iconfont icon-comment fs-18px"></i>
+                            <span class="badge fs-13px">{$post.comments ?: ''}</span>
+                        </div>
+                    </a>
+                    <!-- 转帖 -->
+                    <a href="javascript:;" class="post-action-retweet cursor-default" title="转帖">
+                        <div class="btn btn-sm btn-icon post-action-icon">
+                            <i class="iconfont icon-retweet fs-18px js-no-click"></i>
+                            <span class="badge fs-13px">5</span>
+                        </div>
+                    </a>
+
+                    <!-- 喜欢 -->
+                    <a href="javascript:;" class="post-action-like cursor-default" title="赞">
+                        <div class="btn btn-sm btn-icon post-action-icon">
+                            <i class="iconfont icon-thumbs-up fs-18px js-no-click"></i>
+                            <span class="badge fs-13px">5</span>
+                        </div>
+                    </a>
+
+                    <!-- 收藏 -->
+                    <a href="javascript:;" class="post-action-fav cursor-default" title="收藏">
+                        <div class="btn btn-sm btn-icon post-action-icon">
+                            <i class="iconfont icon-fav fs-18px js-no-click"></i>
+                            <span class="badge fs-13px">5</span>
+                        </div>
+                    </a>
+
+                    <!-- 分享 -->
+                    <a href="javascript:;" class="post-action-fav cursor-default" title="分享">
+                        <div class="btn btn-sm btn-icon post-action-icon">
+                            <i class="iconfont icon-upload fs-18px js-no-click"></i>
+                            <span class="badge fs-13px">5</span>
+                        </div>
+                    </a>
+                </div>
+                <!-- <div>
+                    㒭㒹㕛㚉㚐㚙㝍㠪㠭㤫㪳㫈㵘㶣㶪㸞㹜㽓㽒㿢丄丅冇卍叒叕囧壵夯夵嫑孒孧孨孬尕尛屮巭恏惢憇朤歪汖灮舙
+                </div> -->
             </div>
+
+            <!-- 评论框 -->
+            {include file="layout/_comment" /}
+            <!-- 评论列表 -->
+            {include file="layout/_comment_list" /}
         </div>
 
         <!-- 边栏 -->

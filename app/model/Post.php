@@ -90,9 +90,6 @@ class Post extends Model
             // 有图片则上传
             $this->uploadImage($post_id);
 
-            // 更新帖子字段文件数
-            $this->model->where('id = ?', [$post_id])->increment('images', 1);
-
             // 提交事务
             $this->model->commit();
 
@@ -132,6 +129,7 @@ class Post extends Model
                     p.is_sticky,
                     u.username,
                     a.post_id,
+                    a.width,
                     a.filename,
                     a.type';
 
@@ -254,7 +252,8 @@ class Post extends Model
 
             // 构建附件数据
             $attachmentsData = [
-                'filename'   => $uploadedFileData['file_name'],
+                'width'      => $uploadedFileData['width'],
+                'filename'   => ltrim($uploadedFileData['file_path'], "//upload/"),
                 'type'       => $uploadedFileData['file_ext'],
                 'post_id'    => $post_id,
                 'user_id'    => session('user_id'),
@@ -266,6 +265,9 @@ class Post extends Model
 
             // 写入附件表
             db('attach')->insert($attachmentsData);
+
+            // 更新帖子字段文件数
+            $this->model->where('id = ?', [$post_id])->increment('images', 1);
 
             return true;
         } catch (\Throwable $th) {

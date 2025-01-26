@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #testBtn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div style="position: relative; display: inline-block;">
+        <img id="testImg" src="static/gif.gif" style="display: none;"> <!-- 默认隐藏GIF -->
+        <canvas id="testCanvas" style="display: block;"></canvas> <!-- 默认显示Canvas -->
+    </div>
+
+    <script>
+        if ('getContext' in document.createElement('canvas')) {
+            HTMLImageElement.prototype.play = function() {
+                if (this.storeCanvas) {
+                    // 移除存储的canvas
+                    this.storeCanvas.parentElement.removeChild(this.storeCanvas);
+                    this.storeCanvas = null;
+                    // 显示GIF
+                    this.style.display = '';
+                }
+            };
+
+            HTMLImageElement.prototype.stop = function() {
+                var canvas = document.getElementById('testCanvas');
+                var width = this.width, height = this.height;
+                if (width && height) {
+                    // canvas大小
+                    canvas.width = width;
+                    canvas.height = height;
+                    // 绘制图片帧（第一帧）
+                    var ctx = canvas.getContext('2d');
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);  // 清空Canvas
+                    ctx.drawImage(this, 0, 0, width, height);  // 绘制第一帧
+                    // 隐藏原图，显示canvas
+                    this.style.display = 'none';
+                }
+            };
+        }
+
+        var image = document.getElementById("testImg"),
+            canvas = document.getElementById("testCanvas");
+
+        if (image && canvas) {
+            var ctx = canvas.getContext('2d');
+
+            // 默认绘制第一帧到Canvas
+            image.onload = function() {
+                canvas.width = image.width;
+                canvas.height = image.height;
+                ctx.drawImage(image, 0, 0, image.width, image.height);
+            };
+
+            // 点击Canvas切换播放和停止
+            canvas.addEventListener('click', function() {
+                if (image.style.display === 'none') {
+                    // 播放GIF
+                    image.play();
+                    canvas.style.display = 'none'; // 隐藏Canvas
+                    image.style.display = ''; // 显示GIF
+                } else {
+                    // 停止GIF
+                    image.stop();
+                    canvas.style.display = ''; // 显示Canvas
+                }
+            });
+
+            // 初始化时停止GIF并显示Canvas
+            image.stop();
+            canvas.style.display = ''; // 显示Canvas
+        }
+    </script>
+</body>
+
+</html>

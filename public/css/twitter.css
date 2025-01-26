@@ -8,6 +8,7 @@
   --bs-btn-hover-bg: #E5F8F2;
   --bs-btn-active-bg: #e8e8e8;
   --bs-btn-active-border-color: transparent;
+  position: relative;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -16,6 +17,14 @@
   color: var(--bs-gray);
   background-color: transparent;
   border-radius: var(--bs-border-radius-pill);
+}
+
+.btn-icon .badge {
+  position: absolute;
+  top: 8px;
+  left: 24px;
+  color: currentColor;
+  font-weight: normal;
 }
 
 .btn-sm.btn-icon {
@@ -38,12 +47,29 @@
   cursor: pointer;
 }
 
+.cursor-zoomin {
+  cursor: zoom-in;
+}
+
+.cursor-zoomout {
+  cursor: zoom-out;
+}
+
 .empty-text {
   max-width: 500px;
   margin: 0 auto;
   padding: 100px 50px;
   color: #666;
   text-align: center;
+}
+
+/* 波浪线 */
+.squiggle {
+  -webkit-text-decoration: underline wavy var(--bs-danger);
+  text-decoration: underline wavy var(--bs-danger);
+  -webkit-text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+  text-underline-offset: 0.25em;
 }
 
 /* 只有小屏幕才显示 */
@@ -266,20 +292,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  will-change: transform, opacity;
 }
 
 .toast {
-  width: auto;
   width: 328px;
   max-width: 500px;
   margin-bottom: 10px;
   position: relative;
-  /* 非常重要，使 top 生效 */
   opacity: 0;
   animation-duration: 0.3s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
   transition: opacity 0.3s ease-in-out;
+  will-change: transform, opacity;
 }
 
 .toast.show {
@@ -293,25 +319,24 @@
 
 @keyframes slideDown {
   0% {
-    top: -50px;
-    /* 初始位置略微偏上 */
+    transform: translateY(-50px);
     opacity: 0;
   }
 
   100% {
-    top: 0;
+    transform: translateY(0);
     opacity: 1;
   }
 }
 
 @keyframes slideUp {
   0% {
-    top: 0;
+    transform: translateY(0);
     opacity: 1;
   }
 
   100% {
-    top: -50px;
+    transform: translateY(-50px);
     opacity: 0;
   }
 }
@@ -702,10 +727,12 @@
   display: inline-block;
   margin-top: 10px;
 }
+
 .preview-image {
   max-width: 100px;
   display: block;
 }
+
 .delete-icon {
   position: absolute;
   top: 5px;
@@ -713,13 +740,14 @@
   width: 24px;
   height: 24px;
   line-height: 24px;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 50%;
   cursor: pointer;
   color: #fff;
   font-size: 0.875rem;
   text-align: center;
 }
+
 .delete-icon:hover {
   background-color: #fef1e3;
   color: var(--bs-danger);
@@ -738,6 +766,16 @@
   box-sizing: border-box;
   -webkit-transition: all 200ms linear;
   transition: all 200ms linear;
+}
+
+/******************************* 评论框 */
+#commentTextarea {
+  height: auto;
+  border: 2px solid transparent;
+}
+
+#commentTextarea:focus {
+  border-color: var(--bs-primary);
 }
 
 /******************************* 表情列表 */
@@ -807,11 +845,14 @@
   right: -8px;
 }
 
+.feed-gallery {
+  position: relative;
+  display: inline-block;
+}
+
 .feed-item-img {
-  max-width: 100%;
-  max-height: 200px;
-  border-radius: 0.25rem;
-  transition: max-height 0.3s ease;
+  border-radius: 1rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .feed-item-img:hover {
@@ -819,9 +860,31 @@
   filter: brightness(70%);
 }
 
-.feed-item-img.expanded {
-  max-height: 1000px;
-  /* 或其他合适的高度 */
+.img-small {
+  max-width: 480px;
+  max-height: 450px;
+}
+
+.img-large {
+  max-width: 100%;
+  height: auto;
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+}
+
+.loading-overlay.visible {
+  visibility: visible;
 }
 
 .feed-comments {
@@ -883,6 +946,66 @@
   background: url(/img/bg_reply_num.png) no-repeat;
 }
 
+/******************************* 帖子内容 */
+
+.post-meta {
+  position: relative;
+  display: inline-block;
+  padding-right: 8px;
+  margin-right: 4px;
+}
+
+.post-meta:after {
+  content: "\20";
+  display: inline-block;
+  width: 2px;
+  height: 2px;
+  margin: auto 0;
+  border-radius: 50%;
+  position: absolute;
+  top: 1px;
+  bottom: 0;
+  right: 0;
+  background-color: var(--bs-gray);
+}
+
+.post-actions {
+  margin-left: -.5rem;
+}
+
+.post-actions>a {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--bs-gray);
+}
+
+.post-action-like:hover .post-action-icon {
+  background-color: #ffe7f2;
+}
+
+.liked,
+.liked .iconfont,
+.post-action-like:hover .iconfont {
+  color: #f91880;
+}
+
+.post-action-reply:hover .post-action-icon,
+.post-action-fav:hover .post-action-icon {
+  background-color: #e8f5fe;
+}
+
+.favorited,
+.favorited .iconfont,
+.post-action-reply:hover .iconfont,
+.post-action-fav:hover .iconfont {
+  color: #1d9bf0;
+}
+
+.home-post-actions .iconfont {
+  font-size: 1.125rem !important;
+}
+
 /* 文章排版
 *****************************************/
 
@@ -906,6 +1029,70 @@
   overflow: hidden;
   white-space: pre-wrap;
   word-break: break-all;
+}
+
+/******************************* 聊天框 */
+.chat li {
+  clear: both;
+  padding-bottom: 12px;
+}
+
+.chat li .chat-item {
+  display: inline-flex;
+}
+
+.chat-content {
+  position: relative;
+  margin-bottom: 2px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-align: justify;
+  word-break: break-all;
+  color: var(--bs-dark);
+  font-size: 1rem;
+}
+
+.chat-floors {
+  margin: 2px;
+  font-size: 14px;
+}
+
+/* .chat li.others {
+    margin-right: 3rem;
+} */
+
+.chat li.others .chat-content {
+  background-color: #f5f5f5;
+}
+
+.chat li.others .chat-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -8px;
+  border: 8px solid transparent;
+  border-top-color: #f5f5f5;
+}
+
+.chat li.self {
+  text-align: right;
+}
+
+.chat li.self .chat-item {
+  flex-direction: row-reverse;
+}
+
+.chat li.self .chat-content {
+  background-color: #9eea6a;
+}
+
+.chat li.self .chat-content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  border: 8px solid transparent;
+  border-top-color: #9eea6a;
 }
 
 

@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2791172 */
-  src: url('iconfont.woff2?t=1737613514861') format('woff2'),
-       url('iconfont.woff?t=1737613514861') format('woff'),
-       url('iconfont.ttf?t=1737613514861') format('truetype');
+  src: url('iconfont.woff2?t=1737880435805') format('woff2'),
+       url('iconfont.woff?t=1737880435805') format('woff'),
+       url('iconfont.ttf?t=1737880435805') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,66 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-edit:before {
+  content: "\e67a";
+}
+
+.icon-paper-plane:before {
+  content: "\e676";
+}
+
+.icon-set:before {
+  content: "\e679";
+}
+
+.icon-timer:before {
+  content: "\e677";
+}
+
+.icon-filter:before {
+  content: "\e678";
+}
+
+.icon-crowd:before {
+  content: "\e671";
+}
+
+.icon-news:before {
+  content: "\e672";
+}
+
+.icon-chart:before {
+  content: "\e674";
+}
+
+.icon-podcast:before {
+  content: "\e675";
+}
+
+.icon-thumbs-up:before {
+  content: "\e670";
+}
+
+.icon-history:before {
+  content: "\e66c";
+}
+
+.icon-attachment:before {
+  content: "\e66d";
+}
+
+.icon-edit3:before {
+  content: "\e66e";
+}
+
+.icon-thumbs-down:before {
+  content: "\e66b";
+}
+
+.icon-columns:before {
+  content: "\e66f";
 }
 
 .icon-messages-fill:before {
@@ -37,15 +97,11 @@
   content: "\e665";
 }
 
-.icon-filter:before {
-  content: "\e686";
-}
-
 .icon-color-palette:before {
   content: "\e6ef";
 }
 
-.icon-edit:before {
+.icon-edit2:before {
   content: "\e6cf";
 }
 
@@ -53,7 +109,7 @@
   content: "\e6cd";
 }
 
-.icon-work:before {
+.icon-job:before {
   content: "\e65d";
 }
 
@@ -65,7 +121,7 @@
   content: "\e65f";
 }
 
-.icon-close2:before {
+.icon-close-o:before {
   content: "\e6a9";
 }
 
@@ -109,7 +165,7 @@
   content: "\e65a";
 }
 
-.icon-lists1:before {
+.icon-lists:before {
   content: "\e65b";
 }
 
@@ -133,7 +189,7 @@
   content: "\e64e";
 }
 
-.icon-lock1:before {
+.icon-lock:before {
   content: "\e6c0";
 }
 
@@ -221,7 +277,7 @@
   content: "\e636";
 }
 
-.icon-more3:before {
+.icon-more-o:before {
   content: "\e637";
 }
 
@@ -317,10 +373,6 @@
   content: "\e706";
 }
 
-.icon-praise:before {
-  content: "\e71a";
-}
-
 .icon-return:before {
   content: "\e720";
 }
@@ -351,14 +403,6 @@
 
 .icon-mute:before {
   content: "\e61b";
-}
-
-.icon-filter2:before {
-  content: "\e61c";
-}
-
-.icon-lock:before {
-  content: "\e61d";
 }
 
 .icon-earth:before {
@@ -413,11 +457,11 @@
   content: "\e605";
 }
 
-.icon-lists:before {
+.icon-lists2:before {
   content: "\e609";
 }
 
-.icon-settings:before {
+.icon-set2:before {
   content: "\e60f";
 }
 

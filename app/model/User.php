@@ -61,10 +61,12 @@ class User extends \boss\Model
     /**
      * 根据用户 id 查询用户数据
      */
-    public function find(int $user_id, string $field = '*')
+    public function find(int $user_id, ?string $field = null)
     {
         $this->model = db('user');
-        $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
+        // 如果 $field 为 null，则查询所有字段
+        $field = $field ?? '*';
+        // $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
 
         return $this->model->where('id = ?', [$user_id])->first($field);
     }

@@ -80,6 +80,7 @@ class File
 
             return [
                 'result' => true,
+                'width' => getimagesize($filePath)[0],
                 'file_ext' => $fileExt,
                 'file_name' => $filename,
                 'file_path' => $urlPath,

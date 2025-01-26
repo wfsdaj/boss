@@ -117,13 +117,67 @@ function check_login(): void
 /**
  * 返回缩略图路径，若无缩略图则返回原图路径
  *
- * @param  string $target_image 目标图片路径
+ * @param  string $imagePath 目标图片路径
  * @return string 返回缩略图或原图的路径
  */
-function thumb(string $target_image): string
+function thumb(string $imagePath): string
 {
-    $imgInfo = pathinfo($target_image);
-    $thumbnailPath = "{$imgInfo['dirname']}/{$imgInfo['filename']}_thumb.{$imgInfo['extension']}";
+    static $cache = []; // 缓存 pathinfo 的结果
 
-    return is_file($thumbnailPath) ? $thumbnailPath : $target_image;
+    // 如果结果已经缓存，直接返回缓存结果
+    if (isset($cache[$imagePath])) {
+        return $cache[$imagePath];
+    }
+
+    // 拼接完整路径
+    $fullPath = 'upload/' . $imagePath;
+
+    // 获取路径信息
+    $pathInfo = $cache[$imagePath] ?? $cache[$imagePath] = pathinfo($fullPath);
+
+    // 构造缩略图路径
+    $thumbnailPath = sprintf('%s/%s_thumb.%s', $pathInfo['dirname'], $pathInfo['filename'], $pathInfo['extension']);
+
+    return $thumbnailPath;
+}
+
+/**
+ * 生成图片 HTML 代码
+ *
+ * @param array $post 包含图片信息的数组
+ * @return string 生成的 HTML 代码
+ */
+function generateImageHtml(array $post): string
+{
+    // 如果没有图片，返回空字符串
+    if (empty($post['images'])) {
+        return '';
+    }
+
+    // 检查图片类型是否为 GIF
+    $isGif = pathinfo($post['filename'], PATHINFO_EXTENSION) === 'gif';
+
+    // 根据图片宽度选择图片路径
+    $imageSrc = ($post['width'] >= 500) ? thumb($post['filename']) : 'upload/' . $post['filename'];
+
+    // 宽度>500会生成缩略图，所以添加 img-small 图片缩放图标
+    $imgClass = ($post['width'] >= 500) ? 'cursor-zoomin' : '';
+
+    // 如果是 GIF 图片，只设置 data-gifffer 属性
+    if ($isGif) {
+        $html = <<<HTML
+<div class="feed-gallery mt-2">
+    <img class="feed-item-img img-small {$imgClass}" data-gifffer="{$imageSrc}" alt="">
+</div>
+HTML;
+    } else {
+        // 如果不是 GIF 图片，设置 src 和 data-large 属性
+        $html = <<<HTML
+<div class="feed-gallery mt-2">
+    <img class="feed-item-img img-small {$imgClass}" src="{$imageSrc}" data-large="upload/{$post['filename']}" alt="">
+</div>
+HTML;
+    }
+
+    return $html;
 }
