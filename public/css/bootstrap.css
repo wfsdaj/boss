@@ -3651,7 +3651,7 @@ textarea.form-control-lg {
   --bs-dropdown-bg: var(--bs-body-bg);
   --bs-dropdown-border-color: var(--bs-border-color-translucent);
   --bs-dropdown-border-radius: 0.75rem;
-  --bs-dropdown-border-width: var(--bs-border-width);
+  --bs-dropdown-border-width: 0;
   --bs-dropdown-inner-border-radius: calc(var(--bs-border-radius) - var(--bs-border-width));
   --bs-dropdown-divider-bg: var(--bs-border-color-translucent);
   --bs-dropdown-divider-margin-y: 0.5rem;
@@ -3681,7 +3681,8 @@ textarea.form-control-lg {
   background-clip: padding-box;
   border: var(--bs-dropdown-border-width) solid var(--bs-dropdown-border-color);
   border-radius: var(--bs-dropdown-border-radius);
-  box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
+  /* box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px; */
+  box-shadow: rgb(101 119 134 / 20%) 0px 0px 15px, rgb(101 119 134 / 15%) 0px 0px 3px 1px;
   overflow: hidden;
 }
 
@@ -5072,8 +5073,8 @@ textarea.form-control-lg {
 }
 
 .pagination {
-  --bs-pagination-padding-x: 0.75rem;
-  --bs-pagination-padding-y: 0.375rem;
+  --bs-pagination-padding-x: 1rem;
+  --bs-pagination-padding-y: 0.5rem;
   --bs-pagination-font-size: 1rem;
   --bs-pagination-color: var(--bs-link-color);
   --bs-pagination-bg: var(--bs-body-bg);
@@ -5085,12 +5086,12 @@ textarea.form-control-lg {
   --bs-pagination-hover-border-color: var(--bs-border-color);
   --bs-pagination-focus-color: var(--bs-link-hover-color);
   --bs-pagination-focus-bg: var(--bs-secondary-bg);
-  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  --bs-pagination-focus-box-shadow: none;
   --bs-pagination-active-color: #fff;
-  --bs-pagination-active-bg: #1d9bf0;
-  --bs-pagination-active-border-color: #1d9bf0;
+  --bs-pagination-active-bg: #e6e7e7;
+  --bs-pagination-active-border-color: #e6e7e7;
   --bs-pagination-disabled-color: var(--bs-secondary-color);
-  --bs-pagination-disabled-bg: var(--bs-secondary-bg);
+  --bs-pagination-disabled-bg: var(--bs-gray);
   --bs-pagination-disabled-border-color: var(--bs-border-color);
   display: flex;
   padding-left: 0;

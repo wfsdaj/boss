@@ -165,8 +165,6 @@
   font-size: 1.125rem;
 }
 
-.tile-footer {}
-
 /******************************* 自动隐藏 */
 .autohide {
   position: sticky;
@@ -192,6 +190,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
+  background-color: var(--bs-gray);
 }
 
 @media (max-width: 767px) {
@@ -402,10 +401,6 @@
   .account-switcher-btn div {
     display: none;
   }
-
-  .account-switcher-btn img {
-    margin-right: 0;
-  }
 }
 
 @media (max-width: 1110px) {
@@ -426,6 +421,10 @@
   .primary-col {
     margin: 0 auto;
     width: 600px;
+  }
+
+  .app-nav {
+    align-items: center
   }
 
   .sidebar-col {
@@ -582,10 +581,6 @@
   margin: 12px 0;
   padding: 8px;
   border-radius: 99px;
-}
-
-.account-switcher-btn img {
-  margin-right: .5rem;
 }
 
 .account-switcher-btn:hover {

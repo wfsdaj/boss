@@ -2,7 +2,9 @@
 
 namespace app\model;
 
-class User extends \boss\Model
+use boss\Model;
+
+class User extends Model
 {
     private static $upload_file_failed = false;
     private static $store_file_failed  = false;
@@ -48,14 +50,14 @@ class User extends \boss\Model
 
         $user = $this->findByName($username);
 
-        $user_id = $user['id'];
-        $currentTimestamp = ['updated_at' => time()];
-
         if ($user && password_verify($password, $user['password'])) {
             // 更新登录时间
-            $this->model->where('id = ?', [$user_id])->update($currentTimestamp);
+            $this->model->where('id = ?', [$user['id']])->update(['updated_at' => time()]);
             return $user;
         }
+
+        // 如果用户不存在或密码错误，返回 null 或其他适当的返回值
+        return null;
     }
 
     /**
@@ -74,10 +76,10 @@ class User extends \boss\Model
     /**
      * 根据用户名查询用户数据
      */
-    public function findByName(string $username, string $field = '*')
+    public function findByName(string $username)
     {
         $this->model = db('user');
-        $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
+        $field = 'id, group_id, email, username, password, created_at, updated_at, golds';
 
         return $this->model->where('username = ?', [$username])
                             ->first($field);

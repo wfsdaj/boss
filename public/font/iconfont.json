@@ -6,6 +6,83 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "43244176",
+      "name": "book",
+      "font_class": "book",
+      "unicode": "e67b",
+      "unicode_decimal": 59003
+    },
+    {
+      "icon_id": "43244173",
+      "name": "火箭",
+      "font_class": "rocket",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "43244174",
+      "name": "引用",
+      "font_class": "quote",
+      "unicode": "e67d",
+      "unicode_decimal": 59005
+    },
+    {
+      "icon_id": "43244175",
+      "name": "赞",
+      "font_class": "thumbs-up-fill",
+      "unicode": "e67e",
+      "unicode_decimal": 59006
+    },
+    {
+      "icon_id": "43244170",
+      "name": "赞2",
+      "font_class": "thumbs-down-fill",
+      "unicode": "e67f",
+      "unicode_decimal": 59007
+    },
+    {
+      "icon_id": "43244171",
+      "name": "徽章",
+      "font_class": "badge",
+      "unicode": "e681",
+      "unicode_decimal": 59009
+    },
+    {
+      "icon_id": "43244169",
+      "name": "饼干",
+      "font_class": "cookie",
+      "unicode": "e683",
+      "unicode_decimal": 59011
+    },
+    {
+      "icon_id": "43244168",
+      "name": "lock",
+      "font_class": "lock",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "43244167",
+      "name": "mute",
+      "font_class": "mute",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
+      "icon_id": "43244166",
+      "name": "copy",
+      "font_class": "copy1",
+      "unicode": "e687",
+      "unicode_decimal": 59015
+    },
+    {
+      "icon_id": "43244165",
+      "name": "exchange",
+      "font_class": "exchange",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
       "icon_id": "43233689",
       "name": "edit",
       "font_class": "edit",
@@ -314,13 +391,6 @@
       "unicode_decimal": 58958
     },
     {
-      "icon_id": "34923",
-      "name": "lock",
-      "font_class": "lock",
-      "unicode": "e6c0",
-      "unicode_decimal": 59072
-    },
-    {
       "icon_id": "36037",
       "name": "present",
       "font_class": "present",
@@ -347,13 +417,6 @@
       "font_class": "clap",
       "unicode": "e64c",
       "unicode_decimal": 58956
-    },
-    {
-      "icon_id": "929187",
-      "name": "comment-o",
-      "font_class": "comment-o",
-      "unicode": "e6a6",
-      "unicode_decimal": 59046
     },
     {
       "icon_id": "33440148",
@@ -685,13 +748,6 @@
       "unicode_decimal": 58914
     },
     {
-      "icon_id": "24111171",
-      "name": "mute",
-      "font_class": "mute",
-      "unicode": "e61b",
-      "unicode_decimal": 58907
-    },
-    {
       "icon_id": "24111177",
       "name": "earth",
       "font_class": "earth",
@@ -809,13 +865,6 @@
       "font_class": "send",
       "unicode": "e619",
       "unicode_decimal": 58905
-    },
-    {
-      "icon_id": "18653678",
-      "name": "exchange",
-      "font_class": "exchange",
-      "unicode": "e618",
-      "unicode_decimal": 58904
     }
   ]
 }

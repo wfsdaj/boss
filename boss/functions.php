@@ -339,22 +339,34 @@ function is_mobile(): bool
 }
 
 /**
- * 生成完整的 URL 地址
+ * 生成完整的 URL
  *
- * @param string $path URL 路径，默认空字符串
- * @return string 返回生成的完整 URL
+ * - 如果传入路径参数 `$path`，生成基于当前主机的指定路径 URL。
+ * - 如果 `$path` 为 `null` 或 `''`，返回当前页面的完整 URL（包含请求参数）。
+ *
+ * @param string|null $path 路径（默认为空字符串）。传入 null 或空字符串时返回当前页面 URL。
+ * @return string 返回完整的 URL（包括协议、主机名、路径和查询参数）。
+ * @throws InvalidArgumentException 如果主机名无效则抛出异常。
  */
-function url(string $path = ''): string
+function url(?string $path = ''): string
 {
+    // 获取协议类型
     $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
 
+    // 获取主机名
     $host = $_SERVER['HTTP_HOST'];
     if (!filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME)) {
         throw new InvalidArgumentException('Invalid host name.');
     }
 
-    $sanitizedPath = filter_var($path, FILTER_SANITIZE_URL);
+    // 如果 $path 是 null，返回当前页面的完整 URL
+    if ($path === null || $path === '') {
+        $currentPath = $_SERVER['REQUEST_URI']; // 当前页面路径（带查询参数）
+        return $protocol . '://' . $host . $currentPath;
+    }
 
+    // 对路径进行过滤并返回拼接后的 URL
+    $sanitizedPath = filter_var($path, FILTER_SANITIZE_URL);
     return $protocol . '://' . $host . $sanitizedPath;
 }
 

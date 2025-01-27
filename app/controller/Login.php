@@ -66,7 +66,7 @@ class Login
         // 登录成功，设置 session
         session_regenerate_id(true);
         session_set([
-            'user_id' => $user['id'],
+            'user_id'  => $user['id'],
             'username' => $user['username'],
         ]);
         if ($user['id'] === 1 && $user['group_id'] === 1) {

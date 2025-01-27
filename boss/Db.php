@@ -284,7 +284,8 @@ class Db
         $this->pretreatment->execute($preArray[1]);
         $res = $this->pretreatment->fetch(PDO::FETCH_ASSOC);
         $this->trace($res, $startTime);
-        return $res;
+
+        return $res === false ? null : $res;
     }
 
     /**

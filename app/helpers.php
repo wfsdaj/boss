@@ -23,7 +23,7 @@ function is_logined(): bool
  */
 function is_author(int $author_id): bool
 {
-    return session('user_id') === $author_id;
+    return (int)session('user_id') === $author_id;
 }
 
 /**
@@ -58,7 +58,7 @@ function get_avatar(?int $user_id): string
     }
 
     // 使用crc32哈希函数并取绝对值，然后取模得到头像索引
-    $avatarIndex = abs(crc32((string)$user_id)) % 20;
+    $avatarIndex = abs(crc32((string)$user_id)) % 38;
 
     // 拼接头像路径
     $avatarPath = '/img/avatar/' . $avatarIndex . '.png';
@@ -85,31 +85,6 @@ function go_back(): void
 
     // 执行重定向
     redirect($backLink);
-}
-
-/**
- * 检查用户登录状态
- *
- * 该函数检查当前用户是否已登录。如果已登录，返回到上一页面。如果未登录，跳转到登录页面。
- * 如果当前页面已经是登录页面，则不会执行任何跳转。
- *
- * @return void 如果用户未登录，重定向到登录页面；如果已登录，返回到上一页面
- */
-function check_login(): void
-{
-    // 获取当前用户的用户ID
-    $user_id = session('user_id');
-
-    // 如果用户已登录，返回到上一页面
-    if ($user_id) {
-        go_back(); // 用户已登录，返回上一页
-        return;
-    }
-
-    // 如果用户未登录，并且当前页面不是登录页面，重定向到登录页面
-    if (strpos(url_current(), '/login') === false) {
-        redirect(url('/login'));
-    }
 }
 
 /**
@@ -145,7 +120,7 @@ function thumb(string $imagePath): string
  * @param array $post 包含图片信息的数组
  * @return string 生成的 HTML 代码
  */
-function generateImageHtml(array $post): string
+function generate_image_html(array $post): string
 {
     // 如果没有图片，返回空字符串
     if (empty($post['images']) || $post['filename'] === null) {

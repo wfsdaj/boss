@@ -8,7 +8,7 @@
         <img class="auth-logo mb-4" src="/img/logo.png" alt="">
     </a>
     <h1 class="mb-4 h4 fw-bold text-center">欢迎回来</h1>
-    <form id="authForm" method="post">
+    <form id="authForm" method="post" action="/login/submit">
         <input type="hidden" name="csrf_token" value="{:csrf_token()}">
         <div class="form-floating mb-4" hx-target="this">
             <input type="text" class="form-control" id="username" name="username" value="{:old('username')}" placeholder="用户名" required autofocus>
@@ -73,41 +73,41 @@
             validate(fieldId);
         });
 
-        $('#authForm').submit(function(event) {
-            event.preventDefault();
-            // 禁用提交按钮，防止重复点击
-            const submitButton = $('#submit-btn');
-            submitButton.prop('disabled', true);
+        // $('#authForm').submit(function(event) {
+        //     event.preventDefault();
+        //     // 禁用提交按钮，防止重复点击
+        //     const submitButton = $('#submit-btn');
+        //     submitButton.prop('disabled', true);
 
-            // 获取表单数据
-            const formData = $(this).serialize();
+        //     // 获取表单数据
+        //     const formData = $(this).serialize();
 
-            // 发送 Ajax 请求
-            $.ajax({
-                url: '/login/submit',
-                type: 'POST',
-                data: formData,
-                dataType: 'json',
-                success: function(res) {
-                    if (res.status === 'success') {
-                        toast(res.message, 'success');
-                        setTimeout(() => {
-                            document.referrer === "" ? (window.location.href = "/") : window.history.back();
-                        }, 2000);
-                    } else {
-                        toast(res.message, 'danger');
-                        captchaImg.setAttribute("src", "/auth/captcha?" + Math.random());
-                    }
-                    // 提交完成后重新启用按钮
-                    submitButton.prop('disabled', false);
-                },
-                error: function(xhr, status, error) {
-                    // 提交失败后重新启用按钮
-                    submitButton.prop('disabled', false);
-                    toast('提交失败，请稍后再试', 'danger');
-                }
-            });
-        });
+        //     // 发送 Ajax 请求
+        //     $.ajax({
+        //         url: '/login/submit',
+        //         type: 'POST',
+        //         data: formData,
+        //         dataType: 'json',
+        //         success: function(res) {
+        //             if (res.status === 'success') {
+        //                 toast(res.message, 'success');
+        //                 setTimeout(() => {
+        //                     document.referrer === "" ? (window.location.href = "/") : window.history.back();
+        //                 }, 2000);
+        //             } else {
+        //                 toast(res.message, 'danger');
+        //                 captchaImg.setAttribute("src", "/auth/captcha?" + Math.random());
+        //             }
+        //             // 提交完成后重新启用按钮
+        //             submitButton.prop('disabled', false);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             // 提交失败后重新启用按钮
+        //             submitButton.prop('disabled', false);
+        //             toast('提交失败，请稍后再试', 'danger');
+        //         }
+        //     });
+        // });
     });
 </script>
 {/block}
