@@ -1,171 +1,90 @@
 <?php
 
-declare(strict_types=1);
-
 namespace boss;
 
 class Paginate
 {
-    /** @var int 总记录数 */
-    public int $totalRows;
+    public $totalRows;
+    public $eachPage;
+    public $maxPage;
+    public $limit;
+    public $currentPage = 1;
+    public $firstPage;
+    public $prevPage;
+    public $listPage = [];
+    public $nextPage;
+    public $lastPage;
+    public $skipPage;
+    public $currentUrl;
 
-    /** @var int 每页显示的记录数 */
-    public int $eachPage;
-
-    /** @var int 最大页码数 */
-    public int $maxPage;
-
-    /** @var string SQL LIMIT 子句 */
-    public string $limit;
-
-    /** @var int 当前页码 */
-    public int $currentPage = 1;
-
-    /** @var string 第一页的URL */
-    public string $firstPage;
-
-    /** @var string 上一页的URL */
-    public string $prePage;
-
-    /** @var array<int, string> 分页列表的URL */
-    public array $listPage = [];
-
-    /** @var string 下一页的URL */
-    public string $nextPage;
-
-    /** @var string 最后一页的URL */
-    public string $lastPage;
-
-    /** @var string 跳转分页的HTML代码 */
-    public string $skipPage;
-
-    /** @var string 当前页面的基础URL */
-    private string $currentUrl;
-
-    /**
-     * 构造函数，初始化分页信息
-     *
-     * @param int $totalRows 总记录数
-     * @param int $eachPage 每页显示的记录数
-     * @throws \InvalidArgumentException 如果总记录数或每页记录数不合法
-     */
-    public function __construct(int $totalRows, int $eachPage = 10)
+    public function __construct($totalRows, $eachPage = 10)
     {
-        if ($totalRows < 0) {
-            throw new \InvalidArgumentException("总记录数不能为负数");
-        }
-        if ($eachPage < 1) {
-            throw new \InvalidArgumentException("每页记录数必须大于0");
-        }
-
+        $totalRows < 1 ? $this->maxPage = 1 : $this->maxPage = ceil($totalRows / $eachPage);
         $this->totalRows = $totalRows;
-        $this->eachPage = $eachPage;
-        $this->maxPage = (int)max(1, ceil($totalRows / $eachPage)); // 确保最大页码至少为1
-
-        // 修正当前页码
-        $this->currentPage = $this->normalizeCurrentPage(PAGE_NUMBER);
-
-        // 获取当前页面的基础URL
-        $this->currentUrl = $this->buildCurrentUrl();
-
-        // 初始化分页URL
-        $this->initializePageUrls();
-
-        // 初始化跳转分页的HTML代码
-        $this->skipPage = $this->buildSkipPage();
-    }
-
-    /**
-     * 修正当前页码
-     *
-     * @param int $page 当前页码
-     * @return int 修正后的当前页码
-     */
-    private function normalizeCurrentPage(int $page): int
-    {
-        return max(1, min($page, $this->maxPage));
-    }
-
-    /**
-     * 构建当前页面的基础URL
-     *
-     * @return string 当前页面的基础URL
-     */
-    private function buildCurrentUrl(): string
-    {
-        $baseUrl = CONTROLLER_NAME . '/' . METHOD_NAME;
-        return PG_URL ? $baseUrl . '/' . PG_URL : $baseUrl;
-    }
-
-    /**
-     * 初始化分页URL
-     */
-    private function initializePageUrls(): void
-    {
-        $suffix = PAGE_SUFFIX ?: '/';
-        $getsRec = $this->addGet();
-
-        $this->limit     = ' LIMIT ' . (($this->currentPage - 1) * $this->eachPage) . ',' . $this->eachPage;
+        $this->eachPage  = $eachPage;
+        //修正当前页码
+        if (PAGE_NUMBER < 1) {
+            $this->currentPage = 1;
+        } else if (PAGE_NUMBER > $this->maxPage) {
+            $this->currentPage = $this->maxPage;
+        } else {
+            $this->currentPage = PAGE_NUMBER;
+        }
+        //获取URL
+        if (URL_SEGMENT != '') {
+            $this->currentUrl = '/' . strtolower(CONTROLLER_NAME) . '/' . METHOD_NAME . '/' . URL_SEGMENT;
+        } else {
+            $this->currentUrl = '/' . strtolower(CONTROLLER_NAME) . '/' . METHOD_NAME;
+        }
+        $suffix = 'PAGE_SUFFIX' ? PAGE_SUFFIX : '/';
+        $this->limit     = ' LIMIT ' . (($this->currentPage - 1) * $eachPage) . ',' . $eachPage;
+        $getsRec         = $this->addGet();
         $this->firstPage = $this->currentUrl . '/page_1' . $suffix . $getsRec;
-        $this->prePage   = $this->currentUrl . '/page_' . max(1, $this->currentPage - 1) . $suffix . $getsRec;
-        $this->nextPage  = $this->currentUrl . '/page_' . min($this->maxPage, $this->currentPage + 1) . $suffix . $getsRec;
+        $this->prevPage   = $this->currentUrl . '/page_' . ($this->currentPage - 1) . $suffix . $getsRec;
+        $this->nextPage  = $this->currentUrl . '/page_' . ($this->currentPage + 1) . $suffix . $getsRec;
         $this->lastPage  = $this->currentUrl . '/page_' . $this->maxPage . $suffix . $getsRec;
-
-        // 初始化分页列表
-        $this->listPage = $this->buildPageList($suffix, $getsRec);
-    }
-
-    /**
-     * 构建分页列表
-     *
-     * @param string $suffix URL后缀
-     * @param string $getsRec GET参数
-     * @return array<int, string> 分页列表的URL
-     */
-    private function buildPageList(string $suffix, string $getsRec): array
-    {
-        $start = max(1, $this->currentPage - 2);
-        $end   = min($this->maxPage, $this->currentPage + 3);
-
+        //分页列表
+        if ($this->currentPage <= 3) {
+            $start = 1;
+            $end = 6;
+        } else {
+            $start = $this->currentPage - 2;
+            $end = $this->currentPage + 3;
+        }
+        if ($end > $this->maxPage) {
+            $end = $this->maxPage;
+        }
         if ($end - $start < 5) {
-            $start = max(1, $end - 5);
+            $start = $end - 5;
         }
-
-        $pageList = [];
+        if ($start < 1) {
+            $start = 1;
+        }
         for ($i = $start; $i <= $end; $i++) {
-            $pageList[$i] = $this->currentUrl . '/page_' . $i . $suffix . $getsRec;
+            $this->listPage[$i] = $this->currentUrl . '/page_' . $i . $suffix . $getsRec;
         }
-
-        return $pageList;
-    }
-
-    /**
-     * 构建跳转分页的HTML代码
-     *
-     * @return string 跳转分页的HTML代码
-     */
-    private function buildSkipPage(): string
-    {
-        $skipPage = '<select onchange="location.href=\'' . $this->currentUrl . '/page_\'+this.value+\'' . (PAGE_SUFFIX ?: '/') . $this->addGet() . '\';">';
+        //跳转分页
+        $this->skipPage = '<select onchange="location.href=\'' . $this->currentUrl . '/page_\'+this.value+\'' . $suffix . $getsRec . '\';">';
         for ($i = 1; $i <= $this->maxPage; $i++) {
-            $selected = $i === $this->currentPage ? ' selected="selected"' : '';
-            $skipPage .= '<option value="' . $i . '"' . $selected . '>' . $i . '</option>';
+            if ($i == $this->currentPage) {
+                $this->skipPage .= '<option value="' . $i . '" selected="selected">' . $i . '</option>';
+            } else {
+                $this->skipPage .= '<option value="' . $i . '">' . $i . '</option>';
+            }
         }
-        $skipPage .= '</select>';
-
-        return $skipPage;
+        $this->skipPage .= '</select>';
     }
 
     /**
-     * 获取分页信息
+     * 获取分页链接
      *
-     * @return array<string, mixed> 分页信息
+     * @return array<string, mixed> 返回分页链接的关联数组
      */
     public function pager(): array
     {
         return [
             'firstPage' => $this->firstPage,
-            'prePage'   => $this->prePage,
+            'prevPage'  => $this->prevPage,
             'listPage'  => $this->listPage,
             'nextPage'  => $this->nextPage,
             'lastPage'  => $this->lastPage,
@@ -175,29 +94,25 @@ class Paginate
     /**
      * 获取跳转分页的HTML代码
      *
-     * @return string 跳转分页的HTML代码
+     * @return string 返回跳转分页的HTML代码
      */
     public function skipPager(): string
     {
-        return $this->skipPage;
+        return htmlspecialchars($this->skipPage, ENT_QUOTES, 'UTF-8');
     }
 
-    /**
-     * 添加GET参数
-     *
-     * @return string GET参数字符串
-     */
-    private function addGet(): string
+
+    public function addGet(array $queryParams = []): string
     {
-        if (empty($_GET)) {
+        // 如果没有传递参数，则默认使用 $_GET
+        $queryParams = empty($queryParams) ? $_GET : $queryParams;
+
+        // 如果参数为空，则返回空字符串
+        if (empty($queryParams)) {
             return '';
         }
 
-        $params = [];
-        foreach ($_GET as $key => $value) {
-            $params[] = urlencode($key) . '=' . urlencode($value);
-        }
-
-        return '?' . implode('&', $params);
+        // 使用 http_build_query 构建查询字符串并返回
+        return '?' . http_build_query($queryParams);
     }
 }

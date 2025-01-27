@@ -122,7 +122,7 @@ class App
         define('SEGMENTS', $url);
 
         $url = array_slice($url, 2);
-        define('PG_URL', implode('/', $url));
+        define('URL_SEGMENT', implode('/', $url));
 
         $GLOBALS['traceSql'] = [];
 

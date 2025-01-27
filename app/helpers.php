@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use app\model\User;
-
 /**
-
  * 检查用户是否已登录。
+ *
  * @return bool 如果用户已登录，则返回 true；否则返回 false。
  */
 function is_logined(): bool
@@ -150,7 +148,7 @@ function thumb(string $imagePath): string
 function generateImageHtml(array $post): string
 {
     // 如果没有图片，返回空字符串
-    if (empty($post['images'])) {
+    if (empty($post['images']) || $post['filename'] === null) {
         return '';
     }
 
@@ -178,6 +176,62 @@ HTML;
 </div>
 HTML;
     }
+
+    return $html;
+}
+
+/**
+ * 生成分页导航的HTML代码
+ *
+ * @param object $paginationData 分页数据对象，包含以下属性：
+ *   - totalRows: int, 总记录数
+ *   - currentPage: int, 当前页码
+ *   - prevPage: string, 上一页的URL
+ *   - nextPage: string, 下一页的URL
+ *   - listPage: array, 页码和对应URL的映射数组，例如 [1 => '/page/1', 2 => '/page/2']
+ * @param string $prevIcon 上一页按钮的图标（HTML 字符串），默认是左箭头图标
+ * @param string $nextIcon 下一页按钮的图标（HTML 字符串），默认是右箭头图标
+ *
+ * @return string 返回生成的分页导航HTML代码；如果没有数据，则返回空字符串。
+ */
+function render_pagination(object $paginationData, string $prevIcon = '&lsaquo;', string $nextIcon = '&rsaquo;'): string
+{
+    // 检查是否有数据
+    if ($paginationData->totalRows === 0) {
+        return '';
+    }
+
+    // 提取分页数据
+    $currentPage = $paginationData->currentPage;
+    $prevPage = $paginationData->prevPage;
+    $nextPage = $paginationData->nextPage;
+    $pageList = $paginationData->listPage;
+
+    // 开始生成分页HTML
+    $html = '<nav aria-label="page navigation">';
+    $html .= '<ul class="pagination justify-content-center p-3">';
+
+    // 上一页按钮
+    $prevDisabled = ($currentPage === 1) ? 'disabled' : '';
+    $html .= '<li class="page-item ' . $prevDisabled . '"><a class="page-link" href="' . ($prevDisabled ? '#' : $prevPage) . '">';
+    $html .= '<span aria-hidden="true">' . $prevIcon . '</span></a></li>';
+
+    // 遍历页码
+    foreach ($pageList as $pageNumber => $pageUrl) {
+        $pageUrl = !empty($pageUrl) ? htmlspecialchars($pageUrl) : '#';
+        // 如果是当前页，添加 active 类
+        $activeClass = ($pageNumber === $currentPage) ? 'active' : '';
+        $html .= '<li class="page-item ' . $activeClass . '"><a class="page-link" href="' . $pageUrl . '">';
+        $html .= $pageNumber . '</a></li>';
+    }
+
+    // 下一页按钮
+    $nextDisabled = ($currentPage === $paginationData->maxPage) ? 'disabled' : '';
+    $html .= '<li class="page-item ' . $nextDisabled . '"><a class="page-link" href="' . ($nextDisabled ? '#' : $nextPage) . '">';
+    $html .= '<span aria-hidden="true">' . $nextIcon . '</span></a></li>';
+
+    $html .= '</ul>';
+    $html .= '</nav>';
 
     return $html;
 }

@@ -1,3 +1,4 @@
+{if session('user_id')}
 <div class="composer d-flex px-3 py-12px" id="homeEditor">
     <a href="/user/profile/{:session('user_id')}" class="position-relative">
         <img class="avatar" src="{:get_avatar(session('user_id'))}" alt="">
@@ -133,3 +134,4 @@
         }
     });
 </script>
+{/if}

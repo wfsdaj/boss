@@ -1,0 +1,15 @@
+{if $data[1]->totalRows !== 0}
+<nav aria-label="page navigation">
+    <ul class="pagination justify-content-center p-3">
+        <li class="page-item"><a class="page-link" href="{$data[1].prevPage}"><span aria-hidden="true">&lsaquo;</span></a></li>
+        {foreach $data[1]->listPage as $k => $v}
+            {if $k === $data[1]->currentPage}
+                <li class="page-item"><a class="page-link active" href="{$v}">{$k}</a></li>
+            {else /}
+                <li class="page-item"><a class="page-link" href="{$v}">{$k}</a></li>
+            {/if}
+        {/foreach}
+        <li class="page-item"><a class="page-link" href="{$data[1].nextPage}"><span aria-hidden="true">&rsaquo;</span></a></li>
+    </ul>
+</nav>
+{/if>

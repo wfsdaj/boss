@@ -31,11 +31,12 @@
                 </div>
             </div>
 
-            {if session('user_id')}
-                {include file='layout/_composer' /}
-            {/if}
-
+            <!-- 发帖框 -->
+            {include file='layout/_composer' /}
+            <!-- 帖子列表 -->
             {include file='layout/_list_twitter' /}
+            <!-- 分页 -->
+            {:render_pagination($posts[1])}
 
         </div>
         <div class="sidebar-col">
