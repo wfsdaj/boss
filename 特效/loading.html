@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .loading {
+            width: 26px;
+            height: 26px;
+            animation-name: loadinga;
+            animation-duration: 0.75s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+        @keyframes loadinga {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading loadinga">
+        <svg height="100%" viewBox="0 0 32 32" width="100%">
+            <circle cx="16" cy="16" fill="none" r="14" stroke-width="4" style="stroke: rgb(0,150,136); opacity: 0.2;">
+            </circle>
+            <circle cx="16" cy="16" fill="none" r="14" stroke-width="4"
+                style="stroke: rgb(0,150,136); stroke-dasharray: 80; stroke-dashoffset: 60;"></circle>
+        </svg>
+    </div>
+
+</body>
+
+</html>

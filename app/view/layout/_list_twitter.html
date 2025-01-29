@@ -1,6 +1,6 @@
 <ul class="feed-list list-unstyled">
     {if !$posts }
-    <div class="empty-text fs-3">有鄙夫问于我，空空如也，<br>我叩其两端而竭焉。</div>
+    <div class="empty-text fs-3">空空如也</div>
     {else /}
     {foreach $posts[0] as $post}
     <li class="feed-item d-flex js-tap" id="feed{$post.id}" data-href="/post/show/{$post.id}" data-pid="{$post.id}">
@@ -14,12 +14,12 @@
         </a>
         <div class="d-flex flex-column w-100">
             <div class="d-flex position-relative">
-                <a class="link-dark fw-bold" href="/user/profile/{$post.user_id}">{$post.username}</a>
-                <a class="link-secondary ms-2" href="/post/show/{$post.id}">{$post.created_at | nice_time}</a>
+                <a class="feed-item-link fw-bold" href="/user/profile/{$post.user_id}">{$post.username}</a>
+                <a class="link-secondary ms-2" href="/post/show/{$post.id}">{:nice_time($post.created_at)}</a>
                 <div class="ms-auto dropdown">
                     <button class="btn btn-sm btn-icon feed-item-action" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false"><i class="iconfont icon-more fs-18px"></i></button>
-                    <div class="dropdown-menu dropdown-menu-end fs-15px shadow-sm">
+                    <div class="dropdown-menu dropdown-menu-end fs-15px">
                         <a class="dropdown-item" href="#">
                             <i class="iconfont icon-shield me-2"></i>
                             <span class="fw-bold">屏蔽</span>

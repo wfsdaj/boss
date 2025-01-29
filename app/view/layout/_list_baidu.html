@@ -1,23 +1,32 @@
 <ul class="feed-list list-unstyled">
-    <?php if (!$posts[0]): ?>
-        <div class="placeholder fs-28">無</div>
-    <?php else: ?>
-        <li class="feed-item d-flex p-3 js-tap" data-href="/post/show/123" data-pid="123">
-            <div class="feed-item-count">
-                <spap class="post-num">
-                    <i>1</i>
-                    <span class="list-triangle-border"></span>
-                    <span class="list-triangle-body"></span>
-                </spap>
+{if !$posts[0]}
+    <div class="empty-text fs-3">空空如也</div>
+{else /}
+    {foreach $posts[0] as $post}
+    <li class="feed-item py-12px d-flex js-tap" data-href="/post/show/{$post.id}" data-pid="{$post.id}">
+        <div class="feed-item-count">
+            <spap class="post-num">
+                <i>{$post.comments}</i>
+                <span class="list-triangle-border"></span>
+                <span class="list-triangle-body"></span>
+            </spap>
+        </div>
+        <div class="d-flex flex-column w-100">
+            <p class="typo-text fs-18">{$post.content}</p>
+            {if $post.images > 0}
+                {if $post.type === 'gif'}
+                    <img class="img-fluid feed-item-img rounded align-self-baseline mt-2" data-gifffer="/upload/{$post.filename}" alt="" loading="lazy" decoding="async">
+                {else /}
+                    <img class="img-fluid feed-item-img rounded align-self-baseline mt-2" src="/upload/{$post.filename}" alt="" data-zoomable loading="lazy" decoding="async">
+                {/if}
+            {/if}
+            <div class="d-flex align-items-center mt-1">
+                <a class="link-dark post-meta" href="/user/profile/{$post.user_id}">{$post.username}</a>
+                <a class="link-secondary" href="/post/show/{$post.id}">{:nice_time($post.created_at)}</a>
             </div>
-            <div class="d-flex flex-column w-100">
-                <p class="typo-text">不要问这个世界需要什么，要问问是什么让你感觉活着，然后就去做吧。这世界需要的，就是这样有生命力的人。</p>
-                <img class="img-fluid feed-item-img rounded align-self-baseline mt-2" src="/img/a.jpg.webp" alt="" data-zoomable="" loading="lazy" decoding="async">
-                <div class="d-flex align-items-center mt-2 fs-15px">
-                    <a class="link-dark pe-2" href="/user/profile/2">demo</a>
-                    <a class="link-secondary" href="/post/show/123">8个月</a>
-                </div>
-            </div>
-        </li>
-    <?php endif; ?>
+        </div>
+
+    </li>
+    {/foreach}
+{/if}
 </ul>

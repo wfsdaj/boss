@@ -1,0 +1,40 @@
+<div class="position-relative mb-3">
+    <div class="profile-header-cover">
+        <img src="/img/bg-grid.png" alt="">
+    </div>
+    <div class=" px-3 d-flex justify-content-between">
+        <div class="profile-header-avatar">
+            <form id="avatar-form" method="post" enctype="multipart/form-data">
+                <img class="avatar" id="previewImg" src="{:get_avatar($user.id)}" alt="">
+                <div class="upload-avatar d-flex flex-column justify-content-center align-items-center text-white" title="上传新头像">
+                    <label for="avatarInput">
+                        <input type="file" class="d-none" id="avatarInput" name="avatarInput" accept="image/png, image/jpeg, img/jpg">
+                        <i aria-hidden="true" class="iconfont icon-upload fs-28"></i>
+                        <p class="fs-15">上传新头像</p>
+                    </label>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex mt-3">
+            <div class="me-auto">
+            {if is_author($user.id)}
+                <a class="btn btn-outline-light rounded-pill fw-bold" href="/user/edit/{:session('user_id')}" role="button">编辑个人资料</a>
+            {else /}
+                <a class="btn btn-dark rounded-pill fw-bold" href="#">关注</a>
+            {/if}
+            </div>
+        </div>
+    </div>
+    <div class="py-3 px-4">
+        <p class="mb-2 fs-18px fw-bold text-truncate">{$user.username}</p>
+        <p class="fs-15px text-dark">发布有趣的科学、小玩意、历史、艺术等。订阅有深度的帖子。</p>
+        <p class="mt-1 text-muted fs-14px">
+            <i class="iconfont icon-location"></i> 位置
+           <i class="iconfont icon-date ms-2"></i> {:date("Y年m月", $user.created_at)} 加入
+        </p>
+        <!-- <p class="mt-1 fs-14">
+            <a class="link-muted" href="#"><b>2423</b> 正在关注</a>
+            <a class="link-muted" href="#"><b class="ms-3">84</b> 关注者</a>
+        </p> -->
+    </div>
+</div>

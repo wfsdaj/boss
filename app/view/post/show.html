@@ -1,6 +1,6 @@
 {extend name="layout/app" /}
 
-{block name="title"}{$title}{/block}
+{block name="title"}{$post.username}: {$post.content}{/block}
 
 {block name="main"}
 <main role="main" class="d-flex flex-grow-1">
@@ -12,9 +12,7 @@
                 <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
                     <i class="iconfont icon-left-arrow fs-5"></i>
                 </div>
-                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
-                    <span class="text-truncate">{$pageTitle}</span>
-                </h2>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">帖子</h2>
             </div>
 
             <!-- 帖子 -->
@@ -40,8 +38,7 @@
                 </div>
                 <div class="d-flex align-items-center px-3 pb-2 fs-14px text-muted border-bottom">
                     <span class="d-inline-block me-3">
-                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)} ·
-                            {$post.created_at | date='Y-m-d'}</time>
+                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)}前 · {$post.created_at | date='Y-m-d'}</time>
                     </span>
                     <!-- <span class="d-inline-block me-3">山东</span> -->
                     <!-- 帖子工具栏 -->
@@ -50,7 +47,7 @@
                             aria-expanded="false">
                             <i class="iconfont icon-more fs-5"></i>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-end shadow-sm">
+                        <div class="dropdown-menu dropdown-menu-end">
                             {if is_admin()}
                             <a href="javascript:;" class="dropdown-item" id="js-pin" role="button"
                                 data-post-id="{$post.id}">
@@ -140,13 +137,7 @@
                     <input class="form-control rounded-5 search-input" type="text" placeholder="搜索">
                 </div>
                 <div class="tile mb-3">
-                    <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">每日帖不过３😉</h2>
-                    <div class="px-3 pb-3">
-                        <p class="mt-1 mb-3 text-muted">友情提示，发帖和回帖都需要<i class="squiggle">扣除１枚金币</i>哦！</p>
-                        <a class="btn btn-primary rounded-pill" href="/reward/">
-                            <i class="iconfont icon-present me-2"></i>领取今日登录奖励
-                        </a>
-                    </div>
+                    {include file="user/_user_cover"}
                 </div>
                 <div class="tile">
                     <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">有什么新鲜事？</h2>

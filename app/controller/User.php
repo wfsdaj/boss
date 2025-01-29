@@ -33,8 +33,6 @@ class User
         // 查询用户帖子列表
         $posts = $post->findByUserId($user_id);
 
-        dd($user);
-
         $data = [
             'user'  => $user,
             'posts' => $posts,

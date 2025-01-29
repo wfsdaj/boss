@@ -5,8 +5,8 @@
 
 /******************************* btn icon */
 .btn-icon {
-  --bs-btn-hover-bg: #E5F8F2;
-  --bs-btn-active-bg: #e8e8e8;
+  --bs-btn-hover-bg: #e6e7e7;
+  --bs-btn-active-bg: #cfd0d1;
   --bs-btn-active-border-color: transparent;
   position: relative;
   display: inline-flex;
@@ -824,6 +824,15 @@
   margin-right: 12px;
 }
 
+.feed-item-link {
+  color: var(--bs-dark)
+}
+.feed-item-link:hover {
+  color: var(--bs-dark);
+  text-decoration: underline;
+  text-underline-offset: 0.25em
+}
+
 .feed-item-count .icon {
   fill: var(--bs-gray);
   margin-top: -5px;
@@ -1026,6 +1035,102 @@
   word-break: break-all;
 }
 
+/******************************* 个人主页 */
+.profile-header {
+  position: relative;
+}
+.profile-header-cover {
+  height: 200px;
+  background-color: var(--bs-light);
+  overflow: hidden;
+}
+.profile-header-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-header-avatar {
+  position: relative;
+  margin-top: -60px;
+}
+.profile-header-avatar .avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 1rem;
+  border: 4px solid #fff;
+  background-color: var(--bs-white);
+}
+.profile-header-avatar:hover .upload-avatar {
+  opacity: 1;
+}
+.upload-avatar {
+  margin: 4px;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 12px;
+  background: rgb(0 0 0 / 40%);
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.15s ease-in-out;
+}
+.file-input {
+  display: none;
+}
+/* 媒体列表 */
+.media-list img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  overflow: hidden;
+}
+
+/******************************* nav */
+.nav .nav-link {
+  position: relative;
+  display: block;
+  padding: 0.75rem 1rem;
+  color: var(--bs-body-color);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.nav .nav-link.active:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* border-radius: 1.5px; */
+  width: 40px;
+  height: 3px;
+  background-color: var(--bs-primary);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+.nav .nav-link.active {
+  font-weight: 600;
+}
+.nav .nav-link.disabled {
+  color: var(--bs-gray);
+  pointer-events: none;
+  cursor: default;
+}
+.nav-justified > .nav-link {
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.nav-timeline .nav-link {
+  padding: 1rem;
+}
+.nav-timeline .nav-link:hover {
+  background-color: var(--bs-border);
+}
 /******************************* 聊天框 */
 .chat li {
   clear: both;

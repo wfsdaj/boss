@@ -5,19 +5,28 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{block name="title"}个人空间{/block}</title>
+    <link rel="stylesheet" href="/font/iconfont.css">
     <link rel="stylesheet" href="/css/bootstrap.css">
     <link rel="stylesheet" href="/css/twitter.css">
-    {block name="css"}{/block}
 </head>
 
-<body>
+<body class="d-flex w-100">
+    {include file="layout/header" /}
 
     {block name="main"}{/block}
 
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/editor429.js"></script>
     <script src="/js/twitter.js"></script>
+    <script src="/js/gifffer.min.js"></script>
     {block name="js"}{/block}
+    <script>
+        window.addEventListener('load', function () {
+            // GIF动画播放
+            Gifffer();
+        });
+    </script>
 </body>
 
 </html>
