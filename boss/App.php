@@ -111,6 +111,11 @@ class App
         // 实例化控制器
         $controller_instance = new $controller_class();
 
+        // 检查方法名是否以 "_" 开头，如果是则禁止访问
+        if (strpos($method, '_') === 0) {
+            return abort(404);
+        }
+
         // 检查方法名、检查方法是否存在
         if (!ctype_alnum($method) || !method_exists($controller_instance, $method)) {
             return abort(404);
@@ -126,8 +131,22 @@ class App
 
         $GLOBALS['traceSql'] = [];
 
-        // 执行方法
+        // 提前检查 before 和 after 方法是否存在
+        $hasBefore = method_exists($controller_instance, '_before');
+        $hasAfter  = method_exists($controller_instance, '_after');
+
+        // 执行 before 方法（如果存在）
+        if ($hasBefore) {
+            $controller_instance->_before();
+        }
+
+        // 执行主方法
         $controller_instance->$method();
+
+        // 执行 after 方法（如果存在）
+        if ($hasAfter) {
+            $controller_instance->_after();
+        }
     }
 
     /**

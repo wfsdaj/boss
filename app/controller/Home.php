@@ -19,6 +19,9 @@ class Home
             $data['user'] = (new User())->find(session('user_id'), 'id, username, golds');
         }
 
+        $log = new \boss\Logger();
+        $log->error('asdf');
+
         return view('home/index', $data);
     }
 

@@ -74,7 +74,7 @@ class Post
 
         try {
             (new PostModel())->store($formData);
-            return json('发帖成功', 'success');
+            return json('发帖成功，扣除 1 金币', 'success');
         } catch (\Throwable $th) {
             throw new \Exception($th, 1);
 

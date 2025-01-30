@@ -1,0 +1,105 @@
+{extend name="layout/app" /}
+
+{block name="title"}奖励{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">奖励</h2>
+            </div>
+            <div class="d-flex justify-content-around p-4 text-muted fs-15 bg-light">
+                <div>
+                    <p class="fs-2 text-dark">{$is_signed ? '3' : '0'}</p>
+                    <span>今日已领</span>
+                </div>
+                <div>
+                    <p class="fs-2 text-dark">{$last_signed_time ? nice_time($last_signed_time) : '0'}</p>
+                    <span>上次签到时间</span>
+                </div>
+                <div>
+                    <p class="fs-2 text-dark">{$golds | default="-"}</p>
+                    <span>可用金币</span>
+                </div>
+            </div>
+            <div class="wave-bar mb-2">
+                <svg viewBox="0 0 1152 73">
+                    <path
+                        d="M99.0331 0.252716C59.2655 0.284556 0 25.2197 0 25.2197V0.252716H99.0331C99.0585 0.252696 99.0839 0.252686 99.1093 0.252686C99.1538 0.252686 99.1982 0.252696 99.2427 0.252716H1152V73C1018.73 21.6667 957.818 24.4226 819.692 22.7693C672.54 21.008 573.085 73 427.919 73C308.414 73 218.068 0.307089 99.2427 0.252716H99.0331Z">
+                    </path>
+                </svg>
+            </div>
+
+            <!-- <nav class="nav nav-pills justify-content-center">
+                <a class="nav-link fs-18" id="my-reward" href="/reward">获得</a>
+                <a class="nav-link fs-18" id="my-redeem" href="/reward/redeem">兑换</a>
+                <a class="nav-link fs-18" id="my-levels" href="/reward/levels">等级</a>
+            </nav> -->
+
+            <div class="d-flex justify-content-around p-4 text-center">
+                <div class="box bg-white p-4 border rounded me-4 text-dark text-decoration-none">
+                    <div class="placement fs-5 fw-bold">
+                        <span class="point {$is_signed ? 'bg-success' : ''}"></span> 3
+                    </div>
+                    <p><i class="iconfont icon-present fs-2 text-success"></i></p>
+                    <h3 class="fs-18px fw-bold">登录奖励</h3>
+                    <p class="fs-15 my-3">领取每日登录奖励，可用于发帖、回帖和下载附件。</p>
+                    {if $is_signed}
+                    <button type="button" class="btn btn-secondary" disabled>已领取</button>
+                    {else /}
+                    <button type="submit" class="btn btn-primary" id="{$is_signed ? '' : 'js-sign'}">点击领取</button>
+                    {/if}
+                </div>
+                <div class="box p-4 border rounded">
+                    <p><i class="iconfont icon-redpacket fs-2 text-danger"></i></p>
+                    <h3 class="fs-18px fw-bold">红包</h3>
+                    <p class="fs-15 mt-3">模块正在制作，敬请期待。</p>
+                </div>
+            </div>
+
+            <div class="p-4">
+                <h3 class="section-title mb-2 fs-18px">登录奖励说明</h3>
+                <p>每24小时可领取一次，每次 3 枚金币。</p>
+                <p>发帖、回帖每次各需消耗 1 枚金币。</p>
+            </div>
+        </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        // 高亮当前链接
+        highlightActiveLink('reward');
+        // document.getElementById('my-reward').classList.add('active');
+        // 签到
+        const signElement = document.getElementById("js-sign");
+        if (signElement) {
+            event.preventDefault(); // 阻止默认行为，比如链接跳转
+            signElement.addEventListener('click', function () {
+                fetch('/reward/sign/', { method: 'POST' })
+                    .then(response => response.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            toast(res.message);
+                            document.querySelector('.point').classList.add('bg-success');
+                            // 禁用按钮并显示"已领取"文字
+                            signElement.textContent = '已领取';
+                            signElement.disabled = true;
+                            // 1.5秒后刷新页面
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            toast(res.message);
+                        }
+                    })
+                    .catch(error => console.error(error)); // 处理错误，避免被忽略。
+            });
+        }
+    });
+</script>
+{/block}

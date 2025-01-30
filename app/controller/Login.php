@@ -68,6 +68,7 @@ class Login
         session_set([
             'user_id'  => $user['id'],
             'username' => $user['username'],
+            'golds'    => $user['golds'],
         ]);
         if ($user['id'] === 1 && $user['group_id'] === 1) {
             session_set('is_admin', true);

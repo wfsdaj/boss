@@ -2,33 +2,48 @@ document.addEventListener("DOMContentLoaded", () => {
     // 滚动处理
     const scrollElement = document.querySelector('.js-scroll');
     let lastScrollPosition = 0;
-    let scrolled = false;
+    let isScrolled = false;
 
     const handleScroll = () => {
         const currentScrollPosition = window.scrollY || window.pageYOffset;
 
-        if (scrollElement) {
-            if (currentScrollPosition > lastScrollPosition && !scrolled) {
-                scrollElement.classList.add('scrolled');
-                scrolled = true;
-            }
-
-            if (currentScrollPosition <= 50) {
-                scrollElement.classList.remove('scrolled');
-                scrolled = false;
-            }
-
-            lastScrollPosition = currentScrollPosition;
+        if (!scrollElement) {
+            return; // 如果元素不存在，直接返回
         }
+
+        // 向下滚动且未标记为 scrolled
+        if (currentScrollPosition > lastScrollPosition && !isScrolled) {
+            scrollElement.classList.add('scrolled');
+            isScrolled = true;
+        }
+
+        // 滚动到顶部附近时重置状态
+        if (currentScrollPosition <= 50) {
+            scrollElement.classList.remove('scrolled');
+            isScrolled = false;
+        }
+
+        lastScrollPosition = currentScrollPosition;
     };
 
     const throttle = (func, delay) => {
-        let lastCall = 0;
+        let timeoutId;
+        let lastCallTime = 0;
+
         return (...args) => {
-            const now = new Date().getTime();
-            if (now - lastCall < delay) return;
-            lastCall = now;
-            requestAnimationFrame(() => func(...args));
+            const now = Date.now();
+            const timeSinceLastCall = now - lastCallTime;
+
+            if (timeSinceLastCall < delay) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    lastCallTime = now;
+                    func(...args);
+                }, delay - timeSinceLastCall);
+            } else {
+                lastCallTime = now;
+                func(...args);
+            }
         };
     };
 
