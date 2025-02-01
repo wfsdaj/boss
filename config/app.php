@@ -76,4 +76,13 @@ return [
         'port'     => '6379',
         'prefix'   => 'cache_'
     ],
+
+    // 发送邮件
+    'smtp' => [
+        'server' => '',
+        'port' => '',
+        'ssl' => '',
+        'username' => '',
+        'password' => '',
+    ]
 ];

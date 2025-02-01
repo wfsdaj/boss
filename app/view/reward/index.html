@@ -11,7 +11,7 @@
                 <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
                     <i class="iconfont icon-user"></i>
                 </a>
-                <h2 class="fs-18px fw-bold cursor-pointer js-top">奖励</h2>
+                <h2 class="fs-18px fw-bold cursor-pointer w-100 js-top">奖励</h2>
             </div>
             <div class="d-flex justify-content-around p-4 text-muted fs-15 bg-light">
                 <div>
@@ -24,7 +24,7 @@
                 </div>
                 <div>
                     <p class="fs-2 text-dark">{$golds | default="-"}</p>
-                    <span>可用金币</span>
+                    <span>可用积分</span>
                 </div>
             </div>
             <div class="wave-bar mb-2">
@@ -35,39 +35,45 @@
                 </svg>
             </div>
 
-            <!-- <nav class="nav nav-pills justify-content-center">
-                <a class="nav-link fs-18" id="my-reward" href="/reward">获得</a>
-                <a class="nav-link fs-18" id="my-redeem" href="/reward/redeem">兑换</a>
-                <a class="nav-link fs-18" id="my-levels" href="/reward/levels">等级</a>
-            </nav> -->
+            <nav class="nav justify-content-center">
+                <a class="nav-link fs-18px" id="my-reward" href="/reward">赚积分</a>
+                <a class="nav-link fs-18px cursor-not-allowed" id="my-redeem">兑换</a>
+                <a class="nav-link fs-18px cursor-not-allowed" id="my-levels">等级</a>
+            </nav>
 
             <div class="d-flex justify-content-around p-4 text-center">
-                <div class="box bg-white p-4 border rounded me-4 text-dark text-decoration-none">
+                <div class="box bg-white p-4 border rounded-4 me-4 text-dark text-decoration-none">
                     <div class="placement fs-5 fw-bold">
                         <span class="point {$is_signed ? 'bg-success' : ''}"></span> 3
                     </div>
                     <p><i class="iconfont icon-present fs-2 text-success"></i></p>
                     <h3 class="fs-18px fw-bold">登录奖励</h3>
                     <p class="fs-15 my-3">领取每日登录奖励，可用于发帖、回帖和下载附件。</p>
-                    {if $is_signed}
-                    <button type="button" class="btn btn-secondary" disabled>已领取</button>
+                    {if isset($is_signed) && $is_signed}
+                    <button type="button" class="btn btn-dark rounded-pill" disabled>已领取</button>
                     {else /}
-                    <button type="submit" class="btn btn-primary" id="{$is_signed ? '' : 'js-sign'}">点击领取</button>
+                    <button type="submit" class="btn btn-dark rounded-pill" id="{$is_signed ? '' : 'js-sign'}">点击领取</button>
                     {/if}
                 </div>
-                <div class="box p-4 border rounded">
+                <div class="box p-4 border rounded-4">
                     <p><i class="iconfont icon-redpacket fs-2 text-danger"></i></p>
                     <h3 class="fs-18px fw-bold">红包</h3>
                     <p class="fs-15 mt-3">模块正在制作，敬请期待。</p>
                 </div>
             </div>
-
-            <div class="p-4">
-                <h3 class="section-title mb-2 fs-18px">登录奖励说明</h3>
-                <p>每24小时可领取一次，每次 3 枚金币。</p>
-                <p>发帖、回帖每次各需消耗 1 枚金币。</p>
+        </div>
+        <div class="sidebar-col">
+            <div class="position-sticky sidebar-sticky">
+                <div class="tile">
+                    <h2 class="mb-0 p-3 fs-6 fw-bold">登录奖励</h2>
+                    <div class="p-3 pt-0">
+                        <p>- 每24小时可领取一次，每次 +3 点积分。</p>
+                        <p>- 发帖、回帖每次各 -1 点积分。</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 </main>
 {/block}
 
@@ -76,7 +82,7 @@
     document.addEventListener("DOMContentLoaded", (event) => {
         // 高亮当前链接
         highlightActiveLink('reward');
-        // document.getElementById('my-reward').classList.add('active');
+        document.getElementById('my-reward').classList.add('active');
         // 签到
         const signElement = document.getElementById("js-sign");
         if (signElement) {

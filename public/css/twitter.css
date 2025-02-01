@@ -5,7 +5,7 @@
 
 /******************************* btn icon */
 .btn-icon {
-  --bs-btn-hover-bg: #e6e7e7;
+  --bs-btn-hover-bg: #f1f1f1;
   --bs-btn-active-bg: #cfd0d1;
   --bs-btn-active-border-color: transparent;
   position: relative;
@@ -56,6 +56,10 @@
   cursor: pointer;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
 .cursor-zoomin {
   cursor: zoom-in;
 }
@@ -71,6 +75,8 @@
   color: #666;
   text-align: center;
 }
+
+.time-text { font-size: 1rem; }
 
 /* 波浪线 */
 .squiggle {
@@ -535,7 +541,7 @@
 }
 
 .app-nav a:hover .nav-item {
-  background-color: #e6e7e7;
+  background-color: #f1f1f1;
 }
 
 .app-nav .nav-item .iconfont {
@@ -633,7 +639,7 @@
 }
 
 .account-switcher-btn:hover {
-  background-color: #e6e7e7;
+  background-color: #f1f1f1;
 }
 
 /******************************* 位置导航 */
@@ -1105,7 +1111,7 @@
 .profile-header-avatar .avatar {
   width: 120px;
   height: 120px;
-  border-radius: 1rem;
+  border-radius: 9rem;
   border: 4px solid #fff;
   background-color: var(--bs-white);
 }
@@ -1120,7 +1126,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  border-radius: 12px;
+  border-radius: 9rem;
   background: rgb(0 0 0 / 40%);
   text-align: center;
   text-decoration: none;
@@ -1147,18 +1153,17 @@
   text-decoration: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
+.nav .nav-link:hover:after,
 .nav .nav-link.active:after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  /* border-radius: 1.5px; */
+  border-radius: 4px;
   width: 40px;
-  height: 3px;
+  height: 4px;
   background-color: var(--bs-primary);
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
 }
 .nav .nav-link.active {
   font-weight: 600;
@@ -1277,4 +1282,12 @@
   content: " ";
   z-index: -1;
   background: linear-gradient(90deg,#ffcb15,#ffa800);
+}
+
+/******************************* 私信 */
+#message-list {
+  width: 390px;
+}
+#message-detail {
+  width: 600px;
 }

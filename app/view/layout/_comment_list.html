@@ -1,10 +1,3 @@
-{php}
-    use \app\controller\Comment;
-    $postId = (int)segment(3);
-    $comments = Comment::list($postId);
-    $floors = $comments[1]->totalRows;
-{/php}
-
 {if $comments[1]->totalRows > 0}
     <ul class="list-unstyled chat p-3 border-bottom">
     {foreach $comments[0] as $comment}

@@ -38,7 +38,8 @@
                 </div>
                 <div class="d-flex align-items-center px-3 pb-2 fs-14px text-muted border-bottom">
                     <span class="d-inline-block me-3">
-                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)}前 · {$post.created_at | date='Y-m-d'}</time>
+                        <time datetime="{$post.created_at | date='Y-m-d H:i:s'}">{:nice_time($post.created_at)}前 ·
+                            {$post.created_at | date='Y-m-d'}</time>
                     </span>
                     <!-- <span class="d-inline-block me-3">山东</span> -->
                     <!-- 帖子工具栏 -->
@@ -77,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between py-2 px-3 ms-0 post-actions border-bottom">
+                <div class="d-flex justify-content-between py-1 px-3 ms-0 post-actions border-bottom">
                     <!-- 评论数 -->
                     <a role="button" class="post-action-reply cursor-arrow" data-bs-toggle="tooltip"
                         data-bs-trigger="hover" title="评论">
@@ -126,7 +127,13 @@
             <!-- 评论框 -->
             {include file="layout/_comment" /}
             <!-- 评论列表 -->
-            {include file="layout/_comment_list" /}
+            <div id="comment_list">
+                <div class="text-center">
+                    <div id="loadingSpinner" class="spinner-border m-5" role="status" style="display: none;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 边栏 -->
@@ -168,6 +175,26 @@
         //     margin: 30,
         //     background: 'rgba(0,0,0,.7)',
         // });
+
+        // $('#loadingSpinner').show();
+        $.ajax({
+            url: `/comment/list/{$post_id}`,
+            type: 'GET',
+            dataType: 'html',
+            beforeSend: function () {
+                // 请求开始前显示加载层
+                $('#loadingSpinner').show();
+            },
+            success: function (data) {
+                $('#loadingSpinner').hide();
+                $('#comment_list').html(data);
+            },
+            error: function (xhr, status, error) {
+                $('#loadingSpinner').hide();
+                console.error('Error loading URL:', status, error);
+                // toast('评论列表加载失败');
+            }
+        });
 
         const jDel = document.getElementById('js-del');
 

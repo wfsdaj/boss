@@ -6,7 +6,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
 :root, [data-bs-theme=light] {
-  --bs-blue: #1d9bf0;
+  --bs-blue: #0f62fe;
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
@@ -29,7 +29,7 @@
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  --bs-primary: #009688;
+  --bs-primary: #0f62fe;
   --bs-secondary: #6c757d;
   --bs-success: #198754;
   --bs-info: #0dcaf0;
@@ -37,7 +37,7 @@
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 26,161,121;
+  --bs-primary-rgb: 15,98,254;
   --bs-secondary-rgb: 108, 117, 125;
   --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 13, 202, 240;
@@ -103,7 +103,7 @@
   --bs-highlight-bg: #fff3cd;
   --bs-border-width: 1px;
   --bs-border-style: solid;
-  --bs-border-color: #dee2e6;
+  --bs-border-color: #eff3f4;
   --bs-border-color-translucent: rgba(0, 0, 0, 0.08);
   --bs-border-radius: 0.375rem;
   --bs-border-radius-sm: 0.25rem;
@@ -3189,7 +3189,7 @@ textarea.form-control-lg {
   --bs-btn-border-radius: var(--bs-border-radius);
   --bs-btn-hover-border-color: transparent;
   --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-  --bs-btn-disabled-opacity: 0.65;
+  --bs-btn-disabled-opacity: 1;
   --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
   display: inline-block;
   padding: var(--bs-btn-padding-y) var(--bs-btn-padding-x);
@@ -3263,22 +3263,21 @@ textarea.form-control-lg {
   background-color: var(--bs-btn-disabled-bg);
   border-color: var(--bs-btn-disabled-border-color);
   opacity: var(--bs-btn-disabled-opacity);
-  cursor: not-allowed
 }
 
 .btn-primary {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #009688;
-  --bs-btn-border-color: #009688;
+  --bs-btn-bg: #0f62fe;
+  --bs-btn-border-color: #0f62fe;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #00897B;
-  --bs-btn-hover-border-color: #00897B;
+  --bs-btn-hover-bg: #0050E6;
+  --bs-btn-hover-border-color: #0050E6;
   --bs-btn-focus-shadow-rgb: 49, 132, 253;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #00796B;
-  --bs-btn-active-border-color: #00796B;
+  --bs-btn-active-bg: #002d9c;
+  --bs-btn-active-border-color: #002d9c;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #333;
+  --bs-btn-disabled-color: #8d8d8d;
   --bs-btn-disabled-bg: #c6c6c6;
   --bs-btn-disabled-border-color: #c6c6c6
 }
@@ -3387,19 +3386,19 @@ textarea.form-control-lg {
 
 .btn-dark {
   --bs-btn-color: #fff;
-  --bs-btn-bg: #212529;
-  --bs-btn-border-color: #212529;
+  --bs-btn-bg: #393939;
+  --bs-btn-border-color: #393939;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #424649;
-  --bs-btn-hover-border-color: #373b3e;
+  --bs-btn-hover-bg: #474747;
+  --bs-btn-hover-border-color: #474747;
   --bs-btn-focus-shadow-rgb: 66, 70, 73;
   --bs-btn-active-color: #fff;
-  --bs-btn-active-bg: #4d5154;
-  --bs-btn-active-border-color: #373b3e;
+  --bs-btn-active-bg: #393939;
+  --bs-btn-active-border-color: #393939;
   --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-  --bs-btn-disabled-color: #fff;
-  --bs-btn-disabled-bg: #495057;
-  --bs-btn-disabled-border-color: #495057
+  --bs-btn-disabled-color: #8d8d8d;
+  --bs-btn-disabled-bg: #c6c6c6;
+  --bs-btn-disabled-border-color: #c6c6c6
 }
 
 .btn-outline-primary {
@@ -5073,26 +5072,26 @@ textarea.form-control-lg {
 }
 
 .pagination {
-  --bs-pagination-padding-x: 1rem;
-  --bs-pagination-padding-y: 0.5rem;
+  --bs-pagination-padding-x: 1.25rem;
+  --bs-pagination-padding-y: 0.75rem;
   --bs-pagination-font-size: 1rem;
-  --bs-pagination-color: var(--bs-link-color);
+  --bs-pagination-color: var(--bs-body-color);
   --bs-pagination-bg: var(--bs-body-bg);
-  --bs-pagination-border-width: var(--bs-border-width);
-  --bs-pagination-border-color: var(--bs-border-color);
-  --bs-pagination-border-radius: var(--bs-border-radius);
+  --bs-pagination-border-width: 4px;
+  --bs-pagination-border-color: transparent;
+  --bs-pagination-border-radius: 1rem;
   --bs-pagination-hover-color: var(--bs-link-hover-color);
-  --bs-pagination-hover-bg: var(--bs-tertiary-bg);
+  --bs-pagination-hover-bg: #f1f1f1;
   --bs-pagination-hover-border-color: var(--bs-border-color);
   --bs-pagination-focus-color: var(--bs-link-hover-color);
   --bs-pagination-focus-bg: var(--bs-secondary-bg);
   --bs-pagination-focus-box-shadow: none;
-  --bs-pagination-active-color: #fff;
-  --bs-pagination-active-bg: #e6e7e7;
-  --bs-pagination-active-border-color: #e6e7e7;
-  --bs-pagination-disabled-color: var(--bs-secondary-color);
-  --bs-pagination-disabled-bg: var(--bs-gray);
-  --bs-pagination-disabled-border-color: var(--bs-border-color);
+  --bs-pagination-active-color: var(--bs-body-color);
+  --bs-pagination-active-bg: var(--bs-body-bg);
+  --bs-pagination-active-border-color: var(--bs-primary);
+  --bs-pagination-disabled-color: var(--bs-body-color);
+  --bs-pagination-disabled-bg: var(--bs-body-bg);
+  --bs-pagination-disabled-border-color: var(--bs-body-bg);
   display: flex;
   padding-left: 0;
   list-style: none
@@ -5106,7 +5105,6 @@ textarea.form-control-lg {
   color: var(--bs-pagination-color);
   text-decoration: none;
   background-color: var(--bs-pagination-bg);
-  border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
@@ -5133,9 +5131,22 @@ textarea.form-control-lg {
 
 .active>.page-link, .page-link.active {
   z-index: 3;
+  font-weight: 700;
   color: var(--bs-pagination-active-color);
   background-color: var(--bs-pagination-active-bg);
-  border-color: var(--bs-pagination-active-border-color)
+}
+
+.active>.page-link:after, .page-link.active:after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  display: block;
+  content: "";
+  width: 1rem;
+  height: 4px;
+  background-color: var(--bs-pagination-active-border-color);
 }
 
 .disabled>.page-link, .page-link.disabled {
@@ -5147,16 +5158,6 @@ textarea.form-control-lg {
 
 .page-item:not(:first-child) .page-link {
   margin-left: calc(var(--bs-border-width) * -1)
-}
-
-.page-item:first-child .page-link {
-  border-top-left-radius: var(--bs-pagination-border-radius);
-  border-bottom-left-radius: var(--bs-pagination-border-radius)
-}
-
-.page-item:last-child .page-link {
-  border-top-right-radius: var(--bs-pagination-border-radius);
-  border-bottom-right-radius: var(--bs-pagination-border-radius)
 }
 
 .pagination-lg {
@@ -6691,7 +6692,7 @@ textarea.form-control-lg {
   --bs-spinner-width: 2rem;
   --bs-spinner-height: 2rem;
   --bs-spinner-vertical-align: -0.125em;
-  --bs-spinner-border-width: 0.25em;
+  --bs-spinner-border-width: 0.1875em;
   --bs-spinner-animation-speed: 0.75s;
   --bs-spinner-animation-name: spinner-border;
   border: var(--bs-spinner-border-width) solid currentcolor;

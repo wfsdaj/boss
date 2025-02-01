@@ -457,6 +457,40 @@ function filter_all_html(string $text): string
 }
 
 /**
+ * 移除字符串中的 XSS 风险内容
+ *
+ * @param string $string 待处理的字符串
+ * @return string 处理后的安全字符串
+ */
+function remove_xss(string $string): string
+{
+    // 检查输入是否为字符串
+    if (!is_string($string)) {
+        throw new InvalidArgumentException("输入必须为字符串");
+    }
+
+    // 移除不可见控制字符
+    $string = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S', '', $string);
+
+    // 定义危险标签和事件属性
+    $dangerousTags = ['javascript', 'vbscript', 'expression', 'applet', 'meta', 'xml', 'blink', 'link', 'script', 'embed', 'object', 'iframe', 'frame', 'frameset', 'ilayer', 'layer', 'bgsound', 'title', 'base'];
+    $dangerousEvents = ['onabort', 'onactivate', 'onafterprint', 'onafterupdate', 'onbeforeactivate', 'onbeforecopy', 'onbeforecut', 'onbeforedeactivate', 'onbeforeeditfocus', 'onbeforepaste', 'onbeforeprint', 'onbeforeunload', 'onbeforeupdate', 'onblur', 'onbounce', 'oncellchange', 'onchange', 'onclick', 'oncontextmenu', 'oncontrolselect', 'oncopy', 'oncut', 'ondataavailable', 'ondatasetchanged', 'ondatasetcomplete', 'ondblclick', 'ondeactivate', 'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 'ondrop', 'onerror', 'onerrorupdate', 'onfilterchange', 'onfinish', 'onfocus', 'onfocusin', 'onfocusout', 'onhelp', 'onkeydown', 'onkeypress', 'onkeyup', 'onlayoutcomplete', 'onload', 'onlosecapture', 'onmousedown', 'onmouseenter', 'onmouseleave', 'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onmousewheel', 'onmove', 'onmoveend', 'onmovestart', 'onpaste', 'onpropertychange', 'onreadystatechange', 'onreset', 'onresize', 'onresizeend', 'onresizestart', 'onrowenter', 'onrowexit', 'onrowsdelete', 'onrowsinserted', 'onscroll', 'onselect', 'onselectionchange', 'onselectstart', 'onstart', 'onstop', 'onsubmit', 'onunload', 'onpointerout', 'onfullscreenchange', 'onfullscreenerror', 'onhashchange', 'onanimationend', 'onanimationiteration', 'onanimationstart', 'onmessage', 'onloadstart', 'ondurationchange', 'onloadedmetadata', 'onloadeddata', 'onprogress', 'oncanplay', 'oncanplaythrough', 'onended', 'oninput', 'oninvalid', 'onoffline', 'ononline', 'onopen', 'onpagehide', 'onpageshow', 'onpause', 'onplay', 'onplaying', 'onpopstate', 'onratechange', 'onsearch', 'onseeked', 'onseeking', 'onshow', 'onstalled', 'onstorage', 'onsuspend', 'ontimeupdate', 'ontoggle', 'ontouchcancel', 'ontouchend', 'ontouchmove', 'ontouchstart', 'ontransitionend', 'onvolumechange', 'onwaiting', 'onwheel', 'onbegin'];
+
+    // 合并危险标签和事件属性
+    $dangerousPatterns = array_merge($dangerousTags, $dangerousEvents);
+
+    // 替换危险内容为 'xxx'
+    foreach ($dangerousPatterns as $pattern) {
+        $string = str_ireplace($pattern, 'xxx', $string);
+    }
+
+    // 对字符串进行 HTML 编码，防止 XSS
+    $string = htmlspecialchars($string, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    return $string;
+}
+
+/**
  * 解析内容中的网址，并将匹配的 URL 替换为带有 <a> 标签的链接。
  * 排除已经被 <a> 标签包裹的 URL。
  *
@@ -484,7 +518,7 @@ function replace_urls_with_links(string $content): string
         $link_text = preg_replace('/^https?:\/\//i', '', $url);
 
         // 返回带有 <a> 标签的链接
-        return '<a href="/jump?' . escape($url) . '">' . escape($link_text) . '</a>';
+        return '<a href="/jump?target=' . urlencode($url) . '">' . escape($link_text) . '</a>';
     }, $content);
 
     return $content;
@@ -576,7 +610,7 @@ function nice_time(int $time): string
     foreach ($units as $seconds => $unit) {
         if ($timeDiff >= $seconds) {
             $count = floor($timeDiff / $seconds);
-            return "{$count}{$unit}";
+            return $count . '<span class="time-text">' . $unit . '</span>';
         }
     }
 

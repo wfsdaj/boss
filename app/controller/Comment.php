@@ -10,11 +10,18 @@ class Comment
     /**
      * 根据帖子id显示评论列表
      */
-    public static function list(int $post_id)
+    public function list()
     {
-        $comments = (new CommendModel())->find($post_id);
+        $postId = (int)segment(3);
+        $comments = (new CommendModel())->find($postId);
+        $floors = $comments[1]->totalRows;
 
-        return $comments;
+        $data = [
+            'comments' => $comments,
+            'floors'   => $floors,
+        ];
+
+        return view('layout/_comment_list', $data);
     }
 
     /**

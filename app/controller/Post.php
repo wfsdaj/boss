@@ -13,8 +13,6 @@ class Post
      */
     public function show()
     {
-        $data['pageTitle'] = '帖子';
-
         // 获取帖子id，并验证是否大于1
         $post_id = (int)segment(3);
 
@@ -28,6 +26,7 @@ class Post
 
         // 设置视图数据
         $data['post'] = $post;
+        $data['post_id'] = $post_id;
 
         // 获取当前登录用户的ID
         $user_id  = session('user_id');

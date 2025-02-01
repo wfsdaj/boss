@@ -19,9 +19,6 @@ class Home
             $data['user'] = (new User())->find(session('user_id'), 'id, username, golds');
         }
 
-        $log = new \boss\Logger();
-        $log->error('asdf');
-
         return view('home/index', $data);
     }
 
@@ -63,5 +60,19 @@ class Home
         echo $thumbnailPath;
 
         dd($imgInfo);
+    }
+
+    public function email()
+    {
+        $smtp = new Smtp('smtp.example.com', 'user@example.com', 'password', 465, true, true);
+        $smtp->setReceiver('recipient@example.com');
+        $smtp->setMail('测试邮件', '这是一封测试邮件。');
+        $smtp->addAttachment('/path/to/file.txt');
+
+        if ($smtp->sendMail()) {
+            echo '邮件发送成功！';
+        } else {
+            echo '邮件发送失败：' . $smtp->error();
+        }
     }
 }

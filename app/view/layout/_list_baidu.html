@@ -12,7 +12,7 @@
             </spap>
         </div>
         <div class="d-flex flex-column w-100">
-            <p class="typo-text fs-18">{$post.content}</p>
+            <p class="typo-text fs-18">{$post.content | raw}</p>
             {if $post.images > 0}
                 {if $post.type === 'gif'}
                     <img class="img-fluid feed-item-img rounded align-self-baseline mt-2" data-gifffer="/upload/{$post.filename}" alt="" loading="lazy" decoding="async">

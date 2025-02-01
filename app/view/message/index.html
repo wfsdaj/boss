@@ -1,0 +1,71 @@
+{extend name="layout/app" /}
+
+{block name="title"}私信{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col" id="message-list">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">私信</h2>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i
+                            class="iconfont icon-send"></i></button>
+                    <div class="dropdown-menu animated-dropdown dropdown-menu-end fs-15px">
+                        <div class="dropdown-item p-3 border-bottom text-center arrow bg-white">
+                            <img class="mb-2" src="/img/magic.svg" width="48" height="48" alt="">
+                            <p class="fs-6 fw-bold">主页优先显示热门帖子</p>
+                        </div>
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-exchange me-2"></i>
+                            <span>切换查看最新帖子</span>
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="iconfont icon-set me-2"></i>
+                            <span>查看内容偏好设置</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="p-5">
+                <h2 class="fs-4 fw-bold mb-2">欢迎来到你的收件箱！</h2>
+                <p class="text-gray fs-6 mb-4">可以和别人进行私密对话，大家互发私信、分享帖子等。 </p>
+                <a href="#" id="writeMessage" class="btn btn-primary btn-lg px-4 rounded-pill fs-18px fw-bold shadow-sm"
+                    role="button">写一封私信</a>
+            </div>
+        </div>
+        <div class="sidebar-col" id="message-detail">
+            <div id="messageForm" class="p-4"></div>
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 当前链接添加 active
+        highlightActiveLink("message");
+        // 切换当前链接的 iconfont
+        updateIconClassOnActive('.app-link', 'icon-message', 'icon-message-fill');
+        // 加载写私信表单
+        $('#writeMessage').click(function () {
+            $.ajax({
+                url: '/message/write',
+                method: 'GET',
+                success: function (data) {
+                    $('#messageForm').html(data); // 将返回的数据插入到 #content 中
+                },
+                headers: {'X-CSRF-TOKEN': '{:csrf_token()}'},
+                error: function () {
+                    toast('加载失败');
+                }
+            });
+        });
+    });
+</script>
+{/block}
