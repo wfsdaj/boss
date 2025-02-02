@@ -63,12 +63,9 @@ class User extends Model
     /**
      * 根据用户 id 查询用户数据
      */
-    public function find(int $user_id, ?string $field = null)
+    public function find(int $user_id, ?string $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar')
     {
         $this->model = db('user');
-        // 如果 $field 为 null，则查询所有字段
-        $field = $field ?? '*';
-        // $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
 
         return $this->model->where('id = ?', [$user_id])->first($field);
     }

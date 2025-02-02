@@ -2,9 +2,8 @@
 
 namespace app\controller;
 
-use app\controller\Auth;
 use app\model\User as UserModel;
-use app\model\{Post, Comment, Like};
+use app\model\{Auth, Post, Comment, Like};
 
 class User
 {
@@ -16,10 +15,12 @@ class User
      */
     public function profile()
     {
-        $user  = Auth::checkUser();
+        $url_id = (int)segment(3);
+
+        $user = Auth::getCurrentUser($url_id);
 
         // 查询用户帖子
-        $posts = (new Post())->findByUserId((int)segment(3));
+        $posts = (new Post())->findByUserId($url_id);
 
         $data = [
             'user'  => $user,
@@ -34,7 +35,9 @@ class User
      */
     public function replies()
     {
-        $user  = Auth::checkUser();
+        Auth::checkLogin();
+
+        $user = Auth::getCurrentUser();
 
         // 查询用户回复
         $replies = (new comment())->fetchUserReplies((int)segment(3));
@@ -52,12 +55,12 @@ class User
      */
     public function likes()
     {
-        $user  = Auth::checkUser();
+        Auth::checkLogin();
 
-        $likeModel = new Like();
+        $user = Auth::getCurrentUser();
 
         // 查询用户喜欢列表
-        $likes = $likeModel->getListByUserId((int)session('user_id'));
+        $likes = (new Like())->getListByUserId((int)session('user_id'));
 
         $data = [
             'user'  => $user,
@@ -94,7 +97,7 @@ class User
      */
     public function edit()
     {
-        loginCheck();
+        $user = Auth::checkUser();
 
         $user_id = (int)segment(2);
         $user    = model('user')->find($user_id);
@@ -163,14 +166,5 @@ class User
         if (!$user_id) {
             return abort(404);  // 用户 ID 无效，终止程序
         }
-
-        $userModel = new UserModel();
-        $user = $userModel->find($user_id);
-
-        if (!$user) {
-            return abort(404); // 用户不存在，终止程序
-        }
-
-        return $user; // 返回用户对象
     }
 }

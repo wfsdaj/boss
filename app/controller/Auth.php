@@ -44,28 +44,35 @@ class Auth
 
         // 重定向到登录页面或其他安全页面
         return redirect(url('/'));
+    }
 
+    /**
+     * 检查用户是否已登录，如果未登录则重定向到登录页面。
+     */
+    public static function checkLogin()
+    {
+        if (!session('user_id')) {
+            return redirect(url('/login'));
+        }
     }
 
     /**
      * 检查用户是否存在
      *
-     * @return \app\model\User|void
+     * @return \app\model\User|null
      */
-    public static function checkUser()
+    public static function getCurrentUser(int $user_id)
     {
-        $user_id = (int)segment(3);
-
-        if (!$user_id || session('user_id')) {
-            return abort(404);  // 用户 ID 无效，终止程序
+        if (!$user_id) {
+            return null;
         }
 
-        $user = (new User())->find(session('user_id'));
+        $user = (new User())->find($user_id);
 
         if (!$user) {
-            return abort(404); // 用户不存在，终止程序
+            return null;
         }
 
-        return $user; // 返回用户对象
+        return $user;
     }
 }

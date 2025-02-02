@@ -13,6 +13,16 @@ function is_logined(): bool
 }
 
 /**
+ * 检查用户是否已登录，如果未登录则重定向到登录页面。
+ */
+function check_login()
+{
+    if (! session('user_id')) {
+        return redirect(url('/login'));
+    }
+}
+
+/**
  * 检查当前用户是否是指定作者
  *
  * @param int $author_id 资源（例如文章、帖子等）的作者ID

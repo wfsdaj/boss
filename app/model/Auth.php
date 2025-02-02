@@ -2,7 +2,8 @@
 
 namespace app\model;
 
-use boss\{Model, File, Image};
+use boss\{Model, File, Image, Logger};
+use Exception;
 use Throwable;
 
 class Auth extends Model
@@ -16,10 +17,10 @@ class Auth extends Model
      * 创建新用户
      *
      * @param array $data 用户数据
-     * @return object|false 返回创建的用户信息，或者失败时返回 false
+     * @return int|null 成功时返回新用户的ID，失败时返回null
      * @throws Throwable 可能抛出的异常
      */
-    public function create($data): ?object
+    public function create($data): ?int
     {
         $this->model = db('user');
 
@@ -27,21 +28,26 @@ class Auth extends Model
         $data['created_at'] = time();
         $data['group_id']   = 101;  // 默认用户组
         $data['golds']      = 6;  // 注册时送6金币
-        // $data['created_ip'] = ip2long(get_ip());
+        $data['created_ip'] = ip2long(get_ip());
 
         try {
             $this->model->beginTransaction();
 
-            if ($this->model->insert($data)) {
+            // 插入用户数据
+            $inserted_id = $this->model->insert($data);
+
+            if ($inserted_id !== false) {
                 $this->model->commit();
-                return $this->findByName($data['username']);
+                return $inserted_id;
             }
-            // 如果插入失败，回滚事务
-            $this->model->rollback();
-            return false;
+
+            throw new Exception('用户创建失败：数据插入到数据库时出错');
         } catch (Throwable $th) {
             $this->model->rollback();
-            throw $th;
+
+            (new Logger())->error($th);
+
+            return null;
         }
     }
 
@@ -67,24 +73,22 @@ class Auth extends Model
     /**
      * 根据用户 id 查询用户数据
      */
-    public static function find(int $user_id)
+    public function find(int $user_id, $field = 'id, group_id, email, username, password, created_at, updated_at, golds')
     {
-        $userModel = db('user');
+        $this->model = db('user');
 
-        $field = 'id, group_id, email, username, password, created_at, updated_at, golds, avatar';
-
-        return $userModel->where('id = ?', [$user_id])->first($field);
+        return $this->model->find('id = ?', [$user_id])->first($field);
     }
 
     /**
      * 根据用户名查询用户数据
      */
-    public function findByName($username)
+    public function findByName(string $username, string $field = 'username')
     {
         $this->model = db('user');
+
         return $this->model->where('username = ?', [$username])
-                           ->first('id, username, password, created_at, golds');
-        // $this->model->debugSql();
+                            ->first($field);
     }
 
     /**

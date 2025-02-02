@@ -21,15 +21,12 @@
             {include file="user/_user_cover"}
             {include file="user/_user_cover_nav"}
 
-            {:dd($likes[0])}
-
             <!-- 无帖子提示 -->
-        {if !$likes[0]}
-            <div class="placeholder fs-28">无</div>
-        {else /}
-            <ul class="feed-list list-unstyled">
-            {foreach $likes[0] as $like}
-                {if $like->content}
+            {if !$likes[0]}
+                <div class="placeholder fs-28">无</div>
+            {else /}
+                <ul class="feed-list list-unstyled">
+                {foreach $likes[0] as $like}
                 <li class="feed-item d-flex p-3 js-tap" id="feed{$like.post_id}"
                     data-href="/post/show/{$like.post_id}" data-pid="{$like.post_id}">
                     <img class="avatar chat-avatar me-2" src="{:get_avatar($like.user_id)}" alt="">
@@ -43,10 +40,9 @@
                         {:generate_image_html($post)}
                     </div>
                 </li>
-                {/if}
-            {/foreach}
-            </ul>
-        {/if}
+                {/foreach}
+                </ul>
+            {/if}
 
             <!-- 分页 -->
             {:render_pagination($likes[1])}

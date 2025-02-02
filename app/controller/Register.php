@@ -3,7 +3,7 @@
 namespace app\controller;
 
 use boss\Validator;
-use app\model\User;
+use app\model\Auth;
 
 class Register
 {
@@ -54,15 +54,15 @@ class Register
             return json($errors);
         }
 
-        $userModel = new user();
+        $auth = new Auth();
 
         // 检测重名
-        if ($userModel->findByName($data['username'])) {
+        if ($auth->findByName($data['username'])) {
             return json('用户名已被占用');
         }
 
         // 注册用户，返回成功后的用户 ID
-        $user_id = $userModel->create($data);
+        $user_id = $auth->create($data);
 
         if (!$user_id) {
             return json('注册失败');
