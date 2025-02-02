@@ -1163,7 +1163,7 @@
   border-radius: 4px;
   width: 40px;
   height: 4px;
-  background-color: var(--bs-primary);
+  background-color: var(--bs-dark);
 }
 .nav .nav-link.active {
   font-weight: 600;

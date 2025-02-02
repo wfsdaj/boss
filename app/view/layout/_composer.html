@@ -4,7 +4,7 @@
         <img class="avatar" src="{:get_avatar(session('user_id'))}" alt="">
     </a>
     <div class="flex-fill">
-        <form id="post-form" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate action="/post/submit">
+        <form id="post-form" class="needs-validation" method="POST" enctype="multipart/form-data" novalidate>
             <textarea class="form-control border-0 px-0 js-textarea" name="content" id="content" maxlength="200"
                 spellcheck="false" placeholder="有什么新鲜事儿？" required autofocus></textarea>
             <input type="hidden" name="csrf_token" value="{:csrf_token()}">
@@ -14,14 +14,14 @@
                 {include file="layout/_emoji" /}
                 <div>
                     <!-- <span class="textarea-count" id="counter">200</span> -->
-                {if isset($user) && $user !== null}
+                    {if isset($user) && $user !== null}
                     {if isset($user.golds) && $user.golds <= 0}
                         <button type="button" class="btn btn-primary rounded-pill ms-auto fw-bold" disabled>金币不足</button>
                     {else /}
                         <button type="button" id="submitButton" class="btn btn-primary fw-bold rounded-pill" disabled>发布</button>
                         <!-- <button type="submit" class="btn btn-primary px-3 fw-bold rounded-pill">发布</button> -->
                     {/if}
-                {/if}
+                    {/if}
                 </div>
             </div>
         </form>
@@ -31,7 +31,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const textarea     = document.getElementById('content');
+        const textarea = document.getElementById('content');
         const submitButton = document.getElementById('submitButton');
 
         document.getElementById('imageUpload').addEventListener('change', function (event) {

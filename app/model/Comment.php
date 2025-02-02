@@ -58,7 +58,7 @@ class Comment extends Model
      * @param int $user_id 用户id
      * @param int $pages   分页数
      */
-    public function find(int $post_id, int $pages = 20)
+    public function find(int $post_id, int $pages = 10)
     {
         $this->model = db('comment');
 
@@ -76,9 +76,8 @@ class Comment extends Model
      * @param int $user_id 用户id
      * @param int $pages   分页数
      */
-    public function getListByUserId(int $user_id, int $pages = 20)
+    public function fetchUserReplies(int $user_id, int $pages = 20)
     {
-        $user_id ?? 1;
         $this->model = db('comment');
 
         $fields = 'c.*,
@@ -88,7 +87,7 @@ class Comment extends Model
                     p.created_at AS post_created_at';
         return $this->model->join('AS c LEFT JOIN user AS u ON c.user_id = u.id
                                     LEFT JOIN post AS p ON c.post_id = p.id')
-                        ->where('c.user_id = ?', $user_id)
+                        ->where('c.user_id = ?', [$user_id])
                         ->orderBy('c.id DESC')
                         ->paginate($pages)
                         ->get($fields);

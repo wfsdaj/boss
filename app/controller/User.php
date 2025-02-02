@@ -2,8 +2,9 @@
 
 namespace app\controller;
 
+use app\controller\Auth;
 use app\model\User as UserModel;
-use app\model\Post;
+use app\model\{Post, Comment, Like};
 
 class User
 {
@@ -15,23 +16,10 @@ class User
      */
     public function profile()
     {
-        $user_id = (int)segment(3);
+        $user  = Auth::checkUser();
 
-        if (!$user_id) {
-            return abort(404);
-        }
-
-        $userModel = new UserModel();
-        $user = $userModel->find($user_id);
-
-        if (!$user) {
-            return abort(404);
-        }
-
-        $post = new Post();
-
-        // 查询用户帖子列表
-        $posts = $post->findByUserId($user_id);
+        // 查询用户帖子
+        $posts = (new Post())->findByUserId((int)segment(3));
 
         $data = [
             'user'  => $user,
@@ -46,21 +34,14 @@ class User
      */
     public function replies()
     {
-        $url_id = (int)segment(2);
-        $user   = model('user')->find($url_id);
+        $user  = Auth::checkUser();
 
-        if (!$user) {
-            return abort(404);
-        }
-
-        // 查询用户回复列表
-        $replies = model('comment')->getListByUserId($url_id);
-
-        // dd($replies[0][0]->post_id);
+        // 查询用户回复
+        $replies = (new comment())->fetchUserReplies((int)segment(3));
 
         $data = [
-            'user'       => $user,
-            'replies'    => $replies,
+            'user'    => $user,
+            'replies' => $replies,
         ];
 
         return view('user/replies', $data);
@@ -71,19 +52,16 @@ class User
      */
     public function likes()
     {
-        $user_id = (int)segment(2);
-        $user    = model('user')->find($user_id);
+        $user  = Auth::checkUser();
 
-        if (!$user) {
-            return abort(404);
-        }
+        $likeModel = new Like();
 
         // 查询用户喜欢列表
-        $likes = model('like')->getListByUserId($user_id);
+        $likes = $likeModel->getListByUserId((int)session('user_id'));
 
         $data = [
-            'user'       => $user,
-            'likes'      => $likes,
+            'user'  => $user,
+            'likes' => $likes,
         ];
 
         return view('user/likes', $data);
@@ -171,5 +149,28 @@ class User
         ];
 
         return view('user/avatar', $data);
+    }
+
+    /**
+     * 检查用户是否存在
+     *
+     * @return \app\model\User|void
+     */
+    private function checkUser()
+    {
+        $user_id = (int)segment(3);
+
+        if (!$user_id) {
+            return abort(404);  // 用户 ID 无效，终止程序
+        }
+
+        $userModel = new UserModel();
+        $user = $userModel->find($user_id);
+
+        if (!$user) {
+            return abort(404); // 用户不存在，终止程序
+        }
+
+        return $user; // 返回用户对象
     }
 }

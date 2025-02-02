@@ -1,0 +1,58 @@
+{extend name="user/layout" /}
+
+{block name="title"}{$user.username} 回复列表{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <!-- 中间内容列 -->
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
+                    <i class="iconfont icon-left-arrow fs-5"></i>
+                </div>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
+                    <span class="text-truncate">{$user.username}</span>
+                </h2>
+            </div>
+
+            <!-- 用户信息 -->
+            {include file="user/_user_cover"}
+            {include file="user/_user_cover_nav"}
+
+            {if !$replies[0]}
+                <div class="empty-text fs-28">无</div>
+            {else /}
+            <!-- 回帖列表 -->
+                <ul class="list-unstyled chat p-3">
+                {foreach $replies[0] as $reply}
+                    <li class="others mr-4">
+                        <div class="chat-item">
+                            <img class="avatar chat-avatar me-2" src="{:get_avatar($reply.user_id)}" alt="">
+                            <div>
+                                <div class="chat-content">{$reply.content}</div>
+                                <span class="fs-14 text-muted">{$reply.username} · {:nice_time($reply.post_created_at)}</span>
+                            </div>
+                        </div>
+                    </li>
+                {/foreach}
+                </ul>
+            {/if}
+
+            <!-- 分页 -->
+            {:render_pagination($replies[1])}
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // 当前链接添加 active
+        highlightActiveLink("user");
+        document.getElementById("my-replies").classList.add('active');
+    });
+</script>
+{/block}

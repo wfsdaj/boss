@@ -3,20 +3,14 @@
 namespace app\controller;
 
 use boss\Captcha;
+use app\model\User;
 
 class Auth
 {
-    public $table = 'user';
-
     /**
      * 显示验证码图片.
-     *
-     * 该方法负责生成并返回一个验证码图片给客户端。
-     * 它会创建一个新的验证码实例，并调用其 make 方法来生成图像。
-     *
-     * @return void
      */
-    public function captcha(): void
+    public function captcha()
     {
         /**
          * Captcha constructor.
@@ -26,9 +20,7 @@ class Auth
          * @param int $numbers       数字字符数
          * @param string $fontFamily 字体文件路径
          */
-        $captcha = new Captcha();
-        $captcha->make();
-        return;
+        return (new Captcha())->make();
     }
 
     /**
@@ -53,5 +45,27 @@ class Auth
         // 重定向到登录页面或其他安全页面
         return redirect(url('/'));
 
+    }
+
+    /**
+     * 检查用户是否存在
+     *
+     * @return \app\model\User|void
+     */
+    public static function checkUser()
+    {
+        $user_id = (int)segment(3);
+
+        if (!$user_id || session('user_id')) {
+            return abort(404);  // 用户 ID 无效，终止程序
+        }
+
+        $user = (new User())->find(session('user_id'));
+
+        if (!$user) {
+            return abort(404); // 用户不存在，终止程序
+        }
+
+        return $user; // 返回用户对象
     }
 }

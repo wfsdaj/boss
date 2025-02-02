@@ -96,12 +96,15 @@
                     </a>
 
                     <!-- 喜欢 -->
-                    <a href="javascript:;" class="post-action-like cursor-default" title="赞">
+                    {include file="layout/_like" /}
+
+
+                    <!-- <a href="javascript:;" class="post-action-like cursor-default" title="赞">
                         <div class="btn btn-sm btn-icon post-action-icon">
                             <i class="iconfont icon-thumbs-up fs-18px js-no-click"></i>
                             <span class="badge fs-13px">5</span>
                         </div>
-                    </a>
+                    </a> -->
 
                     <!-- 收藏 -->
                     <a href="javascript:;" class="post-action-fav cursor-default" title="收藏">
@@ -143,9 +146,6 @@
                     <i class="iconfont icon-search search-iconfont"></i>
                     <input class="form-control rounded-5 search-input" type="text" placeholder="搜索">
                 </div>
-                <div class="tile mb-3">
-                    {include file="user/_user_cover"}
-                </div>
                 <div class="tile">
                     <h2 class="mb-0 py-12px px-3 fs-18px fw-bold">有什么新鲜事？</h2>
                     <div href="###" class="tile-item d-flex">
@@ -169,12 +169,14 @@
 {/block}
 
 {block name="js"}
+<script src="/js/post.js"></script>
+<script src="/js/medium-zoom.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // mediumZoom('[data-zoomable]', {
-        //     margin: 30,
-        //     background: 'rgba(0,0,0,.7)',
-        // });
+        mediumZoom('[data-zoomable]', {
+            margin: 30,
+            background: 'rgba(0,0,0,.7)',
+        });
 
         // $('#loadingSpinner').show();
         $.ajax({

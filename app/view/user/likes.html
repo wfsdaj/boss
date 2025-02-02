@@ -1,0 +1,68 @@
+{extend name="user/layout" /}
+
+{block name="title"}{$user.username} 点赞列表{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <!-- 中间内容列 -->
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
+                    <i class="iconfont icon-left-arrow fs-5"></i>
+                </div>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
+                    <span class="text-truncate">{$user.username}</span>
+                </h2>
+            </div>
+
+            <!-- 用户信息 -->
+            {include file="user/_user_cover"}
+            {include file="user/_user_cover_nav"}
+
+            {:dd($likes[0])}
+
+            <!-- 无帖子提示 -->
+        {if !$likes[0]}
+            <div class="placeholder fs-28">无</div>
+        {else /}
+            <ul class="feed-list list-unstyled">
+            {foreach $likes[0] as $like}
+                {if $like->content}
+                <li class="feed-item d-flex p-3 js-tap" id="feed{$like.post_id}"
+                    data-href="/post/show/{$like.post_id}" data-pid="{$like.post_id}">
+                    <img class="avatar chat-avatar me-2" src="{:get_avatar($like.user_id)}" alt="">
+                    <div class="d-flex flex-column w-100">
+                        <div class="d-flex align-items-center fs-15">
+                            <a class="link-dark fw-bold" href="/user/{$like.user_id}">{$like.username}</a>
+                            <a class="link-secondary ms-auto" href="/post/show/{$like.id}">{:nice_time($like.created_at)}</a>
+                        </div>
+                        <p class="typo-text">{$like.content}</p>
+                        <!-- 图片附件 -->
+                        {:generate_image_html($post)}
+                    </div>
+                </li>
+                {/if}
+            {/foreach}
+            </ul>
+        {/if}
+
+            <!-- 分页 -->
+            {:render_pagination($likes[1])}
+        </div>
+    </div>
+</main>
+
+{/block}
+
+{block name="js"}
+
+<script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // 当前链接添加 active
+        highlightActiveLink("user");
+        document.getElementById("my-likes").classList.add('active');
+    });
+</script>
+{/block}

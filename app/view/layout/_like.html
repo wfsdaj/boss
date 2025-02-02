@@ -1,0 +1,29 @@
+{if !is_logined()}
+<!-- 提醒登录 -->
+<a href="javascript:;" class="post-action-like js-jump" data-bs-toggle="tooltip" data-bs-trigger="hover" title="喜欢">
+    <div class="btn btn-sm btn-icon post-action-icon">
+        <i class="iconfont icon-thumbs-up js-no-click"></i>
+    </div>
+    <span class="fs-13px">{$post.likes ?: ''}</span>
+</a>
+{/if}
+
+{if is_logined()}
+    {if $post.likes}
+    <!-- 取消赞 -->
+    <a href="javascript:;" class="post-action-like liked js-like" data-pid="{$post.id}" data-bs-toggle="tooltip" data-bs-trigger="hover" title="取消喜欢">
+        <div class="btn btn-sm btn-icon post-action-icon">
+            <i class="iconfont icon-thumbs-up-fill js-no-click"></i>
+        </div>
+        <span class="fs-13px js-likesNum{$post.id}">{$post.likes}</span>
+    </a>
+    {else/}
+    <!-- 点赞 -->
+    <a href="javascript:;" class="post-action-like js-like" data-pid="{$post.id}" data-bs-toggle="tooltip" data-bs-trigger="hover" title="喜欢">
+        <div class="btn btn-sm btn-icon post-action-icon">
+            <i class="iconfont icon-thumbs-up js-no-click"></i>
+        </div>
+        <span class="fs-13px js-likesNum{$post.id}"></span>
+    </a>
+    {/if}
+{/if}
