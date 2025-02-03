@@ -165,6 +165,23 @@ class App
             $path = DEFAULT_CONTROLLER . '/' . DEFAULT_METHOD;
         }
 
+        // // 获取请求 URI 并处理
+        // $requestUri = $_SERVER['REQUEST_URI'];
+
+        // // 移除查询字符串部分，只保留路径
+        // if (strpos($requestUri, '?') !== false) {
+        //     $requestUri = substr($requestUri, 0, strpos($requestUri, '?'));
+        // }
+
+        // // 移除脚本名称（例如 index.php）
+        // $scriptName = $_SERVER['SCRIPT_NAME'];
+        // if (strpos($requestUri, $scriptName) === 0) {
+        //     $requestUri = substr($requestUri, strlen($scriptName));
+        // }
+
+        // // 清理路径并去除前后的斜杠
+        // $path = trim($requestUri, '/');
+
         // 移除后缀（如果存在）
         if (defined('PAGE_SUFFIX') && PAGE_SUFFIX) {
             $path = str_replace(PAGE_SUFFIX, '', $path);

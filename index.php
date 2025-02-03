@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 /**
  * 所有请求都定向到此文件
- * 2025-1-17
+ * 2025-2-3
  */
 
 // 安全设置
@@ -19,6 +19,6 @@ define('DEBUG', true);  // 调试模式
 define('SHOW_ERROR', true); // 是否展示错误信息
 define('ENABLE_SESSION', true); // 启用 session
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 \boss\App::run();

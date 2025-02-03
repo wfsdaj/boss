@@ -57,7 +57,7 @@ function get_avatar(?int $user_id): string
 
     // 检查$user_id是否为null或小于等于0，如果是则直接返回默认头像
     if (is_null($user_id) || $user_id === '' || $user_id <= 0) {
-        return '/img/avatar/default.jpg';
+        return '/static/imgavatar/default.jpg';
     }
 
     // 如果结果已经缓存，直接返回缓存结果
@@ -69,7 +69,7 @@ function get_avatar(?int $user_id): string
     $avatarIndex = abs(crc32((string)$user_id)) % 38;
 
     // 拼接头像路径
-    $avatarPath = '/img/avatar/' . $avatarIndex . '.png';
+    $avatarPath = '/static/img/avatar/' . $avatarIndex . '.png';
 
     // 缓存结果
     $avatarCache[$user_id] = $avatarPath;

@@ -61,6 +61,7 @@ class FileCacher
 
         // 读取缓存数据
         $cacheData = require $cacheFile;
+        // dd($cacheData);
         $cacheData = unserialize($cacheData);
 
         // 如果缓存已过期，返回 false
@@ -92,12 +93,15 @@ class FileCacher
         $serializedData = serialize($cacheData);
         $serializedData = str_replace('\\', '\\\\', $serializedData);  // 转义反斜杠
         $serializedData = str_replace('$', '\$', $serializedData);  // 转义美元符号
+        // $serializedData = base64_encode($serializedData);
 
         // 生成缓存文件内容
         $cacheContent = "<?php if (!defined('APP_PATH')) { exit(); }\n\$data = <<<EOF\n{$serializedData}\nEOF;\nreturn \$data;";
 
+        $cacheContent = mb_convert_encoding($cacheContent, 'UTF-8');
+
         // 写入缓存文件
-        file_put_contents($cacheFile, $cacheContent);
+        file_put_contents($cacheFile, $cacheContent, LOCK_EX);
     }
 
     /**
