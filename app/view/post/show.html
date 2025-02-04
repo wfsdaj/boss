@@ -32,7 +32,7 @@
                     <div class="typo-text fs-18px" id="postContent">{$post.content | raw}</div>
                     {if $post.images > 0}
                     <div class="feed-gallery mt-2">
-                        <img class="img-fluid" src="/upload/{$post.filename}" alt="">
+                        <img class="img-fluid" src="/upload/{$post.filename}" alt="" data-zoomable>
                     </div>
                     {/if}
                 </div>
@@ -94,18 +94,8 @@
                             <span class="badge fs-13px">5</span>
                         </div>
                     </a>
-
                     <!-- 喜欢 -->
                     {include file="layout/_like" /}
-
-
-                    <!-- <a href="javascript:;" class="post-action-like cursor-default" title="赞">
-                        <div class="btn btn-sm btn-icon post-action-icon">
-                            <i class="iconfont icon-thumbs-up fs-18px js-no-click"></i>
-                            <span class="badge fs-13px">5</span>
-                        </div>
-                    </a> -->
-
                     <!-- 收藏 -->
                     <a href="javascript:;" class="post-action-fav cursor-default" title="收藏">
                         <div class="btn btn-sm btn-icon post-action-icon">
@@ -113,7 +103,6 @@
                             <span class="badge fs-13px">5</span>
                         </div>
                     </a>
-
                     <!-- 分享 -->
                     <a href="javascript:;" class="post-action-fav cursor-default" title="分享">
                         <div class="btn btn-sm btn-icon post-action-icon">
@@ -122,9 +111,6 @@
                         </div>
                     </a>
                 </div>
-                <!-- <div>
-                    㒭㒹㕛㚉㚐㚙㝍㠪㠭㤫㪳㫈㵘㶣㶪㸞㹜㽓㽒㿢丄丅冇卍叒叕囧壵夯夵嫑孒孧孨孬尕尛屮巭恏惢憇朤歪汖灮舙
-                </div> -->
             </div>
 
             <!-- 评论框 -->
@@ -169,13 +155,13 @@
 {/block}
 
 {block name="js"}
-<script src="/js/post.js"></script>
-<script src="/js/medium-zoom.min.js"></script>
+<script src="/static/js/post.js"></script>
+<script src="/static/js/medium-zoom.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         mediumZoom('[data-zoomable]', {
             margin: 30,
-            background: 'rgba(0,0,0,.7)',
+            background: 'rgba(0,0,0,0.7)',
         });
 
         // $('#loadingSpinner').show();

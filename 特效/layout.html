@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三列布局</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .max-width-container {
+            max-width: 1255px;
+            margin: 0 auto;
+            display: flex; /* 启用 flexbox */
+        }
+
+        .left-column {
+            width: 275px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+        }
+
+        .middle-column {
+            /* width: 600px;  不再需要固定宽度 */
+            flex: 1; /* 占据剩余空间 */
+            margin-left: 275px; /* 左边距，防止被左列遮挡 */
+        }
+
+        .right-column {
+            width: 350px;
+        }
+
+        /* 小屏幕时隐藏右列 */
+        @media (max-width: 767.98px) {
+            .right-column {
+                display: none;
+            }
+
+            .middle-column {
+                width: 100%;
+                margin-left: 0; /* 清除左边距 */
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="max-width-container">
+            <div class="row">
+                <div class="col-auto left-column bg-light">
+                    左栏固定宽度 275px
+                </div>
+                <div class="col middle-column bg-dark" style="height: 1800px">
+                    中间栏宽度 600px，居中显示
+                </div>
+                <div class="col-auto right-column bg-info">
+                    右栏固定宽度 350px
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
