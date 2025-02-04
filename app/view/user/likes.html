@@ -23,21 +23,60 @@
 
             <!-- 无帖子提示 -->
             {if !$likes[0]}
-                <div class="placeholder fs-28">无</div>
+                <div class="empty-text fs-3">空空如也</div>
             {else /}
                 <ul class="feed-list list-unstyled">
                 {foreach $likes[0] as $like}
-                <li class="feed-item d-flex p-3 js-tap" id="feed{$like.post_id}"
-                    data-href="/post/show/{$like.post_id}" data-pid="{$like.post_id}">
-                    <img class="avatar chat-avatar me-2" src="{:get_avatar($like.user_id)}" alt="">
-                    <div class="d-flex flex-column w-100">
-                        <div class="d-flex align-items-center fs-15">
-                            <a class="link-dark fw-bold" href="/user/{$like.user_id}">{$like.username}</a>
-                            <a class="link-secondary ms-auto" href="/post/show/{$like.id}">{:nice_time($like.created_at)}</a>
+                <li class="feed-item d-flex js-tap" id="feed{$like.post_id}" data-href="/post/show/{$like.post_id}" data-pid="{$like.post_id}">
+                    <a href="/user/profile/{$like.user_id}" class="position-relative">
+                        <img class="avatar lazyload" src="{:get_avatar($like.user_id)}" loading="lazy" alt="">
+                        {if $like.is_sticky}
+                        <div class="avatar-badge bg-danger">
+                            <i class="iconfont icon-thumbtack text-white"></i>
                         </div>
-                        <p class="typo-text">{$like.content}</p>
+                        {/if}
+                    </a>
+                    <div class="d-flex flex-column w-100">
+                        <div class="d-flex position-relative">
+                            <a class="feed-item-link fw-bold" href="/user/profile/{$like.user_id}">{$like.username}</a>
+                            <a class="link-secondary ms-2" href="/post/show/{$like.user_id}">{:nice_time($like.created_at)}</a>
+                        </div>
+                        <p class="typo-text mt-1 fs-6">{$like.content | raw}</p>
                         <!-- 图片附件 -->
-                        {:generate_image_html($post)}
+                        {:generate_image_html($likes)}
+                        <div class="mt-1 d-flex justify-content-between post-actions">
+                            <!-- 回复 -->
+                            <a role="button" class="post-action-reply cursor-arrow" title="回复">
+                                <div class="btn btn-sm btn-icon post-action-icon">
+                                    <i class="iconfont icon-comment fs-18px js-no-click"></i>
+                                    <span class="badge fs-13px">{$like.comments ?: ''}</span>
+                                </div>
+                            </a>
+
+                            <!-- 转帖 -->
+                            <a href="javascript:;" class="post-action-retweet cursor-default" title="转帖">
+                                <div class="btn btn-sm btn-icon post-action-icon">
+                                    <i class="iconfont icon-retweet fs-18px js-no-click"></i>
+                                    <span class="badge fs-13px">{$like.comments ?: ''}</span>
+                                </div>
+                            </a>
+
+                            <!-- 喜欢 -->
+                            <a href="javascript:;" class="post-action-like cursor-default" title="赞">
+                                <div class="btn btn-sm btn-icon post-action-icon">
+                                    <i class="iconfont icon-thumbs-up fs-18px js-no-click"></i>
+                                    <span class="badge fs-13px">{$like.likes ?: ''}</span>
+                                </div>
+                            </a>
+
+                            <!-- 收藏 -->
+                            <a href="javascript:;" class="post-action-fav cursor-default" title="收藏">
+                                <div class="btn btn-sm btn-icon post-action-icon">
+                                    <i class="iconfont icon-fav fs-18px js-no-click"></i>
+                                    <span class="badge fs-13px">{$like.favorites ?: ''}</span>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </li>
                 {/foreach}

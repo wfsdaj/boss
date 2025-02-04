@@ -20,8 +20,7 @@ class ErrorHandler extends Exception
     {
         // 默认隐藏所有错误，运行报错服务器状态 500
         if (SHOW_ERROR === false) {
-            http_response_code(500);
-            exit(1);
+            abort(500);
         }
 
         // 获取出错行的源码
@@ -46,6 +45,7 @@ class ErrorHandler extends Exception
      */
     public static function handleShutdown(): void
     {
+
         //获取最后发生的错误
         $error = error_get_last();
 
@@ -62,7 +62,12 @@ class ErrorHandler extends Exception
                 'source_code' => $sourceCode,
             ];
 
-            include __DIR__ . '/templates/error.php';
+            if (SHOW_ERROR) {
+                include __DIR__ . '/templates/error.php';
+            } else {
+                // 如果不显示错误页面，可以选择记录日志
+                abort(500);
+            }
             exit(1);
         }
     }

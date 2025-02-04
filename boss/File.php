@@ -7,7 +7,7 @@ class File
     // 默认配置常量
     private const DEFAULT_MAX_SIZE = 2097152; // 2MB
     private const DEFAULT_EXTS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-    private const DEFAULT_SAVE_PATH = '/upload';
+    private const DEFAULT_SAVE_PATH = 'upload';
     private const DEFAULT_URL_PATH = '';
 
     // 配置属性
@@ -72,7 +72,7 @@ class File
             $fileExt = $this->getFileExtension($file);
             $saveDir = $this->getSaveDirectory();
             $filename = $this->generateFilename($file, $fileExt);
-            $filePath = PUBLIC_PATH . '/' . $saveDir . $filename;
+            $filePath = ROOT_PATH . $saveDir . $filename;
             $urlPath = $this->urlPath . '/' . $saveDir . $filename;
 
             $this->ensureDirectoryExists($saveDir);
@@ -160,7 +160,7 @@ class File
      */
     private function ensureDirectoryExists(string $dir): void
     {
-        if (!is_dir(PUBLIC_PATH . '/' . $dir) && !mkdir(PUBLIC_PATH . '/' . $dir, 0755, true)) {
+        if (!is_dir(ROOT_PATH . '/' . $dir) && !mkdir(ROOT_PATH . '/' . $dir, 0755, true)) {
             throw new \Exception('上传目录没有写权限');
         }
     }

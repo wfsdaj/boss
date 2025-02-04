@@ -49,30 +49,10 @@ class Auth
     /**
      * 检查用户是否已登录，如果未登录则重定向到登录页面。
      */
-    public static function checkLogin()
+    public static function check()
     {
         if (!session('user_id')) {
             return redirect(url('/login'));
         }
-    }
-
-    /**
-     * 检查用户是否存在
-     *
-     * @return \app\model\User|null
-     */
-    public static function getCurrentUser(int $user_id)
-    {
-        if (!$user_id) {
-            return null;
-        }
-
-        $user = (new User())->find($user_id);
-
-        if (!$user) {
-            return null;
-        }
-
-        return $user;
     }
 }

@@ -1,6 +1,6 @@
 {extend name="user/layout" /}
 
-{block name="title"}{$user.username} 个人空间{/block}
+{block name="title"}{$user.username ?: ''} 个人空间{/block}
 
 {block name="main"}
 <main role="main" class="d-flex flex-grow-1">

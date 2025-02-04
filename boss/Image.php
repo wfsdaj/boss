@@ -64,7 +64,7 @@ class Image
      * @param int $compression 压缩质量（仅适用于JPEG）
      * @return bool 保存成功返回true，否则返回false
      */
-    public function save(string $result_filename, $image_type, int $compression = 100): bool
+    public function save(string $result_filename, $image_type, int $compression = -1): bool
     {
         if ($this->image === null) {
             throw new \RuntimeException("没有加载的图像");
@@ -78,9 +78,9 @@ class Image
             case IMAGETYPE_GIF:
                 return imagegif($this->image, $result_filename);
             case IMAGETYPE_PNG:
-                return imagepng($this->image, $result_filename);
+                return imagepng($this->image, $result_filename, $compression);
             case IMAGETYPE_WEBP:
-                return imagewebp($this->image, $result_filename);
+                return imagewebp($this->image, $result_filename, $compression);
             case IMAGETYPE_BMP:
                 return imagebmp($this->image, $result_filename);
             case IMAGETYPE_WBMP:

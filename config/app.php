@@ -13,13 +13,13 @@ return [
 
     // 数据库
     'db' => [
-        'driver'   => env('DB_CONNECTION', 'mysql'),
-        'host'     => env('DB_HOST', '127.0.0.1'),
-        'database' => env('DB_DATABASE', ''),
-        'username' => env('DB_USERNAME', ''),
-        'password' => env('DB_PASSWORD', ''),
-        'port'     => env('DB_PORT', '3306'),
-        'charset'  => env('DB_CHARSET', 'utf8mb4'),
+        'driver'   => 'mysql',
+        'host'     => '127.0.0.1',
+        'database' => 'mini_test',
+        'username' => 'root',
+        'password' => 'root',
+        'port'     => '3306',
+        'charset'  => 'utf8mb4',
         'prefix'   => '',
     ],
 

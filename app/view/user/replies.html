@@ -21,21 +21,32 @@
             {include file="user/_user_cover"}
             {include file="user/_user_cover_nav"}
 
+            <!-- 回帖列表 -->
             {if !$replies[0]}
                 <div class="empty-text fs-28">无</div>
             {else /}
-            <!-- 回帖列表 -->
                 <ul class="list-unstyled chat p-3">
                 {foreach $replies[0] as $reply}
-                    <li class="others mr-4">
-                        <div class="chat-item">
-                            <img class="avatar chat-avatar me-2" src="{:get_avatar($reply.user_id)}" alt="">
-                            <div>
-                                <div class="chat-content">{$reply.content}</div>
-                                <span class="fs-14 text-muted">{$reply.username} · {:nice_time($reply.post_created_at)}</span>
-                            </div>
+                <!-- 原帖内容 -->
+                <li class="others mr-4">
+                    <div class="chat-item">
+                        <img class="avatar chat-avatar me-2" src="{:get_avatar($reply.post_user_id)}" alt="">
+                        <div>
+                            <div class="chat-content">{$reply.post_content | raw}</div>
+                            <span class="fs-14 text-muted">{$reply.post_username} · {:nice_time($reply.post_created_at)}</span>
                         </div>
-                    </li>
+                    </div>
+                </li>
+                <!-- 回帖内容 -->
+                <li class="self mb-3">
+                    <div class="chat-item">
+                        <img class="avatar chat-avatar ms-2" src="{:get_avatar($reply.user_id)}" alt="">
+                        <div>
+                            <div class="chat-content">{$reply.content}</div>
+                            <span class="fs-14 text-muted">{:nice_time($reply.created_at)} · {$reply.username}</span>
+                        </div>
+                    </div>
+                </li>
                 {/foreach}
                 </ul>
             {/if}

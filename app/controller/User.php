@@ -3,7 +3,7 @@
 namespace app\controller;
 
 use app\model\User as UserModel;
-use app\model\{Auth, Post, Comment, Like};
+use app\model\{Auth, Post, Comment, Like, Fav};
 
 class User
 {
@@ -15,12 +15,10 @@ class User
      */
     public function profile()
     {
-        $url_id = (int)segment(3);
-
-        $user = Auth::getCurrentUser($url_id);
+        $user = $this->getUserFromUrl();
 
         // 查询用户帖子
-        $posts = (new Post())->findByUserId($url_id);
+        $posts = (new Post())->findByUserId((int)segment(3));
 
         $data = [
             'user'  => $user,
@@ -35,12 +33,10 @@ class User
      */
     public function replies()
     {
-        Auth::checkLogin();
-
-        $user = Auth::getCurrentUser();
+        $user = $this->getUserFromUrl();
 
         // 查询用户回复
-        $replies = (new comment())->fetchUserReplies((int)segment(3));
+        $replies = (new Comment())->findByUserId((int)segment(3));
 
         $data = [
             'user'    => $user,
@@ -55,12 +51,10 @@ class User
      */
     public function likes()
     {
-        Auth::checkLogin();
-
-        $user = Auth::getCurrentUser();
+        $user = $this->getUserFromUrl();
 
         // 查询用户喜欢列表
-        $likes = (new Like())->getListByUserId((int)session('user_id'));
+        $likes = (new Like())->list((int)segment(3));
 
         $data = [
             'user'  => $user,
@@ -75,18 +69,13 @@ class User
      */
     public function fav()
     {
-        $url_id = (int)segment(2);
-        $user   = model('user')::find($url_id);
+        $user = $this->getUserFromUrl();
 
-        if (!$user) {
-            return abort(404);
-        }
-
-        $favorites = model('fav')->getListByUrlId($url_id);
+        $favorites =(new Fav())->list((int)segment(3));
 
         $data = [
-            'user'       => $user,
-            'favorites'  => $favorites,
+            'user'      => $user,
+            'favorites' => $favorites,
         ];
 
         return view('user/fav', $data);
@@ -155,16 +144,24 @@ class User
     }
 
     /**
-     * 检查用户是否存在
+     * 从 URL 中获取用户 ID 并查询用户信息
      *
-     * @return \app\model\User|void
+     * @return array|null 返回查询到的用户对象，如果用户 ID 无效或用户不存在则返回 null
      */
-    private function checkUser()
+    private function getUserFromUrl(): ?array
     {
-        $user_id = (int)segment(3);
+        $url_id = (int)segment(3);
 
-        if (!$user_id) {
-            return abort(404);  // 用户 ID 无效，终止程序
+        if ($url_id <= 0) {
+            return null;
         }
+
+        $user = (new UserModel())->find($url_id);
+
+        if (!$user) {
+            return abort(404);
+        }
+
+        return $user;
     }
 }

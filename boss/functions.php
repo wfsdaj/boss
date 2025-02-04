@@ -122,23 +122,22 @@ function config(string $key = null)
 /**
  * 获取环境配置项
  *
- * @param string $key 配置项的键
+ * @param string $key 环境变量键名
  * @return string|null 返回配置项的值，若配置项不存在则返回null
  * @throws Exception 如果配置文件无法读取或解析
  */
 function env(string $key): ?string
 {
+    static $env = null;
+
     $file = ROOT_PATH . '.env';
 
-    // 检查配置文件是否存在且可读取
-    if (!file_exists($file)) {
-        throw new Exception("无法读取配置文件：{$file}", 1);
+    // 如果未加载过.env文件且文件存在，则加载
+    if ($env === null && file_exists($file)) {
+        $env = parse_ini_file($file, true, INI_SCANNER_RAW);
     }
 
-    // 解析配置文件
-    $env = parse_ini_file($file, true, INI_SCANNER_RAW);
-
-    // 检查配置项是否存在
+    // 返回对应的值，如果键不存在或.env文件不存在则返回null
     return $env[$key] ?? null;
 }
 
@@ -518,7 +517,7 @@ function replace_urls_with_links(string $content): string
         $link_text = preg_replace('/^https?:\/\//i', '', $url);
 
         // 返回带有 <a> 标签的链接
-        return '<a href="/jump?target=' . urlencode($url) . '">' . escape($link_text) . '</a>';
+        return '<a href="/jump?target=' . urlencode($url) . '" target="_blank" rel="nofollow noopener">' . escape($link_text) . '</a>';
     }, $content);
 
     return $content;
@@ -560,7 +559,7 @@ function abort(int $code, string $message = ''): void
     $supportedCodes = [
         403 => '无访问权限',
         404 => '页面不存在',
-        500 => '内部服务器错误',
+        500 => '服务器内部错误',
     ];
 
     // 检查状态码是否有效

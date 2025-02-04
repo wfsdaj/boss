@@ -86,12 +86,11 @@ class Like extends Model
     /**
      * 根据用户 id 获取喜欢列表
      */
-    public function getListByUserId(int $user_id, int $pages = 10)
+    public function list(int $user_id, int $pages = 10)
     {
         $this->model = db('likes');
 
-        $fields = 'k.id,
-                   k.user_id,
+        $fields = 'k.user_id,
                    k.post_id,
                    k.created_at,
                    p.user_id as author_id,
@@ -102,13 +101,18 @@ class Like extends Model
                    p.comments,
                    p.likes,
                    p.favorites,
+                   p.is_sticky,
                    u.username,
                    a.post_id as a_post_id,
                    a.filename,
                    a.type';
-        return $this->model->join('AS k INNER JOIN post  AS p ON p.id = k.post_id
-                                  INNER JOIN user  AS u ON u.id = p.user_id
-                                  LEFT JOIN attach AS a ON a.post_id = p.id')
+        return $this->model->join('AS k
+                                INNER JOIN post AS p
+                                        ON p.id = k.post_id
+                                INNER JOIN user AS u
+                                    ON u.id = p.user_id
+                                LEFT JOIN attach AS a
+                                    ON a.post_id = p.id')
                            ->where('k.user_id = ?', $user_id)
                            ->orderBy('k.id DESC')
                            ->paginate($pages)

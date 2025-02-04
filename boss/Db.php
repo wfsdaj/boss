@@ -186,7 +186,7 @@ class Db
     {
         $startTime = microtime(true);
         if (!is_array($data)) {
-            throw new Exception('插入数据错误', '插入数据应为一个一维数组');
+            throw new Exception('插入数据错误，插入数据应为一个一维数组');
         }
         $this->sql = "INSERT INTO $this->tableName (";
         $fields = [];

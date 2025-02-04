@@ -4,7 +4,7 @@ namespace app\controller;
 
 use app\model\{Post, User};
 
-class Home
+final class Home
 {
     /**
      * 网站首页

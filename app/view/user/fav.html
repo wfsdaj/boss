@@ -1,0 +1,68 @@
+{extend name="user/layout" /}
+
+{block name="title"}{$user.username} 收藏列表{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <!-- 中间内容列 -->
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
+                    <i class="iconfont icon-left-arrow fs-5"></i>
+                </div>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
+                    <span class="text-truncate">{$user.username}</span>
+                </h2>
+            </div>
+
+            <!-- 用户信息 -->
+            {include file="user/_user_cover"}
+            {include file="user/_user_cover_nav"}
+
+            <!-- 无帖子提示 -->
+            {if !$favorites[0]}
+                <div class="empty-text fs-3">空空如也</div>
+            {/if}
+
+            <ul class="feed-list list-unstyled">
+                {foreach $favorites[0] as $fav}
+                <li class="feed-item d-flex js-tap" data-href="/post/show/{$fav.post_id}" data-pid="{$fav.post_id}">
+                    <a href="/user/profile/{$fav.user_id}" class="position-relative">
+                        <img class="avatar lazyload" src="{:get_avatar($fav.user_id)}" loading="lazy" alt="">
+                        {if $fav.is_sticky}
+                        <div class="avatar-badge bg-danger">
+                            <i class="iconfont icon-thumbtack text-white"></i>
+                        </div>
+                        {/if}
+                    </a>
+                    <div class="d-flex flex-column w-100">
+                        <div class="d-flex position-relative">
+                            <a class="feed-item-link fw-bold" href="/user/profile/{$fav.user_id}">{$fav.username}</a>
+                            <a class="link-secondary ms-2" href="/post/show/{$fav.user_id}">{:nice_time($fav.created_at)}</a>
+                        </div>
+                        <p class="typo-text mt-1 fs-6">{$fav.content | raw}</p>
+                        <!-- 图片附件 -->
+                        {:generate_image_html($favorites)}
+                    </div>
+                </li>
+                {/foreach}
+            </ul>
+
+            <!-- 分页 -->
+            {:render_pagination($favorites[1])}
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // 当前链接添加 active
+        highlightActiveLink("user");
+        document.getElementById("my-fav").classList.add('active');
+    });
+</script>
+{/block}

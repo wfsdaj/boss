@@ -135,13 +135,13 @@ class Post extends Model
 
         $data = db('post')->join('AS p
                             LEFT JOIN user AS u
-                                    ON p.user_id = u.id
+                                ON p.user_id = u.id
                             LEFT JOIN attach AS a
-                                    ON a.post_id = p.id
+                                ON a.post_id = p.id
                             LEFT JOIN favorite AS f
-                                    ON f.post_id = p.id
+                                ON f.post_id = p.id
                             LEFT JOIN likes AS l
-                                    ON l.post_id = p.id')
+                                ON l.post_id = p.id')
             ->paginate($this->parameter)
             ->orderBy('p.is_sticky DESC, p.id DESC')
             ->get($fields);
@@ -253,14 +253,14 @@ class Post extends Model
             // 构建附件数据
             $attachmentsData = [
                 'width'      => $uploadedFileData['width'],
-                'filename'   => ltrim($uploadedFileData['file_path'], "//upload/"),
+                'filename'   => ltrim($uploadedFileData['file_path'], "upload/"),
                 'type'       => $uploadedFileData['file_ext'],
                 'post_id'    => $post_id,
                 'user_id'    => session('user_id'),
                 'created_at' => time(),
             ];
 
-            $img_path = PUBLIC_PATH . substr($uploadedFileData['file_path'], 2);
+            $img_path = ROOT_PATH . $uploadedFileData['file_path'];
             $this->resizeImages($img_path);
 
             // 写入附件表

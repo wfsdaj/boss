@@ -76,17 +76,26 @@ class Comment extends Model
      * @param int $user_id 用户id
      * @param int $pages   分页数
      */
-    public function fetchUserReplies(int $user_id, int $pages = 20)
+    public function findByUserId(int $user_id, int $pages = 20)
     {
         $this->model = db('comment');
 
-        $fields = 'c.*,
+        $fields =  'c.post_id,
+                    c.user_id,
+                    c.content,
+                    c.created_at,
                     u.username,
-                    p.content AS title,
+                    p.content AS post_content,
                     p.user_id AS post_user_id,
-                    p.created_at AS post_created_at';
-        return $this->model->join('AS c LEFT JOIN user AS u ON c.user_id = u.id
-                                    LEFT JOIN post AS p ON c.post_id = p.id')
+                    p.created_at AS post_created_at,
+                    pu.username AS post_username';
+        return $this->model->join('AS c
+                                    LEFT JOIN user AS u
+                                        ON c.user_id = u.id
+                                    LEFT JOIN post AS p
+                                        ON c.post_id = p.id
+                                    LEFT JOIN user AS pu
+                                        ON p.user_id = pu.id')
                         ->where('c.user_id = ?', [$user_id])
                         ->orderBy('c.id DESC')
                         ->paginate($pages)
