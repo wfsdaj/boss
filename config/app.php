@@ -15,9 +15,9 @@ return [
     'db' => [
         'driver'   => 'mysql',
         'host'     => '127.0.0.1',
-        'database' => 'mini_test',
-        'username' => 'root',
-        'password' => 'root',
+        'database' => 'fig_test',
+        'username' => 'fig_test',
+        'password' => 'cpiSE8XshEHRaYjE',
         'port'     => '3306',
         'charset'  => 'utf8mb4',
         'prefix'   => '',

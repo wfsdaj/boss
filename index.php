@@ -11,7 +11,7 @@ declare(strict_types=1);
 header("X-XSS-Protection: 1; mode=block");
 header("X-Content-Type-Options: nosniff");
 header("Referrer-Policy: same-origin");
-header('X-Frame-Options: SAMEORIGIN');
+header('X-Frame-Options: DENY');
 header('X-Powered-By:');
 
 // define('TRACE', true);  // 追踪模式

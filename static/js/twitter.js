@@ -100,10 +100,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // 点击刷新验证码
     const resetCaptchaElement = document.getElementById('resetCaptcha');
     if (resetCaptchaElement) {
-        resetCaptchaElement.addEventListener('click', function () {
+        resetCaptchaElement.addEventListener('click', () => {
             this.src = '/auth/captcha?' + Math.random();
         });
     }
+
 
     // 初始化提示框
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(tooltipTriggerEl => {
@@ -215,9 +216,10 @@ function updateIconClassOnActive(selector, fromClass, toClass) {
 const getStringLength = (str) => {
     let realLength = 0;
     const len = str.length;
-    for (let i = 0; i < len; i++) {
-        const charCode = str.charCodeAt(i);
-        realLength += (charCode - 0x4E00) >>> 0 <= 0x9FFF - 0x4E00 ? 2 : 1;
+    for (let charIndex = 0; charIndex < len; charIndex++) {
+        const charCode = str.charCodeAt(charIndex);
+        // 判断是否为中文字符
+        realLength += (charCode >= 0x4E00 && charCode <= 0x9FFF) ? 2 : 1;
     }
     return realLength;
 };

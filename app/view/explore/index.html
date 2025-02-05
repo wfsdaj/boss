@@ -1,0 +1,45 @@
+{extend name="layout/app" /}
+
+{block name="title"}探索{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">探索</h2>
+            </div>
+
+            <nav class="nav nav-justified border-bottom">
+        <a class="nav-link active" id="my-post" href="/">推荐</a>
+        <a class="nav-link" id="my-replies" href="/">热门</a>
+        <a class="nav-link" id="my-likes" href="/">用户</a>
+        <a class="nav-link" id="my-fav" href="/">群</a>
+    </nav>
+
+            <div class="flash-news">
+                <img src="img/flash-news.jpg" alt="">
+
+                <div class="flash-mask">
+                    <h2 class="fs-20 py-1">中华人民共和国</h2>
+                    <p class="fs-13">13号说明字体</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // 当前链接添加 active
+        highlightActiveLink("explore");
+        // document.getElementById("my-post").classList.add('active');
+    });
+</script>
+{/block}
