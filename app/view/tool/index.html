@@ -1,0 +1,43 @@
+{extend name="layout/app" /}
+
+{block name="title"}工具箱{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">工具箱</h2>
+            </div>
+            <div class="p-3 bg-light">
+                <div class="container px-0">
+                    <div class="row mb-4 mt-1">
+                        <div class="col">
+                            <div class="box p-3 d-flex align-items-center">
+                                <a class="stretched-link" href="/tool/symbols">特殊符号大全</a>
+                                <i class="iconfont icon-smile ms-auto fs-3 text-primary opacity-50"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="box p-3 d-flex align-items-center">
+                                <p>万年历</p>
+                                <i class="iconfont icon-date ms-auto fs-3 opacity-50"></i>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="box p-3 d-flex align-items-center">
+                                <p>十二星座</p>
+                                <i class="iconfont icon-birthday ms-auto fs-3 opacity-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{/block}

@@ -1,0 +1,255 @@
+{extend name="layout/app" /}
+
+{block name="title"}勋章{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex justify-content-between align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <h2 class="fs-18px fw-bold cursor-pointer js-top">勋章</h2>
+            </div>
+
+            <div class="d-flex align-items-center mx-4 my-3 p-4 box bg-rainbow rounded">
+                <div>
+                    <h1 class="mb-1 fs-5 fw-bold">荣誉勋章</h1>
+                    <p class="fs-15px">你贡献内容时，除了获得声望和解锁权限外，还能获得社区的勋章，这是你的荣耀。</p>
+                </div>
+                <img class="ms-4" src="/static/img/medal/b1.png" height="60" loading="lazy" alt="">
+            </div>
+
+            <nav class="nav nav-justified border-bottom" id="medal-tab" role="tablist">
+                <div class="nav-link cursor-pointer active" id="medal1" data-bs-toggle="tab" data-bs-target="#medal1-pane" role="tab" aria-controls="medal1-pane" aria-selected="true">用户组</div>
+                <div class="nav-link cursor-pointer" id="medal2" data-bs-toggle="tab" data-bs-target="#medal2-pane" role="tab" aria-controls="medal2-pane" aria-selected="false">纪念</div>
+                <div class="nav-link cursor-pointer" id="medal3" data-bs-toggle="tab" data-bs-target="#medal3-pane" role="tab" aria-controls="medal3-pane" aria-selected="false">优秀会员</div>
+                <div class="nav-link cursor-pointer" id="medal4" data-bs-toggle="tab" data-bs-target="#medal4-pane" role="tab" aria-controls="medal4-pane" aria-selected="false">已获得</div>
+            </nav>
+
+            <div class="container">
+                <div class="tab-content" id="edal-tabContent">
+                    <!-- 用户组 -->
+                    <div class="tab-pane fade show active" id="medal1-pane" role="tabpanel" aria-labelledby="medal1" tabindex="0">
+                        <div class="row row-cols-3 p-4 text-center medal">
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a1.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">荣誉星粉</h3>
+                                    <p class="mt-2">荣誉星粉勋章</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a2.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">酋长</p>
+                                    <p class="mt-2">酋长/副酋长勋章</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a3.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">资源组</p>
+                                    <p class="mt-2">由社区运营人员人工操作进行发放</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a4.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">BUG大师</p>
+                                    <p class="mt-2">提出50条以上有效BUG</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a5.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">分享大师</p>
+                                    <p class="mt-2">分享大师勋章</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a6.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">???</p>
+                                    <p class="mt-2">???</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a7.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">幽默大师</p>
+                                    <p class="mt-2">分享20篇以上趣闻趣事精品帖</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a8.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">生活家</p>
+                                    <p class="mt-2">分享20篇以上生活相关精华帖</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a9.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">百晓生</p>
+                                    <p class="mt-2">答案被采纳100条以上</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a10.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">资源大王</p>
+                                    <p class="mt-2">分享60篇以上资源精华帖</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a11.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">版主</p>
+                                    <p class="mt-2">仅版主可获取</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a12.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">超级版主</p>
+                                    <p class="mt-2">仅超级版主可获取</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a13.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">管理员</p>
+                                    <p class="mt-2">仅管理员可获取</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/a14.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">特使</p>
+                                    <p class="mt-2">特使</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 纪念 -->
+                    <div class="tab-pane fade" id="medal2-pane" role="tabpanel" aria-labelledby="medal2" tabindex="0">
+                        <div class="row row-cols-3 p-4 text-center medal">
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b1.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区一周年勋章</h3>
+                                    <p class="mt-2">2024年12月25日前注册的所有用户颁发</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b2.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区2周年勋章</h3>
+                                    <p class="mt-2">2025年12月25日前注册的所有用户颁发</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b3.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区生日勋章</h3>
+                                    <p class="mt-2">2023年12月25日当天注册的所有用户颁发</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b4.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区2岁生日勋章</h3>
+                                    <p class="mt-2">2024年12月25日当天注册的所有用户颁发</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b5.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">荣誉用户</h3>
+                                    <p class="mt-2">有突出贡献的用户</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b6.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区首批荣誉用户</h3>
+                                    <p class="mt-2">内测期间注册认证成功并有突出表现</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/b7.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">社区8周年勋章</h3>
+                                    <p class="mt-2">2023年8月参与社区8周年星空间话题活动用户颁发</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 优秀会员 -->
+                    <div class="tab-pane fade" id="medal3-pane" role="tabpanel" aria-labelledby="medal3" tabindex="0">
+                        <div class="row row-cols-3 p-4 text-center medal">
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c1.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">达成100帖</h3>
+                                    <p class="mt-2">发帖数量达成100篇即可自动获取</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c2.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">达成1000帖</h3>
+                                    <p class="mt-2">发帖数量达成1000篇即可自动获取</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c3.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">点赞王</h3>
+                                    <p class="mt-2">点赞多的用户</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c4.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">阅览王</h3>
+                                    <p class="mt-2">浏览社区多的用户</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c5.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">回贴王</h3>
+                                    <p class="mt-2">回复多的用户</p>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="box shadow-none p-3">
+                                    <p><img src="/static/img/medal/c6.png" loading="lazy" alt=""></p>
+                                    <p class="fw-bold">任务王</h3>
+                                    <p class="mt-2">完成任务多的用户</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 已获得 -->
+                    <div class="tab-pane fade" id="medal4-pane" role="tabpanel" aria-labelledby="medal4" tabindex="0">
+                        <div class="empty-text fs-5">功能维护中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        highlightActiveLink('medal');
+    });
+</script>
+{/block}

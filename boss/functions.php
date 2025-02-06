@@ -120,13 +120,13 @@ function config(string $key = null)
 }
 
 /**
- * 获取环境配置项
+ * 获取环境变量值，若未定义则返回默认值
  *
- * @param string $key 环境变量键名
- * @return string|null 返回配置项的值，若配置项不存在则返回null
- * @throws Exception 如果配置文件无法读取或解析
+ * @param string $key     环境变量的键
+ * @param string $default 默认值，当环境变量未定义时返回
+ * @return string         环境变量值或默认值
  */
-function env(string $key): ?string
+function env(string $key, string $default): string
 {
     static $env = null;
 
@@ -138,7 +138,7 @@ function env(string $key): ?string
     }
 
     // 返回对应的值，如果键不存在或.env文件不存在则返回null
-    return $env[$key] ?? null;
+    return $env[$key] ?? $default;
 }
 
 /**

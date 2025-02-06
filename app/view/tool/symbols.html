@@ -1,0 +1,526 @@
+{extend name="layout/app" /}
+
+{block name="title"}工具箱{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <a href="/login" class="btn btn-sm btn-icon only-on-sm" role="button">
+                    <i class="iconfont icon-user"></i>
+                </a>
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" data-bs-title="返回">
+                    <i class="iconfont icon-left-arrow"></i>
+                </div>
+                <h1 class="fs-18px fw-bold cursor-pointer flex-fill js-top" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="返回顶部">特殊符号大全</h1>
+                <button class="btn btn-sm btn-icon ms-auto" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                    data-bs-title="分享">
+                    <i class="iconfont icon-upload"></i>
+                </button>
+            </div>
+            <div class="p-3 bg-light border-top">
+                <div class="p-3 bg-white border rounded-4 mb-3">特殊符号是使用频率较少且难以直接输入的符号，包括数字符号、数学符号、特殊中文字符、箭头符号等。</div>
+                <h2 class="fs-18px my-3 section-title">数字符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>①</li>
+                    <li>②</li>
+                    <li>③</li>
+                    <li>④</li>
+                    <li>⑤</li>
+                    <li>⑥</li>
+                    <li>⑦</li>
+                    <li>⑧</li>
+                    <li>⑨</li>
+                    <li>⑩</li>
+                    <li>㊀</li>
+                    <li>㊁</li>
+                    <li>㊂</li>
+                    <li>㊃</li>
+                    <li>㊄</li>
+                    <li>㊅</li>
+                    <li>㊆</li>
+                    <li>㊇</li>
+                    <li>㊈</li>
+                    <li>㊉</li>
+                    <li>㈠</li>
+                    <li>㈡</li>
+                    <li>㈢</li>
+                    <li>㈣</li>
+                    <li>㈤</li>
+                    <li>㈥</li>
+                    <li>㈦</li>
+                    <li>㈧</li>
+                    <li>㈨</li>
+                    <li>㈩</li>
+                    <li>⑴</li>
+                    <li>⑵</li>
+                    <li>⑶</li>
+                    <li>⑷</li>
+                    <li>⑸</li>
+                    <li>⑹</li>
+                    <li>⑺</li>
+                    <li>⑻</li>
+                    <li>⑼</li>
+                    <li>⑽</li>
+                    <li>№</li>
+                    <li>½</li>
+                    <li>⅓</li>
+                    <li>⅔</li>
+                    <li>¼</li>
+                    <li>¾</li>
+                    <li>⅕</li>
+                    <li>⅖</li>
+                    <li>⅗</li>
+                    <li>⅘</li>
+                    <li>⅙</li>
+                    <li>⅚</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">数学符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>+</li>
+                    <li>-</li>
+                    <li>×</li>
+                    <li>÷</li>
+                    <li>√</li>
+                    <li>±</li>
+                    <li>/</li>
+                    <li>=</li>
+                    <li>∥</li>
+                    <li>∠</li>
+                    <li>≌</li>
+                    <li>∽</li>
+                    <li>≦</li>
+                    <li>≧</li>
+                    <li>≒</li>
+                    <li>
+                        << /li>
+                    <li>></li>
+                    <li>≈</li>
+                    <li>≡</li>
+                    <li>≠</li>
+                    <li>≤</li>
+                    <li>≥</li>
+                    <li>≮</li>
+                    <li>≯</li>
+                    <li>∷</li>
+                    <li>∶</li>
+                    <li>∫</li>
+                    <li>∮</li>
+                    <li>∝</li>
+                    <li>∞</li>
+                    <li>∧</li>
+                    <li>∨</li>
+                    <li>∑</li>
+                    <li>∏</li>
+                    <li>∪</li>
+                    <li>∩</li>
+                    <li>∈</li>
+                    <li>∵</li>
+                    <li>∴</li>
+                    <li>⊥</li>
+                    <li>⌒</li>
+                    <li>⊙</li>
+                    <li>∟</li>
+                    <li>⊿</li>
+                    <li>㏒</li>
+                    <li>㏑</li>
+                    <li>%</li>
+                    <li>‰</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">表格符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>┏</li>
+                    <li>┳</li>
+                    <li>┓</li>
+                    <li>┌</li>
+                    <li>┬</li>
+                    <li>┐</li>
+                    <li>╔</li>
+                    <li>╦</li>
+                    <li>╗</li>
+                    <li>╭ </li>
+                    <li>╮</li>
+                    <li>┣</li>
+                    <li>╋</li>
+                    <li>┫</li>
+                    <li>├</li>
+                    <li>┼</li>
+                    <li>┤</li>
+                    <li>╠</li>
+                    <li>╬</li>
+                    <li>╣</li>
+                    <li>╰</li>
+                    <li>╯</li>
+                    <li>┗</li>
+                    <li>┻</li>
+                    <li>┛</li>
+                    <li>└</li>
+                    <li>┴</li>
+                    <li>┘</li>
+                    <li>╚ </li>
+                    <li>╩</li>
+                    <li>╝</li>
+                    <li>┅</li>
+                    <li>━</li>
+                    <li>╓</li>
+                    <li>╥</li>
+                    <li>╖</li>
+                    <li>╒</li>
+                    <li>╤</li>
+                    <li>╕</li>
+                    <li>╱</li>
+                    <li>╲</li>
+                    <li>─</li>
+                    <li>﹋</li>
+                    <li>﹏</li>
+                    <li>╟</li>
+                    <li>╫</li>
+                    <li>╢</li>
+                    <li>╞</li>
+                    <li>╪</li>
+                    <li>╡</li>
+                    <li>╲</li>
+                    <li>╱</li>
+                    <li>│</li>
+                    <li>︴</li>
+                    <li>﹌</li>
+                    <li>╙</li>
+                    <li>╨</li>
+                    <li>╜</li>
+                    <li>╘</li>
+                    <li>╧</li>
+                    <li>╛</li>
+                    <li>┱</li>
+                    <li>┲</li>
+                    <li>╃</li>
+                    <li>╄</li>
+                    <li>═</li>
+                    <li>║</li>
+                    <li>┇</li>
+                    <li>┋</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">米字符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>✱</li>
+                    <li>✲</li>
+                    <li>✳</li>
+                    <li>❃</li>
+                    <li>✾</li>
+                    <li>✽</li>
+                    <li>✼</li>
+                    <li>✻</li>
+                    <li>✺</li>
+                    <li>✹</li>
+                    <li>✸</li>
+                    <li>✷</li>
+                    <li>✶</li>
+                    <li>✵</li>
+                    <li>✴</li>
+                    <li>❄</li>
+                    <li>❅</li>
+                    <li>❆</li>
+                    <li>❇</li>
+                    <li>❈</li>
+                    <li>❉</li>
+                    <li>❊</li>
+                    <li>❋</li>
+                    <li>✱</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">心形符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>❤</li>
+                    <li>♡</li>
+                    <li>♥</li>
+                    <li>❥</li>
+                    <li>♠</li>
+                    <li>♣</li>
+                    <li>♤</li>
+                    <li>ღ</li>
+                    <li>❣</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">星星符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>★</li>
+                    <li>☆</li>
+                    <li>✡</li>
+                    <li>✦</li>
+                    <li>✧</li>
+                    <li>✩</li>
+                    <li>✪</li>
+                    <li>✫</li>
+                    <li>✬</li>
+                    <li>✭</li>
+                    <li>✮</li>
+                    <li>✯</li>
+                    <li>✰</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">对错符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>√</li>
+                    <li>✔</li>
+                    <li>✓</li>
+                    <li>☑</li>
+                    <li>✗</li>
+                    <li>✖</li>
+                    <li>✕</li>
+                    <li>ㄨ</li>
+                    <li>✘</li>
+                    <li>☒</li>
+                    <li>☓</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">方形符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>□</li>
+                    <li>■</li>
+                    <li>❏</li>
+                    <li>❐</li>
+                    <li>❑</li>
+                    <li>❒</li>
+                    <li>▐</li>
+                    <li>▒</li>
+                    <li>▓</li>
+                    <li>▢</li>
+                    <li>▣</li>
+                    <li>▤</li>
+                    <li>▥</li>
+                    <li>▦</li>
+                    <li>▧</li>
+                    <li>▦</li>
+                    <li>▨</li>
+                    <li>▩</li>
+                    <li>▪</li>
+                    <li>▫</li>
+                    <li>▬</li>
+                    <li>▮</li>
+                    <li>▭</li>
+                    <li>▯</li>
+                    <li>▏</li>
+                    <li>▕</li>
+                    <li>∎</li>
+                    <li>⊞</li>
+                    <li>⊟</li>
+                    <li>⊠</li>
+                    <li>⊡</li>
+                    <li>⋄</li>
+                    <li>▱</li>
+                    <li>◆</li>
+                    <li>◇</li>
+                    <li>◈</li>
+                    <li>◧</li>
+                    <li>◨</li>
+                    <li>◩</li>
+                    <li>◪</li>
+                    <li>◫</li>
+                    <li>◙</li>
+                    <li>◘</li>
+                    <li>▀</li>
+                    <li>▔</li>
+                    <li>▁</li>
+                    <li>▂</li>
+                    <li>▃</li>
+                    <li>▄</li>
+                    <li>▅</li>
+                    <li>▆</li>
+                    <li>▇</li>
+                    <li>▉</li>
+                    <li>▊</li>
+                    <li>▋</li>
+                    <li>█</li>
+                    <li>▌</li>
+                    <li>▍</li>
+                    <li>▎</li>
+                    <li>▰</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">圆形符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>○</li>
+                    <li>●</li>
+                    <li>⊙</li>
+                    <li>◎</li>
+                    <li>◕</li>
+                    <li>◯</li>
+                    <li>☪</li>
+                    <li>☼</li>
+                    <li>❂</li>
+                    <li>✪</li>
+                    <li>☻</li>
+                    <li>Θ</li>
+                    <li>⊖</li>
+                    <li>⊘</li>
+                    <li>⊕</li>
+                    <li>⊗</li>
+                    <li>⊚</li>
+                    <li>⊛</li>
+                    <li>⊜</li>
+                    <li>⊝</li>
+                    <li>◉</li>
+                    <li>◌</li>
+                    <li>◍</li>
+                    <li>◐</li>
+                    <li>◑</li>
+                    <li>◒</li>
+                    <li>◓</li>
+                    <li>◔</li>
+                    <li>◖</li>
+                    <li>◗</li>
+                    <li>☢</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">三角符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>◤</li>
+                    <li>◥</li>
+                    <li>▲</li>
+                    <li>▼</li>
+                    <li>▴</li>
+                    <li>▾</li>
+                    <li>△</li>
+                    <li>▽</li>
+                    <li>▵</li>
+                    <li>▿</li>
+                    <li>∆</li>
+                    <li>◣</li>
+                    <li>◢</li>
+                    <li>▶</li>
+                    <li>◀</li>
+                    <li>▸</li>
+                    <li>◂</li>
+                    <li>▷</li>
+                    <li>◁</li>
+                    <li>▹</li>
+                    <li>◃</li>
+                    <li>∇</li>
+                    <li>►</li>
+                    <li>◄</li>
+                    <li>▻</li>
+                    <li>◅</li>
+                    <li>◬</li>
+                    <li>◭</li>
+                    <li>◮</li>
+                    <li>⊿</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">八卦符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>乾</li>
+                    <li>兑</li>
+                    <li>离</li>
+                    <li>震</li>
+                    <li>巽</li>
+                    <li>坎</li>
+                    <li>艮</li>
+                    <li>坤</li>
+                    <li>☯</li>
+                    <li></li>
+                    <li></li>
+                    <li>☰</li>
+                    <li>☱</li>
+                    <li>☲</li>
+                    <li>☳</li>
+                    <li>☴</li>
+                    <li>☵</li>
+                    <li>☶</li>
+                    <li>☷</li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">标点符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>『</li>
+                    <li>』</li>
+                    <li>〖</li>
+                    <li>〗</li>
+                    <li>【</li>
+                    <li>】</li>
+                    <li>〔</li>
+                    <li>〕</li>
+                    <li>︵</li>
+                    <li>︶</li>
+                    <li>︰</li>
+                    <li>︷</li>
+                    <li>︸</li>
+                    <li>︿</li>
+                    <li>﹀</li>
+                    <li>︹</li>
+                    <li>︺</li>
+                    <li>︽</li>
+                    <li>︾</li>
+                    <li>﹂</li>
+                    <li>﹄</li>
+                    <li>︻</li>
+                    <li>︼</li>
+                    <li>﹁</li>
+                    <li>﹃</li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </ul>
+
+                <h2 class="fs-18px my-3 section-title">中文拼音符号</h2>
+                <ul class="d-flex flex-wrap list-unstyled symbols-list js-copy text-muted">
+                    <li>ā</li>
+                    <li>á</li>
+                    <li>ǎ</li>
+                    <li>à</li>
+                    <li>ō</li>
+                    <li>ó</li>
+                    <li>ǒ</li>
+                    <li>ò</li>
+                    <li>ē</li>
+                    <li>é</li>
+                    <li>ě</li>
+                    <li>è</li>
+                    <li>ī</li>
+                    <li>í</li>
+                    <li>ǐ</li>
+                    <li>ì</li>
+                    <li>ū</li>
+                    <li>ú</li>
+                    <li>ǔ</li>
+                    <li>ù</li>
+                    <li>ǖ</li>
+                    <li>ǘ</li>
+                    <li>ǚ</li>
+                    <li>ǜ</li>
+                    <li>ü</li>
+                    <li>ê</li>
+                    <li>ń</li>
+                    <li>ň</li>
+                    <li>ǹ</li>
+                </ul>
+            </div>
+            <!-- 隐藏的textarea，用于复制符号。 -->
+            <textarea id="copyTextarea" class="hidden-content"></textarea>
+        </div>
+    </div>
+</main>
+{/block}
+
+
+{block name="js"}
+<script>
+    // 点击复制文本内容
+    document.addEventListener('DOMContentLoaded', function () {
+        $(".js-copy li").click(function () {
+            var copyText = $(this).text();
+            var textArea = $('.hidden-content');
+            textArea.val(copyText);
+            textArea.select();
+            document.execCommand('copy');
+
+            toast("已复制");
+        });
+    });
+</script>
+{/block}

@@ -10,7 +10,7 @@ declare(strict_types=1);
 // 安全设置
 header("X-XSS-Protection: 1; mode=block");
 header("X-Content-Type-Options: nosniff");
-header("Referrer-Policy: same-origin");
+// header("Referrer-Policy: same-origin");
 header('X-Frame-Options: DENY');
 header('X-Powered-By:');
 
