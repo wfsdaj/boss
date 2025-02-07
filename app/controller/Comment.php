@@ -29,6 +29,10 @@ class Comment
      */
     public function submit()
     {
+        if (!is_logined()) {
+            return json('请先登录再发表回复');
+        }
+
         // 检查请求方法
         if (!is_post()) {
             return json('请求方法不正确', 'error', 405);
@@ -47,14 +51,31 @@ class Comment
             return json($validate->error);
         }
 
-        // 保存评论数据
-        // $result =
-
         try {
             (new CommendModel())->create($data);
-            return json('回帖成功，扣除 1 金币。', 'success', 200);
+            echo json_encode(
+                [
+                    'message' => '回帖成功，扣除 1 金币。',
+                    'status'  => 'success',
+                    'content' => $data['content'],
+                ],
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
+            );
+            return true;
+            // return json('回帖成功，扣除 1 金币。', 'success', 200);
         } catch (\Throwable $th) {
             return json('回帖失败');
         }
     }
+
+    // private function insertHtml($data)
+    // {
+    //     $html = '<li class="self"><div class="chat-item">';
+    //     $html .= '<a href="/user/profile/' . session('user_id');
+    //     $html .= '<img class="avatar ms-2" src="' . get_avatar($comment.user_id) . '" alt=""></a>';
+    //     $html .= '<div><div class="chat-content">' . $data . '</div>';
+    //     $html .= '<span class="fs-13px text-muted">' . session('username') . '</span></div></div></li>';
+
+    //     return $html;
+    // }
 }

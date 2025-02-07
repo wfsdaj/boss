@@ -62,6 +62,7 @@
     document.addEventListener("DOMContentLoaded", (e) => {
         // 当前链接添加 active
         highlightActiveLink("user");
+        updateIconClassOnActive('.app-link', 'icon-fav', 'icon-fav-fill');
         document.getElementById("my-fav").classList.add('active');
     });
 </script>

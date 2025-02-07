@@ -4,6 +4,14 @@ namespace app\controller;
 
 class Fav
 {
+    public function __construct()
+    {
+        // 如果用户未登录，则重定向到登录页。
+        if (is_logined() === false) {
+            return redirect(url('/login'));
+        }
+    }
+
     /**
      * 添加收藏
      */

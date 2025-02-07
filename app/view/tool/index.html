@@ -41,3 +41,12 @@
     </div>
 </main>
 {/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // 当前链接添加 active
+        highlightActiveLink("tool");
+    });
+</script>
+{/block}

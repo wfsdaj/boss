@@ -28,6 +28,10 @@
                     <p class="fs-14px">14px说明字体</p>
                 </div>
             </div>
+
+            <div class="p-3">
+
+            </div>
         </div>
     </div>
 </main>
@@ -38,6 +42,8 @@
     document.addEventListener("DOMContentLoaded", () => {
         // 当前链接添加 active
         highlightActiveLink("explore");
+        // 切换当前链接的 iconfont
+        updateIconClassOnActive('.app-link', 'icon-search', 'icon-search-fill');
         // document.getElementById("my-post").classList.add('active');
     });
 </script>

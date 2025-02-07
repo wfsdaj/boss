@@ -48,8 +48,8 @@ class Post extends Model
                                         attach AS a
                                     ON
                                         a.post_id = p.id')
-            ->where('p.id = ?', [$post_id])
-            ->first($fields);
+                            ->where('p.id = ?', [$post_id])
+                            ->first($fields);
         return $data;
     }
 
@@ -69,8 +69,6 @@ class Post extends Model
         // $tags = $matches[1];
         // 去除内容中的标签
         // $data['content'] = trim(preg_replace('/#([^#]+)#/u', '', $data['content']));
-        // 转换内容中的链接
-        // $data['content'] = url2Link($data['content']);
 
         try {
             // 开启事务
@@ -276,30 +274,6 @@ class Post extends Model
     }
 
     /**
-     * 处理图像
-     * 宽度超过指定值则生成缩略图
-     *
-     * @param array $data  图片数组
-     * @param int   $width 目标宽度
-     *
-     * @return array
-     */
-    // public function handleImagesWidth(array $imagesData, int $targetWidth = 500)
-    // {
-    //     if (!is_array($imagesData)) {
-    //         $imagesData = [$imagesData];
-    //     }
-
-    //     foreach ($imagesData as $image) {
-    //         list($width, $height, $type, $attr) = getimagesize($image['filename']);
-
-    //         if ($width > $targetWidth) {
-    //             $this->resizeImages($imagesData);
-    //         }
-    //     }
-    // }
-
-    /**
      * 生成缩略图
      *
      * @param array|string $uploaded_file_paths 文件路径或包含文件路径的数组
@@ -316,19 +290,6 @@ class Post extends Model
             $image->save($image->getFilePath(), $image->getImageFormat());
         }
     }
-    // private static function resizeImages(array $imagesData, int $targetWidth = 300)
-    // {
-    //     foreach ($imagesData as $img) {
-    //         $image = new Image();
-    //         if ($image->load($img['filename'])) {
-    //             $path_parts = pathinfo($img['filename']);
-    //             $thumbnailPath = $path_parts['dirname'] . '/' . $path_parts['filename'] . '_thumb.' . $path_parts['extension'];
-    //             // 调整图像大小
-    //             $image->resizeToWidth($targetWidth);
-    //             $image->save($thumbnailPath, $path_parts['extension']);
-    //         }
-    //     }
-    // }
 
     /**
      * 处理用户积分
@@ -348,6 +309,13 @@ class Post extends Model
             // 这里可以根据需要进一步处理或记录异常
             throw new Exception($th);
         }
+    }
+
+    private function updatePageViews()
+    {
+        $this->model = db('post');
+
+        // $currentCount = $this->model->where('', [$]);
     }
 
     /**

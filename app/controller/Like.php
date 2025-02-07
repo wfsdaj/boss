@@ -7,10 +7,10 @@ use app\model\Like as LikeModel;
 
 class Like
 {
-    public function __construct()
+    public function index()
     {
         // 如果用户未登录，则重定向到登录页。
-        if (!is_logined()) {
+        if (is_logined() === false) {
             return redirect(url('/login'));
         }
     }

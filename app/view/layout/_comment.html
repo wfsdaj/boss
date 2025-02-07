@@ -42,55 +42,79 @@
 {/if}
 
 <script>
-    // 回帖编辑器
-    let comment_editor;
+// 回帖编辑器
+let comment_editor;
 
-    window.addEventListener('load', function () {
-        // 初始化回帖编辑器
-        const commentTextarea = document.getElementById('commentTextarea');
-        if (commentTextarea && typeof TextEditor === 'function') {
-            comment_editor = new TextEditor(commentTextarea);
-            // 表情列表
-            const emojiList = document.getElementById('emojiList');
-            if (emojiList) {
-                emojiList.addEventListener('click', function (event) {
-                    if (event.target.tagName === 'LI') {
-                        const emoji = event.target.textContent;
-                        comment_editor.insert(emoji, -1, true);
-                    }
-                });
-            }
-        }
-
-        // 点击提交按钮后验证
-        const submitCommentsElement = document.getElementById('submitComments');
-        if (submitCommentsElement) {
-            submitCommentsElement.addEventListener('click', function () {
-                let form = document.getElementById('commentForm');
-                let data = new FormData(form);
-
-                // 发送 AJAX 请求
-                fetch('/comment/submit', {
-                    method: 'POST',
-                    body: data,
-                })
-                    .then(response => response.json())
-                    .then(res => {
-                        if (res.status === 'success') {
-                            // 显示成功消息
-                            toast(res.message);
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1500);
-                        } else {
-                            // 显示错误消息
-                            toast(res.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:');
-                    });
+window.addEventListener('load', function () {
+    // 初始化回帖编辑器
+    const commentTextarea = document.getElementById('commentTextarea');
+    if (commentTextarea && typeof TextEditor === 'function') {
+        comment_editor = new TextEditor(commentTextarea);
+        // 表情列表
+        const emojiList = document.getElementById('emojiList');
+        if (emojiList) {
+            emojiList.addEventListener('click', function (event) {
+                if (event.target.tagName === 'LI') {
+                    const emoji = event.target.textContent;
+                    comment_editor.insert(emoji, -1, true);
+                }
             });
         }
-    });
+    }
+
+    // 点击提交按钮后验证
+    const submitCommentsElement = document.getElementById('submitComments');
+    if (submitCommentsElement) {
+        submitCommentsElement.addEventListener('click', function () {
+            let form = document.getElementById('commentForm');
+            let data = new FormData(form);
+
+            // 发送 AJAX 请求
+            fetch('/comment/submit', {
+                method: 'POST',
+                body: data,
+            })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        // 显示成功消息
+                        toast(res.message);
+
+                        // 创建新的评论元素
+                        const newCommentElement = document.createElement('li');
+                        newCommentElement.innerHTML = `
+                            <li class="self">
+                                <div class="chat-item">
+                                    <div>
+                                        <div class="chat-content">${res.content}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        `;
+
+                        // 将新的评论元素添加到评论列表中
+                        const commentList = document.getElementById('comment-list');
+                        const firstChild = commentList.firstChild; // 获取第一个子元素
+
+                        if (firstChild) {
+                            commentList.insertBefore(newCommentElement, firstChild); // 插入到第一个子元素之前
+                        } else {
+                            commentList.appendChild(newCommentElement); // 如果没有子元素，则直接添加
+                        }
+
+                        // 清空表单
+                        form.reset();
+
+                        // setTimeout(() => {location.reload();}, 1500);
+                    } else {
+                        // 显示错误消息
+                        toast(res.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:');
+                });
+        });
+    }
+});
 </script>

@@ -1,5 +1,5 @@
 {if $comments[1]->totalRows > 0}
-    <ul class="list-unstyled chat p-3 border-bottom">
+    <ul class="list-unstyled chat p-3 border-bottom" id="comment-list">
     {foreach $comments[0] as $comment}
         {if !is_author($comment.user_id)}
         <li class="others">
