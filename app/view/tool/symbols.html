@@ -501,7 +501,7 @@
                 </ul>
             </div>
             <!-- 隐藏的textarea，用于复制符号。 -->
-            <textarea id="copyTextarea" class="hidden-content"></textarea>
+            <textarea id="copyTextarea" class="visually-hidden"></textarea>
         </div>
     </div>
 </main>
@@ -514,7 +514,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         $(".js-copy li").click(function () {
             var copyText = $(this).text();
-            var textArea = $('.hidden-content');
+            var textArea = $('#copyTextarea');
             textArea.val(copyText);
             textArea.select();
             document.execCommand('copy');

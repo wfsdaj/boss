@@ -208,8 +208,8 @@ hr {
   margin: 1rem 0;
   color: inherit;
   border: 0;
-  border-top: var(--bs-border-width) solid;
-  opacity: .25
+  border-top: var(--bs-border-width) solid var(--bs-border-color);
+  /* opacity: .25 */
 }
 
 .h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {

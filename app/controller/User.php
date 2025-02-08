@@ -3,7 +3,7 @@
 namespace app\controller;
 
 use app\model\User as UserModel;
-use app\model\{Auth, Post, Comment, Like, Fav};
+use app\model\{Post, Comment, Like, Fav};
 
 class User
 {
@@ -65,13 +65,13 @@ class User
     }
 
     /**
-     * 收藏列表
+     * 我的收藏
      */
     public function fav()
     {
         $user = $this->getUserFromUrl();
 
-        $favorites =(new Fav())->list((int)segment(3));
+        $favorites = (new Fav())->list((int)segment(3));
 
         $data = [
             'user'      => $user,
@@ -86,14 +86,18 @@ class User
      */
     public function edit()
     {
-        $user = Auth::checkUser();
+        if (!is_logined()) {
+            return redirect(url('/login'));
+        }
 
-        $user_id = (int)segment(2);
-        $user    = model('user')->find($user_id);
+        if (!is_author((int)segment(3))) {
+            return abort(403);
+        }
+
+        $user = $this->getUserFromUrl();
 
         $data = [
-            'page_title' => '用户资料',
-            'user'       => $user,
+            'user' => $user,
         ];
 
         return view('user/edit', $data);
@@ -104,16 +108,16 @@ class User
      */
     public function password()
     {
-        loginCheck();
+        if (!is_logined()) {
+            return redirect(url('/login'));
+        }
 
-        $user_id = session('user_id');
-        $url_id  = (int)segment(2);
-
-        if ($user_id !== $url_id) {
+        if (!is_author((int)segment(3))) {
             return abort(403);
         }
 
-        $user = model('user')->find($user_id);
+        $user = $this->getUserFromUrl();
+
         $data = [
             'user' => $user,
         ];

@@ -1,0 +1,67 @@
+{extend name="user/layout" /}
+
+{block name="title"}编辑个人资料{/block}
+
+{block name="main"}
+<main role="main" class="d-flex flex-grow-1">
+    <div class="d-flex main-wrap justify-content-between min-vh-100">
+        <!-- 中间内容列 -->
+        <div class="primary-col">
+            <!-- 顶部导航条 -->
+            <div class="breadcrumb d-flex align-items-center px-3 js-scroll">
+                <div class="btn btn-sm btn-icon me-3 js-back" aria-label="返回" role="button" tabindex="0">
+                    <i class="iconfont icon-left-arrow fs-5"></i>
+                </div>
+                <h2 class="flex-fill fs-18px fw-bold cursor-pointer js-top">
+                    <span class="text-truncate">{$user.username}</span>
+                </h2>
+            </div>
+
+            <!-- 用户信息 -->
+            {include file="user/_user_cover"}
+
+            <nav class="nav nav-justified border-bottom">
+                <a class="nav-link active" id="my-info" href="/user/edit/{$user.id}">账号信息</a>
+                <a class="nav-link" id="my-password" href="/user/password/{$user.id}">更改密码</a>
+                <a class="nav-link" id="my-avatar" href="/user/avatar/{$user.id}">设置头像</a>
+            </nav>
+
+            <div class="container p-4">
+                <div class="row lh-lg">
+                    <div class="col-4 text-muted text-end">用户名</div>
+                    <div class="col-8">{$user.username}</div>
+                    <div class="col-4 text-muted text-end">注册时间</div>
+                    <div class="col-8">{:date("Y-m-d", $user.created_at)}</div>
+                    <div class="col-4 text-muted text-end">最后登录</div>
+                    <div class="col-8">{:date("Y-m-d", $user.updated_at)}</div>
+
+                    <hr class="my-3">
+
+                    <div class="col-4 text-muted text-end">主题数</div>
+                    <div class="col-8"></div>
+                    <div class="col-4 text-muted text-end">回复数</div>
+                    <div class="col-8"></div>
+                    <div class="col-4 text-muted text-end">金币数</div>
+                    <div class="col-8">{$user.golds}</div>
+
+                    <hr class="my-3">
+
+                    <div class="col-4 text-muted text-end">用户组</div>
+                    <div class="col-8"></div>
+                    <div class="col-4 text-muted text-end">邮箱</div>
+                    <div class="col-8"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{/block}
+
+{block name="js"}
+<script>
+    document.addEventListener("DOMContentLoaded", (e) => {
+        // 当前链接添加 active
+        highlightActiveLink("user");
+    });
+</script>
+{/block}
