@@ -60,7 +60,7 @@ class Login
         $user = $userModel->login($data['username'], $data['password']);
 
         if (!$user) {
-            return json('用户名或密码错误');
+            return json('用户名或密码错误', 'error');
         }
 
         // 登录成功，设置 session

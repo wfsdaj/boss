@@ -90,7 +90,7 @@
                 submitButton.prop('disabled', true);
 
                 // 获取表单数据
-                const formData = $(this).serialize();
+                const formData = new FormData(this);
 
                 // 发送 Ajax 请求
                 $.ajax({
