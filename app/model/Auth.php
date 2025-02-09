@@ -44,9 +44,7 @@ class Auth extends Model
             throw new Exception('用户创建失败：数据插入到数据库时出错');
         } catch (Throwable $th) {
             $this->model->rollback();
-
-            (new Logger())->error($th);
-
+            (new Logger())->error($th->getMessage());
             return null;
         }
     }
@@ -68,6 +66,9 @@ class Auth extends Model
             $this->model->where('id = ?', [$user_id])->update($currentTimestamp);
             return $user;
         }
+
+        // 如果用户不存在或密码错误，返回 null 或其他适当的返回值
+        return null;
     }
 
     /**
@@ -83,9 +84,10 @@ class Auth extends Model
     /**
      * 根据用户名查询用户数据
      */
-    public function findByName(string $username, string $field = 'username')
+    public function findByName(string $username)
     {
         $this->model = db('user');
+        $field = 'id, group_id, email, username, password, created_at, updated_at, golds';
 
         return $this->model->where('username = ?', [$username])
                             ->first($field);

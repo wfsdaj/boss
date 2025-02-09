@@ -24,7 +24,7 @@
                 <label for="username" class="error-message">用户名</label>
             </div>
             <div class="form-floating mb-4">
-                <input type="password" class="form-control" id="password" name="password" value="{:old('password')}"
+                <input type="password" class="form-control" id="password" name="password" value=""
                     placeholder="密码" required>
                 <label for="password" class="error-message">密码</label>
             </div>
@@ -45,7 +45,7 @@
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script src="/static/js/twitter.js"></script>
     <script>
-        $(document).ready(function () {
+        document.addEventListener('DOMContentLoaded', function () {
             const rules = {
                 username: {
                     regex: /^.{3,16}$/,
@@ -61,23 +61,23 @@
                 },
             };
 
-            const captchaImg = document.getElementById("resetCaptcha");
-            const form = $('#authForm');
-            const submitButton = $('#submit-btn');
+            const captchaImg = document.getElementById('resetCaptcha');
+            const submitButton = document.getElementById('submit-btn');
+            const form = document.getElementById('authForm');
 
             function validate(field) {
-                const input = $('#' + field);
-                const value = input.val();
+                const input = document.getElementById(field);
+                const value = input.value;
                 const rule = rules[field];
-                const errorDiv = input.next('.error-message');
+                const errorDiv = input.nextElementSibling;
 
                 if (!rule.regex.test(value)) {
-                    errorDiv.text(rule.message);
-                    input.addClass('is-invalid');
+                    errorDiv.textContent = rule.message;
+                    input.classList.add('is-invalid');
                     return false;
                 } else {
-                    errorDiv.text(input.attr('placeholder'));
-                    input.removeClass('is-invalid');
+                    errorDiv.textContent = input.placeholder || '';
+                    input.classList.remove('is-invalid');
                     return true;
                 }
             }
@@ -100,44 +100,47 @@
                     return;
                 }
 
-                submitButton.prop('disabled', true);
+                const formData = new FormData(this);
+                submitButton.disabled = true;
 
-                const formData = form.serialize();
-
-                $.ajax({
-                    url: '/register/submit',
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (res) {
+                fetch('/register/submit', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(res => {
                         if (res.status === 'success') {
                             toast(res.message, 'success');
                             setTimeout(() => {
                                 document.referrer === "" ? (window.location.href = "/") : window.history.back();
                             }, 2000);
                         } else {
-                            captchaImg.setAttribute("src", "/auth/captcha?" + Math.random());
+                            captchaImg.setAttribute('src', '/auth/captcha?' + Math.random());
                             toast(res.message, 'danger');
                         }
-                        submitButton.prop('disabled', false);
-                    },
-                    error: function (xhr, status, error) {
+                        submitButton.disabled = false;
+                    })
+                    .catch(error => {
                         toast('提交失败，请稍后再试', 'danger');
                         setTimeout(() => {
                             location.reload();
                         }, 2000);
-                        submitButton.prop('disabled', false);
-                    }
-                });
+                        submitButton.disabled = false;
+                    });
             }
 
             // 使用事件委托绑定输入事件，实时验证
-            form.on('input', '.form-control', function () {
-                const fieldId = $(this).attr('id');
-                validate(fieldId);
+            form.addEventListener('input', function (event) {
+                if (event.target.classList.contains('form-control')) {
+                    const fieldId = event.target.id;
+                    validate(fieldId);
+                }
             });
 
-            form.on('submit', handleFormSubmission);
+            form.addEventListener('submit', handleFormSubmission);
         });
     </script>
 </body>

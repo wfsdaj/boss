@@ -3,7 +3,6 @@
 namespace app\controller;
 
 use boss\Captcha;
-use app\model\User;
 
 class Auth
 {

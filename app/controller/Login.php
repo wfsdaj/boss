@@ -3,7 +3,7 @@
 namespace app\controller;
 
 use boss\Validator;
-use app\model\User;
+use app\model\Auth;
 
 class Login
 {
@@ -54,10 +54,10 @@ class Login
             return json($errors);
         }
 
-        $userModel = new User();
+        $auth = new Auth();
 
         // 尝试登录用户
-        $user = $userModel->login($data['username'], $data['password']);
+        $user = $auth->login($data['username'], $data['password']);
 
         if (!$user) {
             return json('用户名或密码错误', 'error');

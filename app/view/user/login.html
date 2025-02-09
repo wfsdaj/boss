@@ -83,39 +83,40 @@
                 validate(fieldId);
             });
 
-            $('#authForm').submit(function (event) {
+            document.getElementById('authForm').addEventListener('submit', function (event) {
                 event.preventDefault();
+
                 // 禁用提交按钮，防止重复点击
-                const submitButton = $('#submit-btn');
-                submitButton.prop('disabled', true);
+                const submitButton = document.getElementById('submit-btn');
+                submitButton.disabled = true;
 
                 // 获取表单数据
                 const formData = new FormData(this);
 
-                // 发送 Ajax 请求
-                $.ajax({
-                    url: '/login/submit',
-                    type: 'POST',
-                    data: formData,
-                    dataType: 'json',
-                    success: function (res) {
-                        if (res.status === 'success') {
-                            toast(res.message, 'success');
-                            setTimeout(() => {
-                                document.referrer === "" ? (window.location.href = "/") : window.history.back();
-                            }, 2000);
-                        } else {
-                            toast(res.message, 'danger');
-                            captchaImg.setAttribute("src", "/auth/captcha?" + Math.random());
-                        }
-                        // 提交完成后重新启用按钮
-                        submitButton.prop('disabled', false);
-                    },
-                    error: function (xhr, status, error) {
-                        // 提交失败后重新启用按钮
-                        submitButton.prop('disabled', false);
-                        toast('提交失败，请稍后再试', 'danger');
+                // 使用 fetch 发送请求
+                fetch('/login/submit', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
                     }
+                })
+                .then(response => response.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        toast(res.message, 'success');
+                        setTimeout(() => {
+                            document.referrer === "" ? (window.location.href = "/") : window.history.back();
+                        }, 2000);
+                    } else {
+                        toast(res.message, 'danger');
+                        location.reload();
+                    }
+                })
+                .finally(() => {
+                    // 无论成功还是失败，都重新启用按钮
+                    submitButton.disabled = false;
+                    document.getElementById('captchaImg').setAttribute("src", "/auth/captcha?" + Math.random());
                 });
             });
         });

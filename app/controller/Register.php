@@ -49,7 +49,7 @@ class Register
         storeOldInput($data);
 
         // 验证表单数据
-        $errors = $this->validateFormData($data);
+        $errors = self::validateFormData($data);
         if ($errors) {
             return json($errors);
         }
@@ -64,7 +64,7 @@ class Register
         // 注册用户，返回成功后的用户 ID
         $user_id = $auth->create($data);
 
-        if (!$user_id) {
+        if ($user_id <= 0) {
             return json('注册失败');
         }
 
@@ -72,6 +72,7 @@ class Register
             'user_id'  => $user_id,
             'username' => $data['username'],
         ]);
+
         return json('注册成功', 'success', 200);
     }
 
@@ -81,7 +82,7 @@ class Register
      * @param array $data
      * @return string|null 错误消息或 null
      */
-    private function validateFormData(array $data): ?string
+    private static function validateFormData(array $data): ?string
     {
         $rules  = [
             'username' => ['string', '3,32', '姓名应为 3-32 个字符'],
